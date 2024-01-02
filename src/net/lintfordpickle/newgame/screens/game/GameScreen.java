@@ -1,5 +1,8 @@
 package net.lintfordpickle.newgame.screens.game;
 
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
+
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.ResourceManager;
@@ -39,39 +42,37 @@ public class GameScreen extends BaseGameScreen {
 	// --------------------------------------
 
 	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-		super.initialize();
-	}
-
-	@Override
-	public void loadResources(ResourceManager resourceManager) {
-		// TODO Auto-generated method stub
-		super.loadResources(resourceManager);
-	}
-
-	@Override
-	public void unloadResources() {
-		// TODO Auto-generated method stub
-		super.unloadResources();
-	}
-
-	@Override
 	public void handleInput(LintfordCore core) {
-		// TODO Auto-generated method stub
 		super.handleInput(core);
+
+		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE, this) || core.input().gamepads().isGamepadButtonDownTimed(GLFW.GLFW_GAMEPAD_BUTTON_START, this)) {
+			screenManager().addScreen(new PauseScreen(screenManager(), mSceneHeader));
+			return;
+		}
+
+		// For simple games you could add code to handle the player input here.
+		// However usually, components would be updated in dedicated BaseControllers (see the CONTROLLERS Section below).
 	}
 
 	@Override
 	public void update(LintfordCore core, boolean otherScreenHasFocus, boolean coveredByOtherScreen) {
-		// TODO Auto-generated method stub
 		super.update(core, otherScreenHasFocus, coveredByOtherScreen);
+
+		// For simple games you could add code to perform the game update logic here.
+		// However usually, components would be updated in dedicated BaseControllers (see the CONTROLLERS Section below).
 	}
 
 	@Override
 	public void draw(LintfordCore core) {
-		// TODO Auto-generated method stub
+
+		GL11.glClearColor(0.08f, .27f, 0.11f, 1.f);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
 		super.draw(core);
+
+		// For simple games you could add code to render a basic scene directly here.
+		// However usually, the rendering would be performed by a specific BaseRenderer (see the RENDERERS section below).
+
 	}
 
 	// --------------------------------------

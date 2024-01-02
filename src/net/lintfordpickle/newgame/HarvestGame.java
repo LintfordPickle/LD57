@@ -1,9 +1,5 @@
 package net.lintfordpickle.newgame;
 
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-
-import org.lwjgl.opengl.GL11;
-
 import net.lintfordlib.GameInfo;
 import net.lintfordlib.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
@@ -17,6 +13,8 @@ import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.TimedIntroScreen;
 import net.lintfordlib.screenmanager.toast.ToastManager;
 import net.lintfordpickle.newgame.screens.MainMenu;
+import net.lintfordpickle.newgame.screens.menu.CreditsScreen;
+import net.lintfordpickle.newgame.screens.menu.MainMenuBackground;
 
 public abstract class HarvestGame extends LintfordCore {
 
@@ -55,10 +53,17 @@ public abstract class HarvestGame extends LintfordCore {
 	// ---------------------------------------------
 
 	@Override
-	protected void showStartUpLogo(long pWindowHandle) {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+	protected void showStartUpLogo(long windowHandle) {
 
-		glfwSwapBuffers(pWindowHandle);
+		// You can optionally choose to display a static resource here to be displayed while the program performs the initialization and resource loading in the background.
+		// Remember to call glfwSwapBuffers(windowHandle) to commit the changes to the buffer before leaving the method.
+
+		// Also, if you use the bacgrkound ResourceLoader (see GameResourceLoader.java), you can forgo this step, as it has its own (non-static) onDraw
+
+//		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+// 		...		
+//		glfwSwapBuffers(windowHandle);
+
 	}
 
 	@Override
@@ -108,12 +113,14 @@ public abstract class HarvestGame extends LintfordCore {
 
 	@Override
 	protected void finializeAppSetup() {
-		final var lSplashScreen = new TimedIntroScreen(mScreenManager, "res/textures/textureSplashGame.png");
+		final var lSplashScreen = new TimedIntroScreen(mScreenManager, "res/textures/textureSplashScreen.png", 1000, 3000);
 		lSplashScreen.stretchBackgroundToFit(true);
 
 		lSplashScreen.setTimerFinishedCallback(new IMenuAction() {
 			@Override
 			public void TimerFinished(Screen pScreen) {
+				mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
+				mScreenManager.addScreen(new CreditsScreen(mScreenManager));
 				mScreenManager.addScreen(new MainMenu(mScreenManager));
 			}
 		});

@@ -1,8 +1,11 @@
 package net.lintfordpickle.newgame.screens;
 
+import org.lwjgl.opengl.GL11;
+
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.ResourceManager;
 import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.MenuEntry;
 import net.lintfordlib.screenmanager.MenuScreen;
 import net.lintfordlib.screenmanager.ScreenManager;
@@ -10,6 +13,8 @@ import net.lintfordlib.screenmanager.ScreenManagerConstants.FILLTYPE;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_ALIGNMENT;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_WIDTH;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
+import net.lintfordlib.screenmanager.screens.LoadingScreen;
+import net.lintfordpickle.newgame.screens.game.GameScreen;
 
 public class MainMenu extends MenuScreen {
 
@@ -20,9 +25,9 @@ public class MainMenu extends MenuScreen {
 	private static final String TITLE = null;
 
 	private static final int SCREEN_BUTTON_PLAY = 11;
-	private static final int SCREEN_BUTTON_EDITOR = 99;
-	private static final int SCREEN_BUTTON_HELP = 12;
-	private static final int SCREEN_BUTTON_OPTIONS = 13;
+	private static final int SCREEN_BUTTON_EDITOR = 12;
+	private static final int SCREEN_BUTTON_HELP = 13;
+	private static final int SCREEN_BUTTON_OPTIONS = 14;
 	private static final int SCREEN_BUTTON_EXIT = 15;
 
 	// ---------------------------------------------
@@ -45,10 +50,9 @@ public class MainMenu extends MenuScreen {
 		mMainMenuListBox.layoutWidth(LAYOUT_WIDTH.HALF);
 		mMainMenuListBox.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
 
-		final var lStartGameEntry = new MenuEntry(mScreenManager, this, "Start Game");
+		final var lStartGameEntry = new MenuEntry(mScreenManager, this, "Start");
 		lStartGameEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
 		lStartGameEntry.registerClickListener(this, SCREEN_BUTTON_PLAY);
-		lStartGameEntry.setToolTip("Harvest and deliver food from each of the farms in the fastest time.");
 
 		final var lEditorEntry = new MenuEntry(mScreenManager, this, "Editor");
 		lEditorEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
@@ -115,6 +119,7 @@ public class MainMenu extends MenuScreen {
 	public void draw(LintfordCore core) {
 		super.draw(core);
 
+		
 	}
 
 	// ---------------------------------------------
@@ -127,6 +132,10 @@ public class MainMenu extends MenuScreen {
 		switch (mClickAction.consume()) {
 		case SCREEN_BUTTON_PLAY: {
 
+			final var lNewSceneHeader = new SceneHeader(null);
+
+			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), lNewSceneHeader));
+			screenManager().createLoadingScreen(new LoadingScreen(screenManager(), true, lLoadingScreen));
 			break;
 		}
 
