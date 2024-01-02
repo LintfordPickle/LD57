@@ -1,7 +1,7 @@
 package net.lintfordpickle.newgame;
 
 import net.lintfordlib.core.AppResources;
-import net.lintfordlib.data.BaseSceneSettings;
+import net.lintfordlib.data.scene.BaseSceneSettings;
 
 public class GameSceneSettings extends BaseSceneSettings {
 
