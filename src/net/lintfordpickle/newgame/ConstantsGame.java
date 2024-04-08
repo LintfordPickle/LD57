@@ -1,6 +1,6 @@
 package net.lintfordpickle.newgame;
 
-import net.lintfordlib.core.ResourceGroupProvider;
+import net.lintfordlib.assets.ResourceGroupProvider;
 
 public class ConstantsGame {
 

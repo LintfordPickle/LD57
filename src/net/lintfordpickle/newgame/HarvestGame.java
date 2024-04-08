@@ -1,7 +1,7 @@
 package net.lintfordpickle.newgame;
 
 import net.lintfordlib.GameInfo;
-import net.lintfordlib.ResourceLoader;
+import net.lintfordlib.assets.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.fonts.BitmapFontManager;

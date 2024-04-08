@@ -2,8 +2,8 @@ package net.lintfordpickle.newgame.screens.menu;
 
 import org.lwjgl.opengl.GL11;
 
+import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.ResourceManager;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.screenmanager.Screen;

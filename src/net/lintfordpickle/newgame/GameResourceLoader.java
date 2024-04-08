@@ -1,15 +1,15 @@
 package net.lintfordpickle.newgame;
 
-import net.lintfordlib.ResourceLoader;
+import net.lintfordlib.assets.ResourceManager;
+import net.lintfordlib.assets.ResourceMapLoader;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.ResourceManager;
 import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.batching.TextureBatchPCT;
 import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.options.DisplayManager;
 
-public class GameResourceLoader extends ResourceLoader {
+public class GameResourceLoader extends ResourceMapLoader {
 
 	// ---------------------------------------------
 	// Variables
@@ -25,7 +25,7 @@ public class GameResourceLoader extends ResourceLoader {
 	// ---------------------------------------------
 
 	public GameResourceLoader(ResourceManager resourceManager, DisplayManager displayManager) {
-		super(resourceManager, displayManager, true);
+		super(resourceManager, displayManager, "res_map.json", ConstantsGame.GAME_RESOURCE_GROUP_ID);
 
 		mTextureBatch = new TextureBatchPCT();
 
@@ -76,7 +76,7 @@ public class GameResourceLoader extends ResourceLoader {
 	}
 
 	@Override
-	protected void resourcesToLoadInBackground() {
+	protected void resourcesToLoadInBackground(int entityGroupUid) {
 		Debug.debugManager().logger().i(getClass().getSimpleName(), "Loading game assets into group: " + ConstantsGame.GAME_RESOURCE_GROUP_ID);
 
 		mResourceManager.addProtectedEntityGroupUid(ConstantsGame.GAME_RESOURCE_GROUP_ID);

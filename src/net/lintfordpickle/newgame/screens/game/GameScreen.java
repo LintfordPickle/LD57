@@ -3,9 +3,9 @@ package net.lintfordpickle.newgame.screens.game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.ResourceManager;
 import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.ScreenManager;
