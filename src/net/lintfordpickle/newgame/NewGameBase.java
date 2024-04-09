@@ -5,7 +5,6 @@ import net.lintfordlib.assets.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.fonts.BitmapFontManager;
-import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.renderers.RendererManager;
 import net.lintfordlib.screenmanager.IMenuAction;
 import net.lintfordlib.screenmanager.Screen;
@@ -16,7 +15,7 @@ import net.lintfordpickle.newgame.screens.MainMenu;
 import net.lintfordpickle.newgame.screens.menu.CreditsScreen;
 import net.lintfordpickle.newgame.screens.menu.MainMenuBackground;
 
-public abstract class HarvestGame extends LintfordCore {
+public abstract class NewGameBase extends LintfordCore {
 
 	// ---------------------------------------------
 	// Variables
@@ -39,10 +38,10 @@ public abstract class HarvestGame extends LintfordCore {
 	// Constructor
 	// ---------------------------------------------
 
-	public HarvestGame(GameInfo pGameInfo, String[] pArgs) {
+	public NewGameBase(GameInfo pGameInfo, String[] pArgs) {
 		super(pGameInfo, pArgs, false);
 
-		mEntityGroupID = RandomNumbers.RANDOM.nextInt();
+		mEntityGroupID = ConstantsGame.GAME_RESOURCE_GROUP_ID;
 		mIsFixedTimeStep = true;
 
 		mScreenManager = new ScreenManager(this);
@@ -51,20 +50,6 @@ public abstract class HarvestGame extends LintfordCore {
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------
-
-	@Override
-	protected void showStartUpLogo(long windowHandle) {
-
-		// You can optionally choose to display a static resource here to be displayed while the program performs the initialization and resource loading in the background.
-		// Remember to call glfwSwapBuffers(windowHandle) to commit the changes to the buffer before leaving the method.
-
-		// Also, if you use the bacgrkound ResourceLoader (see GameResourceLoader.java), you can forgo this step, as it has its own (non-static) onDraw
-
-//		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-// 		...		
-//		glfwSwapBuffers(windowHandle);
-
-	}
 
 	@Override
 	protected void onInitializeBitmapFontSources(BitmapFontManager fontManager) {
@@ -125,7 +110,9 @@ public abstract class HarvestGame extends LintfordCore {
 			}
 		});
 
-		mScreenManager.addScreen(lSplashScreen);
+		mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
+		mScreenManager.addScreen(new CreditsScreen(mScreenManager));
+		mScreenManager.addScreen(new MainMenu(mScreenManager));
 	}
 
 	@Override
