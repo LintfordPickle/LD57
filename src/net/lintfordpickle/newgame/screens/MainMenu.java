@@ -13,6 +13,7 @@ import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_WIDTH;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.LoadingScreen;
 import net.lintfordpickle.newgame.screens.game.GameScreen;
+import net.lintfordpickle.newgame.screens.menu.OptionsScreen;
 
 public class MainMenu extends MenuScreen {
 
@@ -143,7 +144,7 @@ public class MainMenu extends MenuScreen {
 		}
 
 		case SCREEN_BUTTON_OPTIONS: {
-
+			screenManager().addScreen(new OptionsScreen(screenManager()));
 			break;
 		}
 

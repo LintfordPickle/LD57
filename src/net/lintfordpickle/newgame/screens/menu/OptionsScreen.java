@@ -10,6 +10,7 @@ import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_ALIGNMENT;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_WIDTH;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.AudioOptionsScreen;
+import net.lintfordlib.screenmanager.screens.VideoOptionsScreen;
 
 public class OptionsScreen extends MenuScreen {
 
@@ -18,7 +19,7 @@ public class OptionsScreen extends MenuScreen {
 	// ---------------------------------------------
 
 	private static final int BUTTON_AUDIO = 10;
-	private static final int BUTTON_GRAPHICS = 11;
+	private static final int BUTTON_VIDEO = 11;
 	private static final int BUTTON_KEY_BINDS = 12;
 	private static final int BUTTON_BACK = 30;
 
@@ -43,9 +44,9 @@ public class OptionsScreen extends MenuScreen {
 		lKeyBindsEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
 		lKeyBindsEntry.registerClickListener(this, BUTTON_KEY_BINDS);
 
-		final var lGraphicsEntry = new MenuEntry(mScreenManager, this, "Graphics");
-		lGraphicsEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
-		lGraphicsEntry.registerClickListener(this, BUTTON_GRAPHICS);
+		final var lVideoEntry = new MenuEntry(mScreenManager, this, "Video");
+		lVideoEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
+		lVideoEntry.registerClickListener(this, BUTTON_VIDEO);
 
 		final var lAudioSettingsEntry = new MenuEntry(mScreenManager, this, "Audio");
 		lAudioSettingsEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
@@ -55,9 +56,9 @@ public class OptionsScreen extends MenuScreen {
 		lBackEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
 		lBackEntry.registerClickListener(this, BUTTON_BACK);
 
-		lLayout.addMenuEntry(lKeyBindsEntry);
-		lLayout.addMenuEntry(lGraphicsEntry);
+		lLayout.addMenuEntry(lVideoEntry);
 		lLayout.addMenuEntry(lAudioSettingsEntry);
+		lLayout.addMenuEntry(lKeyBindsEntry);
 		lLayout.addMenuEntry(MenuEntry.menuSeparator());
 		lLayout.addMenuEntry(lBackEntry);
 
@@ -94,6 +95,10 @@ public class OptionsScreen extends MenuScreen {
 		switch (mClickAction.consume()) {
 		case BUTTON_AUDIO:
 			screenManager().addScreen(new AudioOptionsScreen(mScreenManager));
+			break;
+
+		case BUTTON_VIDEO:
+			screenManager().addScreen(new VideoOptionsScreen(mScreenManager));
 			break;
 
 		case BUTTON_BACK:
