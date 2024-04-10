@@ -17,9 +17,11 @@ public class NewGameKeyActions extends GameKeyActions {
 	public static final int KEY_BINDING_PRIMARY_RIGHT 		= 1003;
 
 	public NewGameKeyActions() {
-		addNewKeyBinding("Primary Fire", 	KEY_BINDING_PRIMARY_FIRE, 		GLFW.GLFW_KEY_SPACE);
-		addNewKeyBinding("Forward", 		KEY_BINDING_PRIMARY_FORWARD, 	GLFW.GLFW_KEY_W);
-		addNewKeyBinding("Left", 			KEY_BINDING_PRIMARY_LEFT, 		GLFW.GLFW_KEY_A);
-		addNewKeyBinding("Right", 			KEY_BINDING_PRIMARY_RIGHT, 		GLFW.GLFW_KEY_D);
+		addNewKeyboardBinding("Primary Fire", 	KEY_BINDING_PRIMARY_FIRE, 		GLFW.GLFW_KEY_SPACE);
+		addNewKeyboardBinding("Forward", 		KEY_BINDING_PRIMARY_FORWARD, 	GLFW.GLFW_KEY_W);
+		addNewKeyboardBinding("Left", 			KEY_BINDING_PRIMARY_LEFT, 		GLFW.GLFW_KEY_A);
+		addNewKeyboardBinding("Right", 			KEY_BINDING_PRIMARY_RIGHT, 		GLFW.GLFW_KEY_D);
+		
+		addNewGamepadBinding("Primary Fire",    KEY_BINDING_PRIMARY_FORWARD,    GLFW.GLFW_GAMEPAD_BUTTON_X);
 	}
 }
