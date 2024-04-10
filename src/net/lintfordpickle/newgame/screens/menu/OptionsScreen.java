@@ -10,6 +10,7 @@ import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_ALIGNMENT;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_WIDTH;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.AudioOptionsScreen;
+import net.lintfordlib.screenmanager.screens.KeyBindOptionsScreen;
 import net.lintfordlib.screenmanager.screens.VideoOptionsScreen;
 
 public class OptionsScreen extends MenuScreen {
@@ -99,6 +100,10 @@ public class OptionsScreen extends MenuScreen {
 
 		case BUTTON_VIDEO:
 			screenManager().addScreen(new VideoOptionsScreen(mScreenManager));
+			break;
+
+		case BUTTON_KEY_BINDS:
+			screenManager().addScreen(new KeyBindOptionsScreen(mScreenManager));
 			break;
 
 		case BUTTON_BACK:

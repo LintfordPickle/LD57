@@ -5,6 +5,7 @@ import net.lintfordlib.assets.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.fonts.BitmapFontManager;
+import net.lintfordlib.core.input.KeyEventActionManager;
 import net.lintfordlib.renderers.RendererManager;
 import net.lintfordlib.screenmanager.IMenuAction;
 import net.lintfordlib.screenmanager.Screen;
@@ -23,6 +24,7 @@ public abstract class NewGameBase extends LintfordCore {
 
 	protected int mEntityGroupID;
 
+	protected NewGameKeyActions mGameKeyActions;
 	protected ResourceLoader mGameResourceLoader;
 	protected ScreenManager mScreenManager;
 
@@ -50,6 +52,13 @@ public abstract class NewGameBase extends LintfordCore {
 	// ---------------------------------------------
 	// Core-Methods
 	// ---------------------------------------------
+
+	@Override
+	protected void onInitializeInputActions(KeyEventActionManager eventActionManager) {
+		eventActionManager.addGameKeyActions(new NewGameKeyActions());
+
+		super.onInitializeInputActions(eventActionManager);
+	}
 
 	@Override
 	protected void onInitializeBitmapFontSources(BitmapFontManager fontManager) {
