@@ -10,6 +10,7 @@ import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.BaseGameScreen;
+import net.lintfordpickle.newgame.NewGameKeyActions;
 
 public class GameScreen extends BaseGameScreen {
 
@@ -60,6 +61,11 @@ public class GameScreen extends BaseGameScreen {
 
 		// For simple games you could add code to perform the game update logic here.
 		// However usually, components would be updated in dedicated BaseControllers (see the CONTROLLERS Section below).
+
+		if (core.input().eventActionManager().getCurrentControlActionStateTimed(NewGameKeyActions.KEY_BINDING_PRIMARY_FIRE)) {
+			screenManager().toastManager().addMessage(getClass().getSimpleName(), "PRIMARY FIRE", 1500);
+		}
+
 	}
 
 	@Override
