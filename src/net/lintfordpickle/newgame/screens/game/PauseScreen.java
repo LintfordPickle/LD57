@@ -10,6 +10,7 @@ import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.LoadingScreen;
 import net.lintfordpickle.newgame.screens.MainMenu;
 import net.lintfordpickle.newgame.screens.menu.CreditsScreen;
+import net.lintfordpickle.newgame.screens.menu.OptionsScreen;
 
 public class PauseScreen extends MenuScreen {
 
@@ -18,8 +19,9 @@ public class PauseScreen extends MenuScreen {
 	// --------------------------------------
 
 	private static final int SCREEN_BUTTON_CONTINUE = 10;
-	private static final int SCREEN_BUTTON_RESTART = 11;
-	private static final int SCREEN_BUTTON_EXIT = 12;
+	private static final int SCREEN_BUTTON_OPTIONS = 11;
+	private static final int SCREEN_BUTTON_RESTART = 12;
+	private static final int SCREEN_BUTTON_EXIT = 13;
 
 	// --------------------------------------
 	// Variables
@@ -45,6 +47,9 @@ public class PauseScreen extends MenuScreen {
 		final var lContinueEntry = new MenuEntry(mScreenManager, this, "Continue");
 		lContinueEntry.registerClickListener(this, SCREEN_BUTTON_CONTINUE);
 
+		final var lOptionsEntry = new MenuEntry(mScreenManager, this, "Options");
+		lOptionsEntry.registerClickListener(this, SCREEN_BUTTON_OPTIONS);
+
 		final var lRestartEntry = new MenuEntry(mScreenManager, this, "Restart");
 		lRestartEntry.registerClickListener(this, SCREEN_BUTTON_RESTART);
 
@@ -53,6 +58,9 @@ public class PauseScreen extends MenuScreen {
 
 		lLayout.addMenuEntry(lContinueEntry);
 		lLayout.addMenuEntry(lRestartEntry);
+		lLayout.addMenuEntry(MenuEntry.menuSeparator());
+		lLayout.addMenuEntry(lOptionsEntry);
+		lLayout.addMenuEntry(MenuEntry.menuSeparator());
 		lLayout.addMenuEntry(lExitToMenuEntry);
 
 		mLayouts.add(lLayout);
@@ -77,6 +85,10 @@ public class PauseScreen extends MenuScreen {
 		case SCREEN_BUTTON_CONTINUE:
 			exitScreen();
 			return;
+
+		case SCREEN_BUTTON_OPTIONS:
+			screenManager().addScreen(new OptionsScreen(screenManager()));
+			break;
 
 		case SCREEN_BUTTON_RESTART:
 			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), mSceneHeader));
