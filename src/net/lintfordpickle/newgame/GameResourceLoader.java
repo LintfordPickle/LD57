@@ -7,6 +7,7 @@ import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.batching.TextureBatchPCT;
 import net.lintfordlib.core.graphics.textures.Texture;
+import net.lintfordlib.core.time.TimeConstants;
 import net.lintfordlib.options.DisplayManager;
 
 public class GameResourceLoader extends ResourceMapLoader {
@@ -19,16 +20,26 @@ public class GameResourceLoader extends ResourceMapLoader {
 
 	private Texture mLoadingBackgroundTexture;
 	private Texture mLoadingTexture;
+	private float mRunningTime;
+
+	private long mStartTime;
+	private long mMinimumDisplayTimeMs;
 
 	// ---------------------------------------------
 	// Constructors
 	// ---------------------------------------------
 
 	public GameResourceLoader(ResourceManager resourceManager, DisplayManager displayManager) {
+		this(resourceManager, displayManager, 1500);
+	}
+
+	public GameResourceLoader(ResourceManager resourceManager, DisplayManager displayManager, long minimumDisplayTimeMs) {
 		super(resourceManager, displayManager, "res_map.json", ConstantsGame.GAME_RESOURCE_GROUP_ID);
 
 		mTextureBatch = new TextureBatchPCT();
 
+		mStartTime = System.nanoTime();
+		mMinimumDisplayTimeMs = minimumDisplayTimeMs;
 	}
 
 	// ---------------------------------------------
@@ -51,8 +62,6 @@ public class GameResourceLoader extends ResourceMapLoader {
 		mTextureBatch.unloadResources();
 		mLoadingTexture = null;
 	}
-
-	private float mRunningTime;
 
 	@Override
 	protected void onDraw(LintfordCore core) {
@@ -95,9 +104,17 @@ public class GameResourceLoader extends ResourceMapLoader {
 		mResourceManager.fontManager().loadBitmapFont("FONT_NULSHOCK_22", "res/fonts/fontNulshock22.json");
 
 		try {
-			Thread.sleep(3000);
+
+			final var lTimeTakenMs = (System.nanoTime() - mStartTime) / TimeConstants.NanoToMilli;
+			final var lTimeRemaining = mMinimumDisplayTimeMs - lTimeTakenMs;
+
+			System.out.println("time taken: " + lTimeTakenMs);
+			System.out.println("waiting for: " + lTimeRemaining);
+
+			if (lTimeRemaining > 0)
+				Thread.sleep((int) (lTimeRemaining / TimeConstants.NanoToMilli));
+
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
