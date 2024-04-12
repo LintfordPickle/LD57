@@ -8,7 +8,7 @@ public class ConstantsGame {
 	// Setup
 	// ---------------------------------------------
 
-	public static final String FOOTER_TEXT = "(c) 2024 John Hampson";
+	public static final String FOOTER_TEXT = "(c) 2024 LintfordPickle";
 
 	public static final String APPLICATION_NAME = "New Game Template";
 	public static final String WINDOW_TITLE = "New Game Template";
