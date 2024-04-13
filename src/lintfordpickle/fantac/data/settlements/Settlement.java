@@ -1,4 +1,4 @@
-package lintfordpickle.fantac.data;
+package lintfordpickle.fantac.data.settlements;
 
 public class Settlement {
 

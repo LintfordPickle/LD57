@@ -4,9 +4,12 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import lintfordpickle.fantac.NewGameKeyActions;
-import lintfordpickle.fantac.controllers.SettlementController;
+import lintfordpickle.fantac.controllers.JobsController;
+import lintfordpickle.fantac.controllers.SettlementsController;
+import lintfordpickle.fantac.controllers.UnitsController;
 import lintfordpickle.fantac.data.GameWorld;
-import lintfordpickle.fantac.renderers.SettlementRenderer;
+import lintfordpickle.fantac.renderers.SettlementsRenderer;
+import lintfordpickle.fantac.renderers.UnitsRenderer;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -18,10 +21,6 @@ import net.lintfordlib.screenmanager.screens.BaseGameScreen;
 public class GameScreen extends BaseGameScreen {
 
 	// --------------------------------------
-	// Constants
-	// --------------------------------------
-
-	// --------------------------------------
 	// Variables
 	// --------------------------------------
 
@@ -31,14 +30,13 @@ public class GameScreen extends BaseGameScreen {
 	private GameWorld mGameWorld;
 
 	// Controllers
-	private SettlementController mSettlementController;
+	private SettlementsController mSettlementsController;
+	private UnitsController mUnitsController;
+	private JobsController mJobsController;
 
 	// Renderers
-	private SettlementRenderer mSettlementRenderer;
-
-	// --------------------------------------
-	// Properties
-	// --------------------------------------
+	private SettlementsRenderer mSettlementRenderer;
+	private UnitsRenderer mUnitsRenderer;
 
 	// --------------------------------------
 	// Constructor
@@ -83,7 +81,7 @@ public class GameScreen extends BaseGameScreen {
 	@Override
 	public void draw(LintfordCore core) {
 
-		GL11.glClearColor(0.08f, .27f, 0.11f, 1.f);
+		GL11.glClearColor(0.08f, .02f, 0.03f, 1.f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		super.draw(core);
@@ -106,11 +104,13 @@ public class GameScreen extends BaseGameScreen {
 		// setup settlements
 		mGameWorld.settlements().addNewSettlement(0, -130);
 		mGameWorld.settlements().instances().get(0).numWorkers = 20;
-		
+
 		mGameWorld.settlements().addNewSettlement(-250, 0);
 		mGameWorld.settlements().instances().get(1).numWorkers = 50;
-		
+
 		mGameWorld.settlements().addNewSettlement(250, 0);
+
+		mGameWorld.units().addNewUnit(0, 0, 0, 50, 50);
 
 	}
 
@@ -118,32 +118,36 @@ public class GameScreen extends BaseGameScreen {
 
 	@Override
 	protected void createControllers(ControllerManager controllerManager) {
-		mSettlementController = new SettlementController(controllerManager, mGameWorld.settlements(), entityGroupUid());
-
+		mSettlementsController = new SettlementsController(controllerManager, mGameWorld.settlements(), entityGroupUid());
+		mUnitsController = new UnitsController(controllerManager, mGameWorld.units(), entityGroupUid());
+		mJobsController = new JobsController(controllerManager, mGameWorld.jobs(), entityGroupUid());
 	}
 
 	@Override
 	protected void initializeControllers(LintfordCore core) {
-		mSettlementController.initialize(core);
-
+		mSettlementsController.initialize(core);
+		mUnitsController.initialize(core);
+		mJobsController.initialize(core);
 	}
 
 	// RENDERERS -----------------------------------
 
 	@Override
 	protected void createRenderers(LintfordCore core) {
-		mSettlementRenderer = new SettlementRenderer(mRendererManager, entityGroupUid());
-
+		mSettlementRenderer = new SettlementsRenderer(mRendererManager, entityGroupUid());
+		mUnitsRenderer = new UnitsRenderer(mRendererManager, entityGroupUid());
 	}
 
 	@Override
 	protected void initializeRenderers(LintfordCore core) {
 		mSettlementRenderer.initialize(core);
+		mUnitsRenderer.initialize(core);
 	}
 
 	@Override
 	protected void loadRendererResources(ResourceManager resourceManager) {
 		mSettlementRenderer.loadResources(resourceManager);
+		mUnitsRenderer.loadResources(resourceManager);
 
 	}
 }

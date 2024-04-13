@@ -1,7 +1,7 @@
 package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
-import lintfordpickle.fantac.controllers.SettlementController;
+import lintfordpickle.fantac.controllers.SettlementsController;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.debug.Debug;
@@ -10,7 +10,7 @@ import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManager;
 
-public class SettlementRenderer extends BaseRenderer {
+public class SettlementsRenderer extends BaseRenderer {
 
 	// --------------------------------------
 	// Constants
@@ -22,8 +22,7 @@ public class SettlementRenderer extends BaseRenderer {
 	// Variables
 	// --------------------------------------
 
-	private SettlementController mSettlementController;
-
+	private SettlementsController mSettlementController;
 	private SpriteSheetDefinition mGameSpritesheet;
 
 	// --------------------------------------
@@ -39,7 +38,7 @@ public class SettlementRenderer extends BaseRenderer {
 	// Constructor
 	// --------------------------------------
 
-	public SettlementRenderer(RendererManager rendererManager, int entityGroupUid) {
+	public SettlementsRenderer(RendererManager rendererManager, int entityGroupUid) {
 		super(rendererManager, RENDERER_NAME, entityGroupUid);
 	}
 
@@ -51,7 +50,7 @@ public class SettlementRenderer extends BaseRenderer {
 	public void initialize(LintfordCore core) {
 
 		final var lControllerManager = core.controllerManager();
-		mSettlementController = (SettlementController) lControllerManager.getControllerByNameRequired(SettlementController.CONTROLLER_NAME, entityGroupID());
+		mSettlementController = (SettlementsController) lControllerManager.getControllerByNameRequired(SettlementsController.CONTROLLER_NAME, entityGroupID());
 
 	}
 
@@ -65,8 +64,20 @@ public class SettlementRenderer extends BaseRenderer {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
-		return super.handleInput(core);
 
+		if (core.input().mouse().tryAcquireMouseLeftClickTimed(hashCode(), this)) {
+			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
+			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
+
+			final var lSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
+			if (lSettlement != null) {
+				System.out.println("Settlement selected: " + lSettlement.uid);
+				return true;
+			}
+
+		}
+
+		return super.handleInput(core);
 	}
 
 	@Override

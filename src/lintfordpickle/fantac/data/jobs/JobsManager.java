@@ -1,8 +1,8 @@
-package lintfordpickle.fantac.data.settlements;
+package lintfordpickle.fantac.data.jobs;
 
 import net.lintfordlib.core.entities.instances.EnclosedInstanceManager;
 
-public class SettlementsManager extends EnclosedInstanceManager<BaseSettlement> {
+public class JobsManager extends EnclosedInstanceManager<JobAction> {
 
 	// --------------------------------------
 	// Constants
@@ -20,7 +20,7 @@ public class SettlementsManager extends EnclosedInstanceManager<BaseSettlement> 
 	// Constructor
 	// --------------------------------------
 
-	public SettlementsManager() {
+	public JobsManager() {
 
 	}
 
@@ -28,14 +28,13 @@ public class SettlementsManager extends EnclosedInstanceManager<BaseSettlement> 
 	// Methods
 	// --------------------------------------
 
-	public void addNewSettlement(float worldX, float worldY) {
-		final var lNewSettlement = getFreeInstanceItem();
-
-		lNewSettlement.initialise(worldX, worldY);
+	public void startNewJob(int teamUid, int fromUid, int toUid, int numUnits) {
+		final var lJobInstance = getFreeInstanceItem();
+		lJobInstance.initialise(teamUid, fromUid, toUid, numUnits);
 	}
 
 	@Override
-	protected BaseSettlement createPoolObjectInstance() {
-		return new BaseSettlement(getNewInstanceUID());
+	protected JobAction createPoolObjectInstance() {
+		return new JobAction(getNewInstanceUID());
 	}
 }

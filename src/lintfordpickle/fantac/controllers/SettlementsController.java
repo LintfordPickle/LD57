@@ -2,12 +2,14 @@ package lintfordpickle.fantac.controllers;
 
 import org.lwjgl.glfw.GLFW;
 
+import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.settlements.SettlementsManager;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
+import net.lintfordlib.core.maths.CollisionExtensions;
 
-public class SettlementController extends BaseController {
+public class SettlementsController extends BaseController {
 
 	// --------------------------------------
 	// Constants
@@ -33,7 +35,7 @@ public class SettlementController extends BaseController {
 	// Constructor
 	// --------------------------------------
 
-	public SettlementController(ControllerManager controllerManager, SettlementsManager settlements, int entityGroupUid) {
+	public SettlementsController(ControllerManager controllerManager, SettlementsManager settlements, int entityGroupUid) {
 		super(controllerManager, CONTROLLER_NAME, entityGroupUid);
 
 		mSettlementsManager = settlements;
@@ -59,9 +61,27 @@ public class SettlementController extends BaseController {
 
 			if (core.input().keyboard().isKeyDown(GLFW.GLFW_KEY_G))
 				lSettlement.reset();
-
-			System.out.println("(" + lSettlement.uid + ") num workers: " + lSettlement.numWorkers);
 		}
+	}
+
+	// --------------------------------------
+	// Methods
+	// --------------------------------------
+
+	public BaseSettlement getSettlementAtPosition(float worldX, float worldY, float radius) {
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var lSettlement = lSettlements.get(i);
+
+			if (lSettlement.isAssigned() == false)
+				continue;
+
+			if (CollisionExtensions.intersectsCircleCircle(lSettlement.x, lSettlement.y, lSettlement.radius, worldX, worldY, radius))
+				return lSettlement;
+		}
+
+		return null;
 	}
 
 }

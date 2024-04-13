@@ -1,4 +1,4 @@
-package lintfordpickle.fantac.data;
+package lintfordpickle.fantac.data.settlements;
 
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.entities.instances.ClosedPooledBaseData;
@@ -14,7 +14,7 @@ public class BaseSettlement extends ClosedPooledBaseData {
 
 	public float x;
 	public float y;
-	public final float radius = 32.f;
+	public final float radius = 38.f;
 
 	public double rengenWorkerPool;
 	public float rengenRateMod = .01f;
@@ -46,14 +46,10 @@ public class BaseSettlement extends ClosedPooledBaseData {
 
 		final double baseReg = 0.1;
 		final double workerMod = .2;
-
 		final double workForceBonus = MathHelper.clampd((t * workerMod * numWorkers), 0., 10.);
-
 		final double a = t + (t * baseReg) + workForceBonus;
 
 		rengenWorkerPool += a;
-
-		System.out.println("" + rengenWorkerPool);
 
 		final var lFullWorkers = (int) Math.floor(rengenWorkerPool);
 		if (lFullWorkers > 0) {
