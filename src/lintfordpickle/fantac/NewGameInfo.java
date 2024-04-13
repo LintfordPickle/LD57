@@ -47,6 +47,6 @@ public class NewGameInfo implements GameInfo {
 
 	@Override
 	public boolean windowResizeable() {
-		return false;
+		return true;
 	}
 }

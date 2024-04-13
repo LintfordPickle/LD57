@@ -32,6 +32,21 @@ public class SettlementsController extends BaseController {
 		return mSettlementsManager;
 	}
 
+	public int getBuildingCount(int teamUid) {
+		int result = 0;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			if (lSettlements.get(i).isAssigned() == false)
+				continue;
+
+			if (lSettlements.get(i).teamUid == teamUid)
+				result++;
+
+		}
+		return result;
+	}
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -90,10 +105,10 @@ public class SettlementsController extends BaseController {
 			return;
 
 		// TODO: Attacking / Defending calcs
-		
+
 		if (settlement.numSoldiers > 0) {
 			// atacking soldiers
-			settlement.numWorkers--;
+			settlement.numSoldiers--;
 		} else {
 			// attacking workers
 			settlement.numWorkers--;

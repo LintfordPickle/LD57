@@ -68,8 +68,8 @@ public class BaseSettlement extends ClosedPooledBaseData {
 	private void updateTown(LintfordCore core) {
 		final double t = core.gameTime().elapsedTimeMilli() * .0001f;
 
-		final double baseReg = .1f;
-		final double workerMod = .02;
+		final double baseReg = .3f; // .2
+		final double workerMod = .03;
 		final double workForceBonus = MathHelper.clampd((t * workerMod * numWorkers), 0., 10.);
 		final double a = t + (t * baseReg) + workForceBonus;
 

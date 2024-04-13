@@ -1,11 +1,12 @@
 {
-  "outputDataFilename": "D:\\dev\\java\\ludumdare\\55 - Tempest\\projects\\Tempest\\res\\spritesheets\\spritesheetParticles.json",
-  "outputImageFilename": "D:\\dev\\java\\ludumdare\\55 - Tempest\\projects\\Tempest\\res\\textures\\textureParticles.png",
-  "workingDirectory": "D:\\dev\\java\\ludumdare\\55 - Tempest\\projects\\Tempest\\raw\\spritesheets\\particles",
+  "outputDataFilename": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\Fantac\\res\\spritesheets\\spritesheetParticles.json",
+  "outputNameDataFilename": null,
+  "outputImageFilename": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\Fantac\\res\\textures\\textureParticles.png",
+  "workingDirectory": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\Fantac\\raw\\spritesheets\\particles",
   "spriteSheetName": "SPRITESHEET_PARTICLES",
   "textureName": "TEXTURE_PARTICLES",
   "dataPackageName": "enter.package.name",
-  "exportDataFile": false,
+  "exportDataFile": true,
   "exportTextureFile": true,
   "exportNamesFile": true,
   "sortMode": "Area",
@@ -15,14 +16,14 @@
   "trim": false,
   "allowRotations": false,
   "spritePadding": 2,
-  "textureWidthMax": 512,
-  "textureWidthActual": 512,
-  "textureHeightMax": 512,
-  "textureHeightActual": 512,
+  "textureWidthMax": 128,
+  "textureWidthActual": 128,
+  "textureHeightMax": 128,
+  "textureHeightActual": 127,
   "forcePoTTextures": true,
   "autoSizeTexture": false,
   "itemFilenames": [
-    "D:\\dev\\java\\ludumdare\\55 - Tempest\\projects\\Tempest\\raw\\spritesheets\\particles\\*.*"
+    "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\Fantac\\raw\\spritesheets\\particles\\*.*"
   ],
   "animationItems": {}
 }

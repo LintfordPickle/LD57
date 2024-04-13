@@ -27,6 +27,12 @@ public class Unit extends OpenPooledBaseData {
 	public float vx;
 	public float vy;
 
+	// flags
+	public boolean highStep;
+
+	public float stimer; // step
+	public float ptimer; // particle
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -61,8 +67,4 @@ public class Unit extends OpenPooledBaseData {
 		x = 0;
 		y = 0;
 	}
-
-	// --------------------------------------
-	// Methods
-	// --------------------------------------
 }

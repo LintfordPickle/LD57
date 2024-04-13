@@ -4,8 +4,11 @@ import lintfordpickle.fantac.data.units.UnitDefinitions;
 import lintfordpickle.fantac.data.units.UnitsManager;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
+import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.maths.CollisionExtensions;
+import net.lintfordlib.core.maths.RandomNumbers;
+import net.lintfordlib.core.particles.particlesystems.ParticleSystemInstance;
 
 public class UnitsController extends BaseController {
 
@@ -23,6 +26,9 @@ public class UnitsController extends BaseController {
 
 	private AnimationController mAnimationController;
 	private SettlementsController mSettlementsController;
+	private ParticleFrameworkController mParticleFrameworkController;
+
+	private ParticleSystemInstance mFootstepsParticles;
 
 	// --------------------------------------
 	// Properties
@@ -53,6 +59,10 @@ public class UnitsController extends BaseController {
 		final var lControllerManager = core.controllerManager();
 		mAnimationController = (AnimationController) lControllerManager.getControllerByNameRequired(AnimationController.CONTROLLER_NAME, entityGroupUid());
 		mSettlementsController = (SettlementsController) lControllerManager.getControllerByNameRequired(SettlementsController.CONTROLLER_NAME, entityGroupUid());
+		mParticleFrameworkController = (ParticleFrameworkController) lControllerManager.getControllerByNameRequired(ParticleFrameworkController.CONTROLLER_NAME, entityGroupUid());
+
+		final var lParticleSystemManager = mParticleFrameworkController.particleFrameworkData().particleSystemManager();
+		mFootstepsParticles = lParticleSystemManager.getParticleSystemByName("PS_FOOTSTEPS");
 	}
 
 	@Override
@@ -81,6 +91,14 @@ public class UnitsController extends BaseController {
 
 			u.vx *= 0.97f;
 			u.vy *= 0.97f;
+
+			if (u.ptimer > 0.f)
+				u.ptimer -= dt;
+
+			if (u.ptimer <= 0.f && RandomNumbers.getRandomChance(20.f) && mFootstepsParticles != null) {
+				u.ptimer = RandomNumbers.random(20, 100);
+				mFootstepsParticles.spawnParticle(u.x, u.y, -0.5f, u.vx, u.vy);
+			}
 
 			// process on destination reached
 			if (CollisionExtensions.intersectsCircleCircle(u.to.x, u.to.y, u.to.radius, u.x, u.y, u.radius)) {

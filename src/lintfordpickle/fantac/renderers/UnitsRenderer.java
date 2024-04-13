@@ -2,11 +2,14 @@ package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.controllers.UnitsController;
+import lintfordpickle.fantac.data.Team;
 import lintfordpickle.fantac.data.units.UnitDefinitions;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.core.graphics.sprites.SpriteFrame;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
+import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManager;
 
@@ -87,31 +90,51 @@ public class UnitsRenderer extends BaseRenderer {
 		for (int i = 0; i < lNumUnitInstance; i++) {
 			final var lUnitInstance = lUnits.get(i);
 
-			final var lSpriteFrame = mGameSpritesheet.getSpriteFrame("PEON");
+			final var lSpriteFrame = getSpriteFrame(Team.getTeamByUid(lUnitInstance.teamUid), lUnitInstance.unitTypeUid);
 			final var lWidth = lSpriteFrame.width() * 2.f;
 			final var lHeight = lSpriteFrame.height() * 2.f;
 
-			final var xx = lUnitInstance.x;
-			final var yy = lUnitInstance.y;
+			if (lUnitInstance.stimer > 0.f)
+				lUnitInstance.stimer -= core.gameTime().elapsedTimeMilli();
+			else
+				lUnitInstance.highStep = false;
 
-			switch (lUnitInstance.unitTypeUid) {
-			default:
-			case UnitDefinitions.UNIT_WORKER_UID:
-				lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("PEON"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
-				break;
-
-			case UnitDefinitions.UNIT_SOLDIER_UID:
-				lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SOLDIER"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
-				break;
+			if (lUnitInstance.highStep == false && lUnitInstance.stimer <= 0.f) {
+				lUnitInstance.highStep = RandomNumbers.getRandomChance(30);
+				lUnitInstance.stimer = 100.f;
 			}
 
-//			if (ConstantsGame.IS_DEBUG_RENDERING_MODE) {
-//				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), xx, yy, lUnitInstance.radius);
-//			}
+			final var xx = lUnitInstance.x;
+			final var yy = lUnitInstance.y - (lUnitInstance.highStep ? 3.f : 0.f);
+
+			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lSpriteFrame, xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 		}
 
 		lSpriteBatch.end();
+	}
 
+	private SpriteFrame getSpriteFrame(Team team, int unitTypeUid) {
+		switch (team.raceUid) {
+		case Team.RACE_HUMANS:
+			switch (unitTypeUid) {
+			case UnitDefinitions.UNIT_WORKER_UID:
+				return mGameSpritesheet.getSpriteFrame("WORKER");
+			case UnitDefinitions.UNIT_SOLDIER_UID:
+				return mGameSpritesheet.getSpriteFrame("SOLDIER");
+			}
+			break;
+
+		case Team.RACE_DEMONS:
+			switch (unitTypeUid) {
+			case UnitDefinitions.UNIT_WORKER_UID:
+				return mGameSpritesheet.getSpriteFrame("PEON");
+			case UnitDefinitions.UNIT_SOLDIER_UID:
+				return mGameSpritesheet.getSpriteFrame("DEMON");
+			}
+			break;
+		}
+
+		return null;
 	}
 
 }
