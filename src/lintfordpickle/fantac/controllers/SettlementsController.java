@@ -89,9 +89,18 @@ public class SettlementsController extends BaseController {
 		if (settlement.teamUid == unit.teamUid)
 			return;
 
-		settlement.numWorkers--;
-		if (settlement.numWorkers <= 0) {
-			settlement.teamUid = unit.teamUid;
+		// TODO: Attacking / Defending calcs
+		
+		if (settlement.numSoldiers > 0) {
+			// atacking soldiers
+			settlement.numWorkers--;
+		} else {
+			// attacking workers
+			settlement.numWorkers--;
+		}
+
+		if (settlement.numSoldiers <= 0 && settlement.numWorkers <= 0) {
+			settlement.teamUid = unit.teamUid; // conquered
 		}
 	}
 }

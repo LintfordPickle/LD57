@@ -26,9 +26,9 @@ public class UnitsManager extends OpenPoolInstanceManager<Unit> {
 	// Methods
 	// --------------------------------------
 
-	public void addNewUnit(int teamUid, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy) {
+	public void addNewUnit(int teamUid, int unitType, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy) {
 		final var lNewUnitInstance = getFreePooledItem();
-		lNewUnitInstance.initialise(teamUid, from, to, worldX, worldY, vx, vy);
+		lNewUnitInstance.initialise(teamUid, unitType, from, to, worldX, worldY, vx, vy);
 
 		unitsInField.add(lNewUnitInstance);
 	}

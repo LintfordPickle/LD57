@@ -15,6 +15,8 @@ public class Unit extends OpenPooledBaseData {
 
 	public int teamUid;
 
+	public int unitTypeUid;
+
 	public BaseSettlement from;
 	public BaseSettlement to;
 
@@ -37,8 +39,9 @@ public class Unit extends OpenPooledBaseData {
 	// Core-Methods
 	// --------------------------------------
 
-	public void initialise(int teamUid, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy) {
+	public void initialise(int teamUid, int unitTypeUid, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy) {
 		this.teamUid = teamUid;
+		this.unitTypeUid = unitTypeUid;
 
 		this.from = from;
 		this.to = to;

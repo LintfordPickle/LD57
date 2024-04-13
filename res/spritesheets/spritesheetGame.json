@@ -15,6 +15,30 @@
       "anchorPoints": []
     },
     {
+      "name": "PENTAGRAM",
+      "x": 0,
+      "y": 42,
+      "w": 32,
+      "h": 32,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "TOWN",
+      "x": 34,
+      "y": 42,
+      "w": 32,
+      "h": 32,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
       "name": "FLAG00",
       "x": 34,
       "y": 8,
@@ -135,6 +159,18 @@
       "anchorPoints": []
     },
     {
+      "name": "SOLDIER",
+      "x": 106,
+      "y": 8,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
       "name": "PEON",
       "x": 48,
       "y": 0,
@@ -154,12 +190,12 @@
       "frameDuration": 50,
       "minimumViableRuntime": 0,
       "animationSpriteIndices": [
-        5,
-        6,
         7,
         8,
         9,
-        10
+        10,
+        11,
+        12
       ]
     }
   }

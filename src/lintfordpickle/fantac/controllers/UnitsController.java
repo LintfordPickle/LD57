@@ -1,5 +1,6 @@
 package lintfordpickle.fantac.controllers;
 
+import lintfordpickle.fantac.data.units.UnitDefinitions;
 import lintfordpickle.fantac.data.units.UnitsManager;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
@@ -86,7 +87,11 @@ public class UnitsController extends BaseController {
 
 				// If this settlement is on own team, then add to it
 				if (u.teamUid == u.to.teamUid) {
-					u.to.numWorkers++;
+					if (u.unitTypeUid == UnitDefinitions.UNIT_WORKER_UID)
+						u.to.numWorkers++;
+					else if (u.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID)
+						u.to.numSoldiers++;
+
 					mUnitsManager.returnPooledItem(lUnitInstances.remove(i));
 
 				} else {

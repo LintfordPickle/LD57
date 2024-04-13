@@ -2,9 +2,9 @@ package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.controllers.UnitsController;
+import lintfordpickle.fantac.data.units.UnitDefinitions;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.renderers.BaseRenderer;
@@ -94,7 +94,16 @@ public class UnitsRenderer extends BaseRenderer {
 			final var xx = lUnitInstance.x;
 			final var yy = lUnitInstance.y;
 
-			lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("PEON"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+			switch (lUnitInstance.unitTypeUid) {
+			default:
+			case UnitDefinitions.UNIT_WORKER_UID:
+				lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("PEON"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+				break;
+
+			case UnitDefinitions.UNIT_SOLDIER_UID:
+				lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SOLDIER"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+				break;
+			}
 
 //			if (ConstantsGame.IS_DEBUG_RENDERING_MODE) {
 //				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), xx, yy, lUnitInstance.radius);

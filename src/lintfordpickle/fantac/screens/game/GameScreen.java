@@ -10,6 +10,7 @@ import lintfordpickle.fantac.controllers.SettlementsController;
 import lintfordpickle.fantac.controllers.UnitsController;
 import lintfordpickle.fantac.data.GameWorld;
 import lintfordpickle.fantac.data.Teams;
+import lintfordpickle.fantac.data.settlements.SettlementType;
 import lintfordpickle.fantac.renderers.AnimationRenderer;
 import lintfordpickle.fantac.renderers.SettlementsRenderer;
 import lintfordpickle.fantac.renderers.UnitsRenderer;
@@ -108,24 +109,22 @@ public class GameScreen extends BaseGameScreen {
 	protected void createData(DataManager dataManager) {
 		mGameWorld = new GameWorld();
 
+		// team 1 - humans
+		// team 2 - demons
+
 		// setup settlements
-		final var lSettlement00 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, -300, -200);
-		lSettlement00.numWorkers = 5;
+		final var lSettlement00 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, SettlementType.SETTLEMENT_TYPE_TOWN, -300, -200);
+		final var lSettlement02 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, SettlementType.SETTLEMENT_TYPE_TOWN, -330, 170);
+		final var lSettlement06 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_NONE_UID, SettlementType.SETTLEMENT_TYPE_CASTLE, -150, -50);
 
-		final var lSettlement01 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, -300, 0);
-		lSettlement01.numWorkers = 5;
+		lSettlement00.numWorkers = 10;
+		lSettlement02.numWorkers = 10;
 
-		final var lSettlement02 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, -300, 200);
-		lSettlement02.numWorkers = 5;
-
-		final var lSettlement03 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, +300, -200);
-		lSettlement03.numWorkers = 5;
-
-		final var lSettlement04 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, +300, -0);
-		lSettlement04.numWorkers = 5;
-
-		final var lSettlement05 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, +300, 200);
-		lSettlement05.numWorkers = 5;
+		final var lSettlement03 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -200);
+		final var lSettlement04 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, SettlementType.SETTLEMENT_TYPE_SCHOOL, +350, -0);
+		final var lSettlement05 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
+		lSettlement03.numWorkers = 7;
+		lSettlement05.numWorkers = 7;
 
 	}
 
@@ -151,8 +150,8 @@ public class GameScreen extends BaseGameScreen {
 
 	@Override
 	protected void createRenderers(LintfordCore core) {
-		mSettlementRenderer = new SettlementsRenderer(mRendererManager, entityGroupUid());
 		mUnitsRenderer = new UnitsRenderer(mRendererManager, entityGroupUid());
+		mSettlementRenderer = new SettlementsRenderer(mRendererManager, entityGroupUid());
 		mAnimationRenderer = new AnimationRenderer(mRendererManager, mAnimationController, entityGroupUid());
 	}
 

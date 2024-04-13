@@ -2,6 +2,7 @@ package lintfordpickle.fantac.controllers;
 
 import lintfordpickle.fantac.data.jobs.JobsManager;
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
+import lintfordpickle.fantac.data.units.UnitDefinitions;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -27,6 +28,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 
 	private float mMouseCooldownTimer;
 	private boolean mProcessingInput;
+	private int mProcessingArmyUnitType;
 	private BaseSettlement mFoundFromSettlement;
 	private BaseSettlement mFoundToSettlement;
 
@@ -63,7 +65,23 @@ public class JobsController extends BaseController implements IInputProcessor {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
-		if (core.input().mouse().tryAcquireMouseLeftClickTimed(hashCode(), this)) {
+		if (!mProcessingInput && core.input().mouse().tryAcquireMouseLeftClickTimed(hashCode(), this)) {
+			mProcessingArmyUnitType = UnitDefinitions.UNIT_WORKER_UID;
+
+			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
+			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
+
+			mFoundFromSettlement = mSettlementsController.getSettlementAtPosition(lMouseX, lMouseY, 4);
+			if (mFoundFromSettlement != null) {
+				mProcessingInput = true;
+
+				return true;
+			}
+		}
+
+		if (!mProcessingInput && core.input().mouse().tryAcquireMouseRightClickTimed(hashCode(), this)) {
+			mProcessingArmyUnitType = UnitDefinitions.UNIT_SOLDIER_UID;
+
 			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
 			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
 
@@ -76,7 +94,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 		}
 
 		if (mProcessingInput) {
-			if (core.input().mouse().isMouseLeftButtonDown() == false) {
+			if (core.input().mouse().isMouseLeftButtonDown() == false && core.input().mouse().isMouseRightButtonDown() == false) {
 				// check if a settlement was selected (under the mouse)
 				final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
 				final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
@@ -85,12 +103,13 @@ public class JobsController extends BaseController implements IInputProcessor {
 				if (mFoundToSettlement != null) {
 
 					if (mFoundFromSettlement != mFoundToSettlement)
-						sendArmy(mFoundFromSettlement.teamUid, mFoundFromSettlement, mFoundToSettlement);
+						sendArmy(mFoundFromSettlement.teamUid, mProcessingArmyUnitType, mFoundFromSettlement, mFoundToSettlement);
 				}
 
 				mProcessingInput = false;
 				mFoundFromSettlement = null;
 				mFoundToSettlement = null;
+				mProcessingArmyUnitType = -1;
 
 			} else {
 				// Still working on it
@@ -126,7 +145,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 				final var rvx = RandomNumbers.random(-(float) Math.PI, (float) Math.PI);
 				final var rvy = RandomNumbers.random(-(float) Math.PI, (float) Math.PI);
 
-				mUnitsController.unitsManager().addNewUnit(lJobToProcess.teamUid, lFrom, lTo, lFrom.x, lFrom.y, rvx * launchFor, rvy * launchFor);
+				mUnitsController.unitsManager().addNewUnit(lJobToProcess.teamUid, lJobToProcess.unitType, lFrom, lTo, lFrom.x, lFrom.y, rvx * launchFor, rvy * launchFor);
 
 				lJobToProcess.deployTimer = 0;
 				lJobToProcess.numUnits--;
@@ -141,14 +160,23 @@ public class JobsController extends BaseController implements IInputProcessor {
 	// Methods
 	// --------------------------------------
 
-	private void sendArmy(int teamUid, BaseSettlement from, BaseSettlement to) {
+	private void sendArmy(int teamUid, int unitType, BaseSettlement from, BaseSettlement to) {
 		final var lNewJob = mJobsManager.getFreeInstanceItem();
 
-		// Get and reduce the settlement numbers
-		final var lTotalWorkers = from.numWorkers / 2;
-		from.numWorkers -= lTotalWorkers;
+		int numToSend = 0;
 
-		lNewJob.initialise(teamUid, from, to, lTotalWorkers);
+		switch (unitType) {
+		case UnitDefinitions.UNIT_WORKER_UID:
+			numToSend = from.numWorkers / 2;
+			from.numWorkers -= numToSend;
+			break;
+		case UnitDefinitions.UNIT_SOLDIER_UID:
+			numToSend = from.numSoldiers / 2;
+			from.numSoldiers -= numToSend;
+			break;
+		}
+
+		lNewJob.initialise(teamUid, unitType, from, to, numToSend);
 	}
 
 	// --------------------------------------

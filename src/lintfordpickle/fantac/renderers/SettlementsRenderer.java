@@ -2,10 +2,11 @@ package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.controllers.SettlementsController;
+import lintfordpickle.fantac.data.settlements.SettlementType;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.core.graphics.sprites.SpriteFrame;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManager;
@@ -85,7 +86,21 @@ public class SettlementsRenderer extends BaseRenderer {
 				continue;
 
 			// TODO: Draw the settlements
-			final var lSpriteFrame = mGameSpritesheet.getSpriteFrame("CASTLE");
+
+			SpriteFrame lSpriteFrame = null;
+			if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_TOWN) {
+				lSpriteFrame = mGameSpritesheet.getSpriteFrame("TOWN");
+			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_CASTLE) {
+				lSpriteFrame = mGameSpritesheet.getSpriteFrame("CASTLE");
+			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_SCHOOL) {
+				lSpriteFrame = mGameSpritesheet.getSpriteFrame("PENTAGRAM");
+			} else {
+				lSpriteFrame = mGameSpritesheet.getSpriteFrame("CAMP");
+			}
+
+			if (lSpriteFrame == null)
+				continue;
+
 			final var lWidth = lSpriteFrame.width() * 2.f;
 			final var lHeight = lSpriteFrame.height() * 2.f;
 
@@ -94,21 +109,26 @@ public class SettlementsRenderer extends BaseRenderer {
 
 			// Draw settlement base
 
-			lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("CASTLE"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lSpriteFrame, xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 
 			// Draw team flag
 			final var teamName = "FLAG0" + lSettlement.teamUid;
 			final var lFlagSpriteFrame = mGameSpritesheet.getSpriteFrame(teamName);
-			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lFlagSpriteFrame, xx, yy - lHeight * .5f, lFlagSpriteFrame.width() * 2.f, lFlagSpriteFrame.height() * 2.f, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+			if (lFlagSpriteFrame != null)
+				lSpriteBatch.drawAroundCenter(mGameSpritesheet, lFlagSpriteFrame, xx, yy - lHeight * .5f, lFlagSpriteFrame.width() * 2.f, lFlagSpriteFrame.height() * 2.f, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 
-			// Draw stats
+			// Draw workers / peons
 
 			final var lNumWorkersTextWidth = lFontUnit.getStringWidth("" + lSettlement.numWorkers);
 			lFontUnit.drawText("" + lSettlement.numWorkers, xx - lNumWorkersTextWidth * .5f, yy + lWidth * .5f, -0.1f, 1.f);
 
-			if (ConstantsGame.IS_DEBUG_RENDERING_MODE) {
-				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), xx, yy, lSettlement.radius);
-			}
+			final var lNumSoldiersTextWidth = lFontUnit.getStringWidth("" + lSettlement.numSoldiers);
+
+			lFontUnit.drawText("" + lSettlement.numSoldiers, xx - lNumSoldiersTextWidth * .5f, yy + lWidth * .5f + lFontUnit.fontHeight() + 2, -0.1f, ColorConstants.BLUE, 1.f);
+
+//			if (ConstantsGame.IS_DEBUG_RENDERING_MODE) {
+//				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), xx, yy, lSettlement.radius);
+//			}
 
 		}
 

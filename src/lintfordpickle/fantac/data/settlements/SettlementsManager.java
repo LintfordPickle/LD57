@@ -32,10 +32,10 @@ public class SettlementsManager extends EnclosedInstanceManager<BaseSettlement> 
 	// Methods
 	// --------------------------------------
 
-	public BaseSettlement addNewSettlement(int teamUid, float worldX, float worldY) {
+	public BaseSettlement addNewSettlement(int teamUid, int typeUid, float worldX, float worldY) {
 		final var lNewSettlement = getFreeInstanceItem();
 
-		lNewSettlement.initialise(teamUid, worldX, worldY);
+		lNewSettlement.initialise(teamUid, typeUid, worldX, worldY);
 		return lNewSettlement;
 	}
 
