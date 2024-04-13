@@ -1,4 +1,4 @@
-package net.lintfordpickle.newgame;
+package lintfordpickle.fantac;
 
 import net.lintfordlib.GameInfo;
 import net.lintfordlib.GameVersion;

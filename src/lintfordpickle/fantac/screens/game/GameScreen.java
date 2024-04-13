@@ -1,8 +1,9 @@
-package net.lintfordpickle.newgame.screens.game;
+package lintfordpickle.fantac.screens.game;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
+import lintfordpickle.fantac.NewGameKeyActions;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -10,7 +11,6 @@ import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.BaseGameScreen;
-import net.lintfordpickle.newgame.NewGameKeyActions;
 
 public class GameScreen extends BaseGameScreen {
 

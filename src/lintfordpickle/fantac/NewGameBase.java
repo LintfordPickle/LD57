@@ -1,5 +1,8 @@
-package net.lintfordpickle.newgame;
+package lintfordpickle.fantac;
 
+import lintfordpickle.fantac.screens.MainMenu;
+import lintfordpickle.fantac.screens.menu.CreditsScreen;
+import lintfordpickle.fantac.screens.menu.MainMenuBackground;
 import net.lintfordlib.GameInfo;
 import net.lintfordlib.assets.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
@@ -12,9 +15,6 @@ import net.lintfordlib.screenmanager.Screen;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.TimedIntroScreen;
 import net.lintfordlib.screenmanager.toast.ToastManager;
-import net.lintfordpickle.newgame.screens.MainMenu;
-import net.lintfordpickle.newgame.screens.menu.CreditsScreen;
-import net.lintfordpickle.newgame.screens.menu.MainMenuBackground;
 
 public abstract class NewGameBase extends LintfordCore {
 

@@ -1,5 +1,8 @@
-package net.lintfordpickle.newgame.screens.game;
+package lintfordpickle.fantac.screens.game;
 
+import lintfordpickle.fantac.screens.MainMenu;
+import lintfordpickle.fantac.screens.menu.CreditsScreen;
+import lintfordpickle.fantac.screens.menu.OptionsScreen;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.MenuEntry;
@@ -8,9 +11,6 @@ import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.FILLTYPE;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.LoadingScreen;
-import net.lintfordpickle.newgame.screens.MainMenu;
-import net.lintfordpickle.newgame.screens.menu.CreditsScreen;
-import net.lintfordpickle.newgame.screens.menu.OptionsScreen;
 
 public class PauseScreen extends MenuScreen {
 

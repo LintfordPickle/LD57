@@ -1,4 +1,4 @@
-package net.lintfordpickle.newgame.screens.menu;
+package lintfordpickle.fantac.screens.menu;
 
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;

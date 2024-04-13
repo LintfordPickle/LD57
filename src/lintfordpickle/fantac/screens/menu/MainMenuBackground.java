@@ -1,4 +1,4 @@
-package net.lintfordpickle.newgame.screens.menu;
+package lintfordpickle.fantac.screens.menu;
 
 import org.lwjgl.opengl.GL11;
 

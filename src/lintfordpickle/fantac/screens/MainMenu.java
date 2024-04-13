@@ -1,5 +1,7 @@
-package net.lintfordpickle.newgame.screens;
+package lintfordpickle.fantac.screens;
 
+import lintfordpickle.fantac.screens.game.GameScreen;
+import lintfordpickle.fantac.screens.menu.OptionsScreen;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
@@ -12,8 +14,6 @@ import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_ALIGNMENT;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_WIDTH;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.LoadingScreen;
-import net.lintfordpickle.newgame.screens.game.GameScreen;
-import net.lintfordpickle.newgame.screens.menu.OptionsScreen;
 
 public class MainMenu extends MenuScreen {
 
@@ -24,7 +24,6 @@ public class MainMenu extends MenuScreen {
 	private static final String TITLE = null;
 
 	private static final int SCREEN_BUTTON_PLAY = 11;
-	private static final int SCREEN_BUTTON_EDITOR = 12;
 	private static final int SCREEN_BUTTON_HELP = 13;
 	private static final int SCREEN_BUTTON_OPTIONS = 14;
 	private static final int SCREEN_BUTTON_EXIT = 15;
@@ -53,10 +52,6 @@ public class MainMenu extends MenuScreen {
 		lStartGameEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
 		lStartGameEntry.registerClickListener(this, SCREEN_BUTTON_PLAY);
 
-		final var lEditorEntry = new MenuEntry(mScreenManager, this, "Editor");
-		lEditorEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
-		lEditorEntry.registerClickListener(this, SCREEN_BUTTON_EDITOR);
-
 		final var lHelpButton = new MenuEntry(mScreenManager, this, "Instructions");
 		lHelpButton.horizontalFillType(FILLTYPE.FILL_CONTAINER);
 		lHelpButton.registerClickListener(this, SCREEN_BUTTON_HELP);
@@ -71,7 +66,6 @@ public class MainMenu extends MenuScreen {
 
 		mMainMenuListBox.addMenuEntry(lStartGameEntry);
 		mMainMenuListBox.addMenuEntry(MenuEntry.menuSeparator());
-		mMainMenuListBox.addMenuEntry(lEditorEntry);
 		mMainMenuListBox.addMenuEntry(MenuEntry.menuSeparator());
 		mMainMenuListBox.addMenuEntry(lHelpButton);
 		mMainMenuListBox.addMenuEntry(lOptionsEntry);
@@ -118,7 +112,6 @@ public class MainMenu extends MenuScreen {
 	public void draw(LintfordCore core) {
 		super.draw(core);
 
-		
 	}
 
 	// ---------------------------------------------
@@ -135,11 +128,6 @@ public class MainMenu extends MenuScreen {
 
 			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), lNewSceneHeader));
 			screenManager().createLoadingScreen(new LoadingScreen(screenManager(), true, lLoadingScreen));
-			break;
-		}
-
-		case SCREEN_BUTTON_EDITOR: {
-
 			break;
 		}
 
