@@ -4,6 +4,9 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import lintfordpickle.fantac.NewGameKeyActions;
+import lintfordpickle.fantac.controllers.SettlementController;
+import lintfordpickle.fantac.data.GameWorld;
+import lintfordpickle.fantac.renderers.SettlementRenderer;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -23,6 +26,15 @@ public class GameScreen extends BaseGameScreen {
 	// --------------------------------------
 
 	private SceneHeader mSceneHeader;
+
+	// Data
+	private GameWorld mGameWorld;
+
+	// Controllers
+	private SettlementController mSettlementController;
+
+	// Renderers
+	private SettlementRenderer mSettlementRenderer;
 
 	// --------------------------------------
 	// Properties
@@ -89,7 +101,16 @@ public class GameScreen extends BaseGameScreen {
 
 	@Override
 	protected void createData(DataManager dataManager) {
-		// TODO Auto-generated method stub
+		mGameWorld = new GameWorld();
+
+		// setup settlements
+		mGameWorld.settlements().addNewSettlement(0, -130);
+		mGameWorld.settlements().instances().get(0).numWorkers = 20;
+		
+		mGameWorld.settlements().addNewSettlement(-250, 0);
+		mGameWorld.settlements().instances().get(1).numWorkers = 50;
+		
+		mGameWorld.settlements().addNewSettlement(250, 0);
 
 	}
 
@@ -97,13 +118,13 @@ public class GameScreen extends BaseGameScreen {
 
 	@Override
 	protected void createControllers(ControllerManager controllerManager) {
-		// TODO Auto-generated method stub
+		mSettlementController = new SettlementController(controllerManager, mGameWorld.settlements(), entityGroupUid());
 
 	}
 
 	@Override
 	protected void initializeControllers(LintfordCore core) {
-		// TODO Auto-generated method stub
+		mSettlementController.initialize(core);
 
 	}
 
@@ -111,19 +132,18 @@ public class GameScreen extends BaseGameScreen {
 
 	@Override
 	protected void createRenderers(LintfordCore core) {
-		// TODO Auto-generated method stub
+		mSettlementRenderer = new SettlementRenderer(mRendererManager, entityGroupUid());
 
 	}
 
 	@Override
 	protected void initializeRenderers(LintfordCore core) {
-		// TODO Auto-generated method stub
-
+		mSettlementRenderer.initialize(core);
 	}
 
 	@Override
 	protected void loadRendererResources(ResourceManager resourceManager) {
-		// TODO Auto-generated method stub
+		mSettlementRenderer.loadResources(resourceManager);
 
 	}
 }

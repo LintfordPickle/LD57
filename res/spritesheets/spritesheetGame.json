@@ -1,0 +1,31 @@
+{
+  "spriteSheetName": "SPRITESHEET_GAME",
+  "textureName": "TEXTURE_GAME",
+  "spriteFrames": [
+    {
+      "name": "CASTLE",
+      "x": 0,
+      "y": 0,
+      "w": 32,
+      "h": 32,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "PEON",
+      "x": 34,
+      "y": 0,
+      "w": 4,
+      "h": 4,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    }
+  ],
+  "animationFramesMap": {}
+}

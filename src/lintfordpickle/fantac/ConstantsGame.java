@@ -31,6 +31,8 @@ public class ConstantsGame {
 	// ---------------------------------------------
 
 	public static final boolean IS_DEBUG_MODE = true;
+	public static final boolean IS_DEBUG_RENDERING_MODE = true;
+
 	public static final boolean CAMERA_DEBUG_MODE = true;
 
 }

@@ -1,0 +1,29 @@
+{
+  "outputDataFilename": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\res\\spritesheets\\spritesheetGame.json",
+  "outputNameDataFilename": null,
+  "outputImageFilename": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\res\\textures\\textureGame.png",
+  "workingDirectory": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\raw\\spritesheets\\game",
+  "spriteSheetName": "SPRITESHEET_GAME",
+  "textureName": "TEXTURE_GAME",
+  "dataPackageName": "enter.package.name",
+  "exportDataFile": true,
+  "exportTextureFile": true,
+  "exportNamesFile": true,
+  "sortMode": "Area",
+  "borderPadding": 0,
+  "shapeOutlines": false,
+  "crop": false,
+  "trim": false,
+  "allowRotations": false,
+  "spritePadding": 2,
+  "textureWidthMax": 256,
+  "textureWidthActual": 256,
+  "textureHeightMax": 256,
+  "textureHeightActual": 255,
+  "forcePoTTextures": true,
+  "autoSizeTexture": false,
+  "itemFilenames": [
+    "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\raw\\spritesheets\\game\\*.*"
+  ],
+  "animationItems": {}
+}

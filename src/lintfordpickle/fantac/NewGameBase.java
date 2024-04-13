@@ -1,6 +1,7 @@
 package lintfordpickle.fantac;
 
 import lintfordpickle.fantac.screens.MainMenu;
+import lintfordpickle.fantac.screens.game.GameScreen;
 import lintfordpickle.fantac.screens.menu.CreditsScreen;
 import lintfordpickle.fantac.screens.menu.MainMenuBackground;
 import net.lintfordlib.GameInfo;
@@ -10,10 +11,7 @@ import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.fonts.BitmapFontManager;
 import net.lintfordlib.core.input.KeyEventActionManager;
 import net.lintfordlib.renderers.RendererManager;
-import net.lintfordlib.screenmanager.IMenuAction;
-import net.lintfordlib.screenmanager.Screen;
 import net.lintfordlib.screenmanager.ScreenManager;
-import net.lintfordlib.screenmanager.screens.TimedIntroScreen;
 import net.lintfordlib.screenmanager.toast.ToastManager;
 
 public abstract class NewGameBase extends LintfordCore {
@@ -107,21 +105,11 @@ public abstract class NewGameBase extends LintfordCore {
 
 	@Override
 	protected void finializeAppSetup() {
-		final var lSplashScreen = new TimedIntroScreen(mScreenManager, "res/textures/textureSplashScreen.png", 1000, 3000);
-		lSplashScreen.stretchBackgroundToFit(true);
-
-		lSplashScreen.setTimerFinishedCallback(new IMenuAction() {
-			@Override
-			public void TimerFinished(Screen pScreen) {
-				mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
-				mScreenManager.addScreen(new CreditsScreen(mScreenManager));
-				mScreenManager.addScreen(new MainMenu(mScreenManager));
-			}
-		});
-
-		mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
-		mScreenManager.addScreen(new CreditsScreen(mScreenManager));
-		mScreenManager.addScreen(new MainMenu(mScreenManager));
+//		mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
+//		mScreenManager.addScreen(new CreditsScreen(mScreenManager));
+//		mScreenManager.addScreen(new MainMenu(mScreenManager));
+		
+		mScreenManager.addScreen(new GameScreen(mScreenManager, null));
 	}
 
 	@Override
