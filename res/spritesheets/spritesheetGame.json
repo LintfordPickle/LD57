@@ -5,7 +5,7 @@
     {
       "name": "CASTLE",
       "x": 0,
-      "y": 0,
+      "y": 8,
       "w": 32,
       "h": 32,
       "pivotX": 0,
@@ -15,8 +15,128 @@
       "anchorPoints": []
     },
     {
-      "name": "PEON",
+      "name": "FLAG00",
       "x": 34,
+      "y": 8,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "FLAG01",
+      "x": 52,
+      "y": 8,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "FLAG02",
+      "x": 70,
+      "y": 8,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "FLAG03",
+      "x": 88,
+      "y": 8,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "ATTACK_00",
+      "x": 0,
+      "y": 0,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "ATTACK_01",
+      "x": 8,
+      "y": 0,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "ATTACK_02",
+      "x": 16,
+      "y": 0,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "ATTACK_03",
+      "x": 24,
+      "y": 0,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "ATTACK_04",
+      "x": 32,
+      "y": 0,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "ATTACK_05",
+      "x": 40,
+      "y": 0,
+      "w": 6,
+      "h": 6,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
+      "name": "PEON",
+      "x": 48,
       "y": 0,
       "w": 4,
       "h": 4,
@@ -27,5 +147,20 @@
       "anchorPoints": []
     }
   ],
-  "animationFramesMap": {}
+  "animationFramesMap": {
+    "attack": {
+      "animationName": "attack",
+      "loopAnimation": false,
+      "frameDuration": 50,
+      "minimumViableRuntime": 0,
+      "animationSpriteIndices": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    }
+  }
 }

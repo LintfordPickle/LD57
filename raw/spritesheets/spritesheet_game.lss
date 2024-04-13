@@ -19,11 +19,24 @@
   "textureWidthMax": 256,
   "textureWidthActual": 256,
   "textureHeightMax": 256,
-  "textureHeightActual": 255,
+  "textureHeightActual": 256,
   "forcePoTTextures": true,
   "autoSizeTexture": false,
   "itemFilenames": [
     "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\raw\\spritesheets\\game\\*.*"
   ],
-  "animationItems": {}
+  "animationItems": {
+    "attack": {
+      "loopAnimation": false,
+      "frameDuration": 50,
+      "animationSprites": [
+        "ATTACK_00",
+        "ATTACK_01",
+        "ATTACK_02",
+        "ATTACK_03",
+        "ATTACK_04",
+        "ATTACK_05"
+      ]
+    }
+  }
 }

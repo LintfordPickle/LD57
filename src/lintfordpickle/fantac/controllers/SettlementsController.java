@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.settlements.SettlementsManager;
+import lintfordpickle.fantac.data.units.Unit;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -84,4 +85,13 @@ public class SettlementsController extends BaseController {
 		return null;
 	}
 
+	public void attackSettlement(BaseSettlement settlement, Unit unit) {
+		if (settlement.teamUid == unit.teamUid)
+			return;
+
+		settlement.numWorkers--;
+		if (settlement.numWorkers <= 0) {
+			settlement.teamUid = unit.teamUid;
+		}
+	}
 }

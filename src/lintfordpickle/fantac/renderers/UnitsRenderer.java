@@ -82,7 +82,7 @@ public class UnitsRenderer extends BaseRenderer {
 		lSpriteBatch.begin(core.gameCamera());
 
 		final var lUnitsManager = mUnitsController.unitsManager();
-		final var lUnits = lUnitsManager.instances();
+		final var lUnits = lUnitsManager.unitsInField;
 		final var lNumUnitInstance = lUnits.size();
 		for (int i = 0; i < lNumUnitInstance; i++) {
 			final var lUnitInstance = lUnits.get(i);

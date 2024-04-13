@@ -12,6 +12,8 @@ public class BaseSettlement extends ClosedPooledBaseData {
 
 	public int numWorkers;
 
+	public int teamUid;
+
 	public float x;
 	public float y;
 	public final float radius = 38.f;
@@ -32,7 +34,9 @@ public class BaseSettlement extends ClosedPooledBaseData {
 	// Core-Methods
 	// --------------------------------------
 
-	public void initialise(float worldX, float worldY) {
+	public void initialise(int teamUid, float worldX, float worldY) {
+		this.teamUid = teamUid;
+
 		this.x = worldX;
 		this.y = worldY;
 	}

@@ -3,23 +3,16 @@ package lintfordpickle.fantac.data.units;
 import java.util.ArrayList;
 import java.util.List;
 
+import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import net.lintfordlib.core.entities.instances.OpenPoolInstanceManager;
 
 public class UnitsManager extends OpenPoolInstanceManager<Unit> {
-
-	// --------------------------------------
-	// Constants
-	// --------------------------------------
 
 	// --------------------------------------
 	// Variables
 	// --------------------------------------
 
 	public final List<Unit> unitsInField = new ArrayList<>();
-
-	// --------------------------------------
-	// Properties
-	// --------------------------------------
 
 	// --------------------------------------
 	// Constructor
@@ -33,9 +26,9 @@ public class UnitsManager extends OpenPoolInstanceManager<Unit> {
 	// Methods
 	// --------------------------------------
 
-	public void addNewUnit(int teamUid, int fromSettlementUid, int toSettlementUid, float worldX, float worldY) {
+	public void addNewUnit(int teamUid, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy) {
 		final var lNewUnitInstance = getFreePooledItem();
-		lNewUnitInstance.initialise(teamUid, fromSettlementUid, toSettlementUid, worldX, worldY);
+		lNewUnitInstance.initialise(teamUid, from, to, worldX, worldY, vx, vy);
 
 		unitsInField.add(lNewUnitInstance);
 	}

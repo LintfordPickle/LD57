@@ -5,18 +5,6 @@ import net.lintfordlib.core.entities.instances.EnclosedInstanceManager;
 public class JobsManager extends EnclosedInstanceManager<JobAction> {
 
 	// --------------------------------------
-	// Constants
-	// --------------------------------------
-
-	// --------------------------------------
-	// Variables
-	// --------------------------------------
-
-	// --------------------------------------
-	// Properties
-	// --------------------------------------
-
-	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
@@ -27,11 +15,6 @@ public class JobsManager extends EnclosedInstanceManager<JobAction> {
 	// --------------------------------------
 	// Methods
 	// --------------------------------------
-
-	public void startNewJob(int teamUid, int fromUid, int toUid, int numUnits) {
-		final var lJobInstance = getFreeInstanceItem();
-		lJobInstance.initialise(teamUid, fromUid, toUid, numUnits);
-	}
 
 	@Override
 	protected JobAction createPoolObjectInstance() {

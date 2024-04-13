@@ -1,5 +1,5 @@
 set location=%~dp0
 
-aseprite -b --ignore-empty <absolute path to aseprite file> --save-as "%location%spritesheets\<filename>\{layer}\{tag} 00.png"
+aseprite -b --ignore-empty "D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\raw\aseprite\attack.aseprite" --save-as "D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\raw\spritesheets\game\attack00.png"
 
 pause

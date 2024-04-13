@@ -5,16 +5,20 @@ import net.lintfordlib.core.entities.instances.EnclosedInstanceManager;
 public class SettlementsManager extends EnclosedInstanceManager<BaseSettlement> {
 
 	// --------------------------------------
-	// Constants
-	// --------------------------------------
-
-	// --------------------------------------
-	// Variables
-	// --------------------------------------
-
-	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public BaseSettlement getSettlementByUid(int uid) {
+		final int lNumInstances = mInstances.size();
+		for (int i = 0; i < lNumInstances; i++) {
+			if (mInstances.get(i).isAssigned()) {
+				if (mInstances.get(i).uid == uid)
+					return mInstances.get(i);
+			}
+		}
+
+		return null;
+	}
 
 	// --------------------------------------
 	// Constructor
@@ -28,10 +32,11 @@ public class SettlementsManager extends EnclosedInstanceManager<BaseSettlement> 
 	// Methods
 	// --------------------------------------
 
-	public void addNewSettlement(float worldX, float worldY) {
+	public BaseSettlement addNewSettlement(int teamUid, float worldX, float worldY) {
 		final var lNewSettlement = getFreeInstanceItem();
 
-		lNewSettlement.initialise(worldX, worldY);
+		lNewSettlement.initialise(teamUid, worldX, worldY);
+		return lNewSettlement;
 	}
 
 	@Override

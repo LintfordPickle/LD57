@@ -1,9 +1,6 @@
 package lintfordpickle.fantac;
 
-import lintfordpickle.fantac.screens.MainMenu;
 import lintfordpickle.fantac.screens.game.GameScreen;
-import lintfordpickle.fantac.screens.menu.CreditsScreen;
-import lintfordpickle.fantac.screens.menu.MainMenuBackground;
 import net.lintfordlib.GameInfo;
 import net.lintfordlib.assets.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
@@ -88,7 +85,7 @@ public abstract class NewGameBase extends LintfordCore {
 	protected void onLoadResources() {
 		super.onLoadResources();
 
-		mGameResourceLoader = new GameResourceLoader(mResourceManager, config().display());
+		mGameResourceLoader = new GameResourceLoader(mResourceManager, config().display(), 0);
 
 		mGameResourceLoader.loadResources(mResourceManager);
 		mGameResourceLoader.setMinimumTimeToShowLogosMs(ConstantsGame.IS_DEBUG_MODE ? 0 : 2000);
@@ -108,7 +105,7 @@ public abstract class NewGameBase extends LintfordCore {
 //		mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
 //		mScreenManager.addScreen(new CreditsScreen(mScreenManager));
 //		mScreenManager.addScreen(new MainMenu(mScreenManager));
-		
+
 		mScreenManager.addScreen(new GameScreen(mScreenManager, null));
 	}
 

@@ -4,10 +4,13 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import lintfordpickle.fantac.NewGameKeyActions;
+import lintfordpickle.fantac.controllers.AnimationController;
 import lintfordpickle.fantac.controllers.JobsController;
 import lintfordpickle.fantac.controllers.SettlementsController;
 import lintfordpickle.fantac.controllers.UnitsController;
 import lintfordpickle.fantac.data.GameWorld;
+import lintfordpickle.fantac.data.Teams;
+import lintfordpickle.fantac.renderers.AnimationRenderer;
 import lintfordpickle.fantac.renderers.SettlementsRenderer;
 import lintfordpickle.fantac.renderers.UnitsRenderer;
 import net.lintfordlib.assets.ResourceManager;
@@ -15,6 +18,7 @@ import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
+import net.lintfordlib.renderers.sprites.FafAnimationRenderer;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.BaseGameScreen;
 
@@ -33,10 +37,13 @@ public class GameScreen extends BaseGameScreen {
 	private SettlementsController mSettlementsController;
 	private UnitsController mUnitsController;
 	private JobsController mJobsController;
+	private AnimationController mAnimationController;
 
 	// Renderers
 	private SettlementsRenderer mSettlementRenderer;
 	private UnitsRenderer mUnitsRenderer;
+	private FafAnimationRenderer mFafAnimationRenderer;
+	private AnimationRenderer mAnimationRenderer;
 
 	// --------------------------------------
 	// Constructor
@@ -102,15 +109,23 @@ public class GameScreen extends BaseGameScreen {
 		mGameWorld = new GameWorld();
 
 		// setup settlements
-		mGameWorld.settlements().addNewSettlement(0, -130);
-		mGameWorld.settlements().instances().get(0).numWorkers = 20;
+		final var lSettlement00 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, -300, -200);
+		lSettlement00.numWorkers = 5;
 
-		mGameWorld.settlements().addNewSettlement(-250, 0);
-		mGameWorld.settlements().instances().get(1).numWorkers = 50;
+		final var lSettlement01 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, -300, 0);
+		lSettlement01.numWorkers = 5;
 
-		mGameWorld.settlements().addNewSettlement(250, 0);
+		final var lSettlement02 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_1_UID, -300, 200);
+		lSettlement02.numWorkers = 5;
 
-		mGameWorld.units().addNewUnit(0, 0, 0, 50, 50);
+		final var lSettlement03 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, +300, -200);
+		lSettlement03.numWorkers = 5;
+
+		final var lSettlement04 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, +300, -0);
+		lSettlement04.numWorkers = 5;
+
+		final var lSettlement05 = mGameWorld.settlements().addNewSettlement(Teams.TEAM_2_UID, +300, 200);
+		lSettlement05.numWorkers = 5;
 
 	}
 
@@ -121,6 +136,7 @@ public class GameScreen extends BaseGameScreen {
 		mSettlementsController = new SettlementsController(controllerManager, mGameWorld.settlements(), entityGroupUid());
 		mUnitsController = new UnitsController(controllerManager, mGameWorld.units(), entityGroupUid());
 		mJobsController = new JobsController(controllerManager, mGameWorld.jobs(), entityGroupUid());
+		mAnimationController = new AnimationController(controllerManager, entityGroupUid());
 	}
 
 	@Override
@@ -128,6 +144,7 @@ public class GameScreen extends BaseGameScreen {
 		mSettlementsController.initialize(core);
 		mUnitsController.initialize(core);
 		mJobsController.initialize(core);
+		mAnimationController.initialize(core);
 	}
 
 	// RENDERERS -----------------------------------
@@ -136,18 +153,21 @@ public class GameScreen extends BaseGameScreen {
 	protected void createRenderers(LintfordCore core) {
 		mSettlementRenderer = new SettlementsRenderer(mRendererManager, entityGroupUid());
 		mUnitsRenderer = new UnitsRenderer(mRendererManager, entityGroupUid());
+		mAnimationRenderer = new AnimationRenderer(mRendererManager, mAnimationController, entityGroupUid());
 	}
 
 	@Override
 	protected void initializeRenderers(LintfordCore core) {
 		mSettlementRenderer.initialize(core);
 		mUnitsRenderer.initialize(core);
+		mAnimationRenderer.initialize(core);
 	}
 
 	@Override
 	protected void loadRendererResources(ResourceManager resourceManager) {
 		mSettlementRenderer.loadResources(resourceManager);
 		mUnitsRenderer.loadResources(resourceManager);
+		mAnimationRenderer.loadResources(resourceManager);
 
 	}
 }

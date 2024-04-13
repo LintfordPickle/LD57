@@ -63,24 +63,6 @@ public class SettlementsRenderer extends BaseRenderer {
 	}
 
 	@Override
-	public boolean handleInput(LintfordCore core) {
-
-		if (core.input().mouse().tryAcquireMouseLeftClickTimed(hashCode(), this)) {
-			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
-			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
-
-			final var lSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
-			if (lSettlement != null) {
-				System.out.println("Settlement selected: " + lSettlement.uid);
-				return true;
-			}
-
-		}
-
-		return super.handleInput(core);
-	}
-
-	@Override
 	public void update(LintfordCore core) {
 		super.update(core);
 
@@ -110,10 +92,19 @@ public class SettlementsRenderer extends BaseRenderer {
 			final var xx = lSettlement.x;
 			final var yy = lSettlement.y;
 
+			// Draw settlement base
+
 			lSpriteBatch.drawAroundCenter(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("CASTLE"), xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 
+			// Draw team flag
+			final var teamName = "FLAG0" + lSettlement.teamUid;
+			final var lFlagSpriteFrame = mGameSpritesheet.getSpriteFrame(teamName);
+			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lFlagSpriteFrame, xx, yy - lHeight * .5f, lFlagSpriteFrame.width() * 2.f, lFlagSpriteFrame.height() * 2.f, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+
+			// Draw stats
+
 			final var lNumWorkersTextWidth = lFontUnit.getStringWidth("" + lSettlement.numWorkers);
-			lFontUnit.drawText("" + lSettlement.numWorkers, xx - lNumWorkersTextWidth * .5f, yy - lWidth * .5f, -0.1f, 1.f);
+			lFontUnit.drawText("" + lSettlement.numWorkers, xx - lNumWorkersTextWidth * .5f, yy + lWidth * .5f, -0.1f, 1.f);
 
 			if (ConstantsGame.IS_DEBUG_RENDERING_MODE) {
 				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), xx, yy, lSettlement.radius);
