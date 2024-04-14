@@ -1,7 +1,6 @@
 package lintfordpickle.fantac.controllers;
 
 import lintfordpickle.fantac.data.IGameStateListener;
-import lintfordpickle.fantac.data.Team;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -18,7 +17,7 @@ public class GameStateController extends BaseController {
 	// Variables
 	// --------------------------------------
 
-	private SettlementsController mSettlementsController;
+	private SettlementController mSettlementController;
 	private IGameStateListener mGameStateListener;
 
 	// --------------------------------------
@@ -46,7 +45,7 @@ public class GameStateController extends BaseController {
 		super.initialize(core);
 
 		final var lControllerManager = core.controllerManager();
-		mSettlementsController = (SettlementsController) lControllerManager.getControllerByNameRequired(SettlementsController.CONTROLLER_NAME, entityGroupUid());
+		mSettlementController = (SettlementController) lControllerManager.getControllerByNameRequired(SettlementController.CONTROLLER_NAME, entityGroupUid());
 	}
 
 	@Override
@@ -55,12 +54,12 @@ public class GameStateController extends BaseController {
 
 		// Cuurent win/lose condition is control of all buidlings on the map
 
-		if (mSettlementsController.getBuildingCount(Team.TEAM_1_UID) == 0) {
-			mGameStateListener.onGameLost(Team.TEAM_1_UID);
-		}
+//		if (mSettlementsController.getBuildingCount(Team.TEAM_1_UID) == 0) {
+//			mGameStateListener.onGameLost(Team.TEAM_1_UID);
+//		}
 
-		if (mSettlementsController.getBuildingCount(Team.TEAM_2_UID) == 0) {
-			mGameStateListener.onGameWon(Team.TEAM_1_UID);
-		}
+//		if (mSettlementsController.getBuildingCount(Team.TEAM_2_UID) == 0) {
+//			mGameStateListener.onGameWon(Team.TEAM_1_UID);
+//		}
 	}
 }

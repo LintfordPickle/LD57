@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tree>
+  <Node id="Node_0" name="BtSettlement" type="Root">
+    <Children>
+      <Node id="Node_1" type="Repeat">
+        <Children>
+          <Node id="Node_2" type="Selector">
+            <Children>
+              <Node id="Node_3" type="Sequence">
+                <Children>
+                  <Node id="Node_4" name="CheckGlobalExpand" type="Condition" />
+                  <Node id="Node_5" name="ComputeClosestNeutralSettlement" type="Action" />
+                  <Node id="Node_6" name="CheckCanAffordLocalExpand" type="Condition" />
+                  <Node id="Node_7" name="MoveTroops" type="Action">
+                    <Parameters>
+                      <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
+                      <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
+                      <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
+                      <Parameter name="unitType" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID</Parameter>
+                    </Parameters>
+                  </Node>
+                </Children>
+              </Node>
+              <Node id="Node_8" type="Sequence">
+                <Children>
+                  <Node id="Node_9" name="CheckGlobalAttack" type="Condition" />
+                  <Node id="Node_10" name="ComputeWeakestEnemySettlement" type="Action" />
+                  <Node id="Node_11" name="CheckCanAffordLocalAttack" type="Condition" />
+                  <Node id="Node_12" name="MoveTroops" type="Action">
+                    <Parameters>
+                      <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
+                      <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
+                      <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
+                      <Parameter name="unitType" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID</Parameter>
+                    </Parameters>
+                  </Node>
+                </Children>
+              </Node>
+            </Children>
+          </Node>
+        </Children>
+      </Node>
+    </Children>
+  </Node>
+</Tree>
+

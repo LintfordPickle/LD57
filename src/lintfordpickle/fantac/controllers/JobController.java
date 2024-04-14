@@ -2,6 +2,7 @@ package lintfordpickle.fantac.controllers;
 
 import lintfordpickle.fantac.data.jobs.JobsManager;
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
+import lintfordpickle.fantac.data.teams.TeamRace;
 import lintfordpickle.fantac.data.units.UnitDefinitions;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
@@ -9,7 +10,7 @@ import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.input.mouse.IInputProcessor;
 import net.lintfordlib.core.maths.RandomNumbers;
 
-public class JobsController extends BaseController implements IInputProcessor {
+public class JobController extends BaseController implements IInputProcessor {
 
 	// --------------------------------------
 	// Constants
@@ -23,8 +24,9 @@ public class JobsController extends BaseController implements IInputProcessor {
 
 	private JobsManager mJobsManager;
 
-	private UnitsController mUnitsController;
-	private SettlementsController mSettlementsController;
+	private TeamController mTeamController;
+	private UnitController mUnitController;
+	private SettlementController mSettlementController;
 
 	private float mMouseCooldownTimer;
 	private boolean mProcessingInput;
@@ -44,7 +46,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 	// Constructor
 	// --------------------------------------
 
-	public JobsController(ControllerManager controllerManager, JobsManager jobsManager, int entityGroupUid) {
+	public JobController(ControllerManager controllerManager, JobsManager jobsManager, int entityGroupUid) {
 		super(controllerManager, CONTROLLER_NAME, entityGroupUid);
 
 		mJobsManager = jobsManager;
@@ -59,8 +61,10 @@ public class JobsController extends BaseController implements IInputProcessor {
 		super.initialize(core);
 
 		final var lControllerManager = core.controllerManager();
-		mSettlementsController = (SettlementsController) lControllerManager.getControllerByNameRequired(SettlementsController.CONTROLLER_NAME, entityGroupUid());
-		mUnitsController = (UnitsController) lControllerManager.getControllerByNameRequired(UnitsController.CONTROLLER_NAME, entityGroupUid());
+
+		mSettlementController = (SettlementController) lControllerManager.getControllerByNameRequired(SettlementController.CONTROLLER_NAME, entityGroupUid());
+		mUnitController = (UnitController) lControllerManager.getControllerByNameRequired(UnitController.CONTROLLER_NAME, entityGroupUid());
+		mTeamController = (TeamController) lControllerManager.getControllerByNameRequired(TeamController.CONTROLLER_NAME, entityGroupUid());
 	}
 
 	@Override
@@ -71,11 +75,13 @@ public class JobsController extends BaseController implements IInputProcessor {
 			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
 			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
 
-			mFoundFromSettlement = mSettlementsController.getSettlementAtPosition(lMouseX, lMouseY, 4);
+			mFoundFromSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
 			if (mFoundFromSettlement != null) {
-				mProcessingInput = true;
-
-				return true;
+				final var lOwner = mTeamController.getTeamByUid(mFoundFromSettlement.teamUid);
+				if (lOwner != null && lOwner.playerControlled) {
+					mProcessingInput = true;
+					return true;
+				}
 			}
 		}
 
@@ -85,7 +91,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
 			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
 
-			mFoundFromSettlement = mSettlementsController.getSettlementAtPosition(lMouseX, lMouseY, 4);
+			mFoundFromSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
 			if (mFoundFromSettlement != null) {
 				mProcessingInput = true;
 
@@ -99,11 +105,12 @@ public class JobsController extends BaseController implements IInputProcessor {
 				final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
 				final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
 
-				mFoundToSettlement = mSettlementsController.getSettlementAtPosition(lMouseX, lMouseY, 4);
+				mFoundToSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
 				if (mFoundToSettlement != null) {
 
+					// TODO: This isn't using the correct race - we are just assuming the player is playing as demons
 					if (mFoundFromSettlement != mFoundToSettlement)
-						sendArmy(mFoundFromSettlement.teamUid, mProcessingArmyUnitType, mFoundFromSettlement, mFoundToSettlement);
+						sendArmy(mFoundFromSettlement.teamUid, TeamRace.RACE_DEMONS, mProcessingArmyUnitType, mFoundFromSettlement, mFoundToSettlement);
 				}
 
 				mProcessingInput = false;
@@ -145,7 +152,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 				final var rvx = RandomNumbers.random(-(float) Math.PI, (float) Math.PI);
 				final var rvy = RandomNumbers.random(-(float) Math.PI, (float) Math.PI);
 
-				mUnitsController.unitsManager().addNewUnit(lJobToProcess.teamUid, lJobToProcess.unitType, lFrom, lTo, lFrom.x, lFrom.y, rvx * launchFor, rvy * launchFor);
+				mUnitController.unitsManager().addNewUnit(lJobToProcess.teamUid, lJobToProcess.raceUid, lJobToProcess.unitType, lFrom, lTo, lFrom.x, lFrom.y, rvx * launchFor, rvy * launchFor);
 
 				lJobToProcess.deployTimer = 0;
 				lJobToProcess.numUnits--;
@@ -160,7 +167,11 @@ public class JobsController extends BaseController implements IInputProcessor {
 	// Methods
 	// --------------------------------------
 
-	private void sendArmy(int teamUid, int unitType, BaseSettlement from, BaseSettlement to) {
+	// initalises a new move job. instantly reduces settlement pop. count, but slowly releases units over time.
+	public void sendArmy(int teamUid, int raceUid, int unitType, BaseSettlement from, BaseSettlement to) {
+		if (from == null || to == null)
+			return;
+
 		final var lNewJob = mJobsManager.getFreeInstanceItem();
 
 		int numToSend = 0;
@@ -176,7 +187,7 @@ public class JobsController extends BaseController implements IInputProcessor {
 			break;
 		}
 
-		lNewJob.initialise(teamUid, unitType, from, to, numToSend);
+		lNewJob.initialise(teamUid, raceUid, unitType, from, to, numToSend);
 	}
 
 	// --------------------------------------

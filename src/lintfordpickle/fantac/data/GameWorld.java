@@ -2,18 +2,16 @@ package lintfordpickle.fantac.data;
 
 import lintfordpickle.fantac.data.jobs.JobsManager;
 import lintfordpickle.fantac.data.settlements.SettlementsManager;
+import lintfordpickle.fantac.data.teams.TeamManager;
 import lintfordpickle.fantac.data.units.UnitsManager;
 
 public class GameWorld {
 
 	// --------------------------------------
-	// Constants
-	// --------------------------------------
-
-	// --------------------------------------
 	// Variables
 	// --------------------------------------
 
+	private TeamManager mTeamManager;
 	private JobsManager mJobsManager;
 	private UnitsManager mUnitsManager;
 	private SettlementsManager mSettlementsManager;
@@ -21,6 +19,10 @@ public class GameWorld {
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public TeamManager team() {
+		return mTeamManager;
+	}
 
 	public JobsManager jobs() {
 		return mJobsManager;
@@ -39,6 +41,7 @@ public class GameWorld {
 	// --------------------------------------
 
 	public GameWorld() {
+		mTeamManager = new TeamManager();
 		mJobsManager = new JobsManager();
 		mUnitsManager = new UnitsManager();
 		mSettlementsManager = new SettlementsManager();

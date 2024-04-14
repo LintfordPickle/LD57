@@ -1,0 +1,15 @@
+<Configuration>
+	<BTLibrary>
+		<BTFile>D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\res\def\jbt\jbtSettlement.xbt</BTFile>
+		<BTFile>D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\res\def\jbt\jbtTeam.xbt</BTFile>
+		
+		<LibraryClassName>BtLibrary</LibraryClassName>
+		<LibraryPackage>lintfordpickle.fantac.data.ai.bts</LibraryPackage>
+		<LibraryOutputDirectory>D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\src\lintfordpickle\fantac\data\ai\bts</LibraryOutputDirectory>
+		
+		<DomainFile>D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\raw\jbt\summoning_mmpm.xml</DomainFile>
+		
+		<ModelActionsPackage>lintfordpickle.fantac.data.ai.modelactions</ModelActionsPackage>
+		<ModelConditionsPackage>lintfordpickle.fantac.data.ai.modelconditions</ModelConditionsPackage>
+	</BTLibrary>
+</Configuration>

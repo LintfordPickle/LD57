@@ -1,8 +1,9 @@
 package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
-import lintfordpickle.fantac.controllers.UnitsController;
-import lintfordpickle.fantac.data.Team;
+import lintfordpickle.fantac.controllers.TeamController;
+import lintfordpickle.fantac.controllers.UnitController;
+import lintfordpickle.fantac.data.teams.TeamRace;
 import lintfordpickle.fantac.data.units.UnitDefinitions;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
@@ -25,8 +26,8 @@ public class UnitsRenderer extends BaseRenderer {
 	// Variables
 	// --------------------------------------
 
-	private UnitsController mUnitsController;
-
+	private UnitController mUnitController;
+	private TeamController mTeamController;
 	private SpriteSheetDefinition mGameSpritesheet;
 
 	// --------------------------------------
@@ -35,7 +36,7 @@ public class UnitsRenderer extends BaseRenderer {
 
 	@Override
 	public boolean isInitialized() {
-		return mUnitsController != null;
+		return mUnitController != null;
 	}
 
 	// --------------------------------------
@@ -54,7 +55,7 @@ public class UnitsRenderer extends BaseRenderer {
 	public void initialize(LintfordCore core) {
 
 		final var lControllerManager = core.controllerManager();
-		mUnitsController = (UnitsController) lControllerManager.getControllerByNameRequired(UnitsController.CONTROLLER_NAME, entityGroupID());
+		mUnitController = (UnitController) lControllerManager.getControllerByNameRequired(UnitController.CONTROLLER_NAME, entityGroupID());
 
 	}
 
@@ -84,28 +85,28 @@ public class UnitsRenderer extends BaseRenderer {
 
 		lSpriteBatch.begin(core.gameCamera());
 
-		final var lUnitsManager = mUnitsController.unitsManager();
+		final var lUnitsManager = mUnitController.unitsManager();
 		final var lUnits = lUnitsManager.unitsInField;
 		final var lNumUnitInstance = lUnits.size();
 		for (int i = 0; i < lNumUnitInstance; i++) {
-			final var lUnitInstance = lUnits.get(i);
+			final var u = lUnits.get(i);
 
-			final var lSpriteFrame = getSpriteFrame(Team.getTeamByUid(lUnitInstance.teamUid), lUnitInstance.unitTypeUid);
+			final var lSpriteFrame = getSpriteFrame(u.raceUid, u.unitTypeUid);
 			final var lWidth = lSpriteFrame.width() * 2.f;
 			final var lHeight = lSpriteFrame.height() * 2.f;
 
-			if (lUnitInstance.stimer > 0.f)
-				lUnitInstance.stimer -= core.gameTime().elapsedTimeMilli();
+			if (u.stimer > 0.f)
+				u.stimer -= core.gameTime().elapsedTimeMilli();
 			else
-				lUnitInstance.highStep = false;
+				u.highStep = false;
 
-			if (lUnitInstance.highStep == false && lUnitInstance.stimer <= 0.f) {
-				lUnitInstance.highStep = RandomNumbers.getRandomChance(30);
-				lUnitInstance.stimer = 100.f;
+			if (u.highStep == false && u.stimer <= 0.f) {
+				u.highStep = RandomNumbers.getRandomChance(30);
+				u.stimer = 100.f;
 			}
 
-			final var xx = lUnitInstance.x;
-			final var yy = lUnitInstance.y - (lUnitInstance.highStep ? 3.f : 0.f);
+			final var xx = u.x;
+			final var yy = u.y - (u.highStep ? 3.f : 0.f);
 
 			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lSpriteFrame, xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 		}
@@ -113,9 +114,9 @@ public class UnitsRenderer extends BaseRenderer {
 		lSpriteBatch.end();
 	}
 
-	private SpriteFrame getSpriteFrame(Team team, int unitTypeUid) {
-		switch (team.raceUid) {
-		case Team.RACE_HUMANS:
+	private SpriteFrame getSpriteFrame(int raceUid, int unitTypeUid) {
+		switch (raceUid) {
+		case TeamRace.RACE_HUMANS:
 			switch (unitTypeUid) {
 			case UnitDefinitions.UNIT_WORKER_UID:
 				return mGameSpritesheet.getSpriteFrame("WORKER");
@@ -124,7 +125,7 @@ public class UnitsRenderer extends BaseRenderer {
 			}
 			break;
 
-		case Team.RACE_DEMONS:
+		case TeamRace.RACE_DEMONS:
 			switch (unitTypeUid) {
 			case UnitDefinitions.UNIT_WORKER_UID:
 				return mGameSpritesheet.getSpriteFrame("PEON");

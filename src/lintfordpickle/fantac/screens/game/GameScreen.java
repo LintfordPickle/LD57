@@ -5,15 +5,18 @@ import org.lwjgl.opengl.GL11;
 
 import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.NewGameKeyActions;
+import lintfordpickle.fantac.controllers.AiController;
 import lintfordpickle.fantac.controllers.AnimationController;
 import lintfordpickle.fantac.controllers.GameStateController;
-import lintfordpickle.fantac.controllers.JobsController;
-import lintfordpickle.fantac.controllers.SettlementsController;
-import lintfordpickle.fantac.controllers.UnitsController;
+import lintfordpickle.fantac.controllers.JobController;
+import lintfordpickle.fantac.controllers.SettlementController;
+import lintfordpickle.fantac.controllers.TeamController;
+import lintfordpickle.fantac.controllers.UnitController;
 import lintfordpickle.fantac.data.GameWorld;
 import lintfordpickle.fantac.data.IGameStateListener;
-import lintfordpickle.fantac.data.Team;
 import lintfordpickle.fantac.data.settlements.SettlementType;
+import lintfordpickle.fantac.data.teams.TeamManager;
+import lintfordpickle.fantac.data.teams.TeamRace;
 import lintfordpickle.fantac.renderers.AnimationRenderer;
 import lintfordpickle.fantac.renderers.SettlementsRenderer;
 import lintfordpickle.fantac.renderers.UnitsRenderer;
@@ -43,11 +46,13 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	// Controllers
 	private GameStateController mGameStateController;
-	private SettlementsController mSettlementsController;
-	private UnitsController mUnitsController;
-	private JobsController mJobsController;
+	private SettlementController mSettlementController;
+	private UnitController mUnitController;
+	private JobController mJobController;
 	private AnimationController mAnimationController;
 	private ParticleFrameworkController mParticleFrameworkController;
+	private AiController mAiController;
+	private TeamController mTeamController;
 
 	// Renderers
 	private SettlementsRenderer mSettlementRenderer;
@@ -114,6 +119,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	// DATA ----------------------------------------
 
+	@SuppressWarnings("unused")
 	@Override
 	protected void createData(DataManager dataManager) {
 		mParticleFrameworkData = new ParticleFrameworkData(dataManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
@@ -121,22 +127,27 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 		mGameWorld = new GameWorld();
 
+		// TODO:
+		final var lPlayerTeam = mGameWorld.team().addTeam(true, TeamRace.RACE_DEMONS);
+		final var lNpcTeam = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
+
 		// team 1 - humans
 		// team 2 - demons
 
 		// setup settlements
-		final var lSettlement00 = mGameWorld.settlements().addNewSettlement(Team.TEAM_1_UID, SettlementType.SETTLEMENT_TYPE_TOWN, -300, -200);
-		final var lSettlement02 = mGameWorld.settlements().addNewSettlement(Team.TEAM_1_UID, SettlementType.SETTLEMENT_TYPE_TOWN, -330, 170);
-		final var lSettlement06 = mGameWorld.settlements().addNewSettlement(Team.TEAM_NONE_UID, SettlementType.SETTLEMENT_TYPE_CASTLE, -150, -50);
+		final var lSettlement00 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -300, -200);
+		final var lSettlement01 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -330, 170);
 
-		lSettlement00.numWorkers = 10;
-		lSettlement02.numWorkers = 10;
+		lSettlement00.numWorkers = 8;
+		lSettlement01.numWorkers = 12;
 
-		final var lSettlement03 = mGameWorld.settlements().addNewSettlement(Team.TEAM_2_UID, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -200);
-		final var lSettlement04 = mGameWorld.settlements().addNewSettlement(Team.TEAM_2_UID, SettlementType.SETTLEMENT_TYPE_SCHOOL, +350, -0);
-		final var lSettlement05 = mGameWorld.settlements().addNewSettlement(Team.TEAM_2_UID, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
-		lSettlement03.numWorkers = 7;
-		lSettlement05.numWorkers = 7;
+		final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -200);
+		final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
+		lSettlement02.numWorkers = 7;
+		lSettlement03.numWorkers = 15;
+
+		mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, -150, -50);
+		mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_SCHOOL, +350, -0);
 
 	}
 
@@ -145,23 +156,27 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	@Override
 	protected void createControllers(ControllerManager controllerManager) {
 		mGameStateController = new GameStateController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
-		mSettlementsController = new SettlementsController(controllerManager, mGameWorld.settlements(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
-		mUnitsController = new UnitsController(controllerManager, mGameWorld.units(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
-		mJobsController = new JobsController(controllerManager, mGameWorld.jobs(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mTeamController = new TeamController(controllerManager, mGameWorld.team(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mSettlementController = new SettlementController(controllerManager, mGameWorld.settlements(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mUnitController = new UnitController(controllerManager, mGameWorld.units(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mJobController = new JobController(controllerManager, mGameWorld.jobs(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mAnimationController = new AnimationController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mParticleFrameworkController = new ParticleFrameworkController(controllerManager, mParticleFrameworkData, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mAiController = new AiController(controllerManager, mGameWorld.team(), ConstantsGame.GAME_RESOURCE_GROUP_ID);
 
 		mGameStateController.setGameStateListener(this);
 	}
 
 	@Override
 	protected void initializeControllers(LintfordCore core) {
+		mTeamController.initialize(core);
 		mGameStateController.initialize(core);
-		mSettlementsController.initialize(core);
-		mUnitsController.initialize(core);
-		mJobsController.initialize(core);
+		mSettlementController.initialize(core);
+		mUnitController.initialize(core);
+		mJobController.initialize(core);
 		mAnimationController.initialize(core);
 		mParticleFrameworkController.initialize(core);
+		mAiController.initialize(core);
 	}
 
 	// RENDERERS -----------------------------------

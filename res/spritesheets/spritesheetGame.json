@@ -3,6 +3,18 @@
   "textureName": "TEXTURE_GAME",
   "spriteFrames": [
     {
+      "name": "HUDTEAMPANEL",
+      "x": 0,
+      "y": 42,
+      "w": 160,
+      "h": 64,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
       "name": "CASTLE",
       "x": 0,
       "y": 8,
@@ -16,7 +28,7 @@
     },
     {
       "name": "PENTAGRAM",
-      "x": 0,
+      "x": 162,
       "y": 42,
       "w": 32,
       "h": 32,
@@ -28,7 +40,7 @@
     },
     {
       "name": "TOWER",
-      "x": 34,
+      "x": 196,
       "y": 42,
       "w": 32,
       "h": 32,
@@ -40,8 +52,8 @@
     },
     {
       "name": "TOWN",
-      "x": 68,
-      "y": 42,
+      "x": 0,
+      "y": 108,
       "w": 32,
       "h": 32,
       "pivotX": 0,
@@ -226,12 +238,12 @@
       "frameDuration": 50,
       "minimumViableRuntime": 0,
       "animationSpriteIndices": [
-        9,
         10,
         11,
         12,
         13,
-        14
+        14,
+        15
       ]
     }
   }

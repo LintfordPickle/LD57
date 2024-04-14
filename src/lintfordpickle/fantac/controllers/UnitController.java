@@ -1,5 +1,6 @@
 package lintfordpickle.fantac.controllers;
 
+import lintfordpickle.fantac.data.teams.TeamRace;
 import lintfordpickle.fantac.data.units.UnitDefinitions;
 import lintfordpickle.fantac.data.units.UnitsManager;
 import net.lintfordlib.controllers.BaseController;
@@ -10,13 +11,13 @@ import net.lintfordlib.core.maths.CollisionExtensions;
 import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.core.particles.particlesystems.ParticleSystemInstance;
 
-public class UnitsController extends BaseController {
+public class UnitController extends BaseController {
 
 	// --------------------------------------
 	// Constants
 	// --------------------------------------
 
-	public static final String CONTROLLER_NAME = "Units Controller";
+	public static final String CONTROLLER_NAME = "Unit Controller";
 
 	// --------------------------------------
 	// Variables
@@ -25,10 +26,11 @@ public class UnitsController extends BaseController {
 	private UnitsManager mUnitsManager;
 
 	private AnimationController mAnimationController;
-	private SettlementsController mSettlementsController;
+	private SettlementController mSettlementController;
 	private ParticleFrameworkController mParticleFrameworkController;
 
-	private ParticleSystemInstance mFootstepsParticles;
+	private ParticleSystemInstance mHumanFootstepsParticles;
+	private ParticleSystemInstance mDemonFootstepsParticles;
 
 	// --------------------------------------
 	// Properties
@@ -42,7 +44,7 @@ public class UnitsController extends BaseController {
 	// Constructor
 	// --------------------------------------
 
-	public UnitsController(ControllerManager controllerManager, UnitsManager unitManager, int entityGroupUid) {
+	public UnitController(ControllerManager controllerManager, UnitsManager unitManager, int entityGroupUid) {
 		super(controllerManager, CONTROLLER_NAME, entityGroupUid);
 
 		mUnitsManager = unitManager;
@@ -58,11 +60,12 @@ public class UnitsController extends BaseController {
 
 		final var lControllerManager = core.controllerManager();
 		mAnimationController = (AnimationController) lControllerManager.getControllerByNameRequired(AnimationController.CONTROLLER_NAME, entityGroupUid());
-		mSettlementsController = (SettlementsController) lControllerManager.getControllerByNameRequired(SettlementsController.CONTROLLER_NAME, entityGroupUid());
+		mSettlementController = (SettlementController) lControllerManager.getControllerByNameRequired(SettlementController.CONTROLLER_NAME, entityGroupUid());
 		mParticleFrameworkController = (ParticleFrameworkController) lControllerManager.getControllerByNameRequired(ParticleFrameworkController.CONTROLLER_NAME, entityGroupUid());
 
 		final var lParticleSystemManager = mParticleFrameworkController.particleFrameworkData().particleSystemManager();
-		mFootstepsParticles = lParticleSystemManager.getParticleSystemByName("PS_FOOTSTEPS");
+		mHumanFootstepsParticles = lParticleSystemManager.getParticleSystemByName("PS_FOOTSTEPS");
+		mDemonFootstepsParticles = lParticleSystemManager.getParticleSystemByName("PS_DEMONSTEPS");
 	}
 
 	@Override
@@ -95,9 +98,13 @@ public class UnitsController extends BaseController {
 			if (u.ptimer > 0.f)
 				u.ptimer -= dt;
 
-			if (u.ptimer <= 0.f && RandomNumbers.getRandomChance(20.f) && mFootstepsParticles != null) {
+			if (u.ptimer <= 0.f && RandomNumbers.getRandomChance(20.f) && mHumanFootstepsParticles != null) {
 				u.ptimer = RandomNumbers.random(20, 100);
-				mFootstepsParticles.spawnParticle(u.x, u.y, -0.5f, u.vx, u.vy);
+
+				if (u.raceUid == TeamRace.RACE_HUMANS)
+					mHumanFootstepsParticles.spawnParticle(u.x, u.y, -0.5f, u.vx, u.vy);
+				if (u.raceUid == TeamRace.RACE_DEMONS)
+					mDemonFootstepsParticles.spawnParticle(u.x, u.y, -0.5f, u.vx, u.vy);
 			}
 
 			// process on destination reached
@@ -114,7 +121,7 @@ public class UnitsController extends BaseController {
 
 				} else {
 					// otherwise, attack
-					mSettlementsController.attackSettlement(u.to, u);
+					mSettlementController.attackSettlement(u.to, u);
 
 					// Attack animation
 					mAnimationController.playAttackAnimation(u.x, u.y);

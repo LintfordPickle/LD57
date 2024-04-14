@@ -4,13 +4,14 @@ import org.lwjgl.glfw.GLFW;
 
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.settlements.SettlementsManager;
+import lintfordpickle.fantac.data.teams.TeamManager;
 import lintfordpickle.fantac.data.units.Unit;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.maths.CollisionExtensions;
 
-public class SettlementsController extends BaseController {
+public class SettlementController extends BaseController {
 
 	// --------------------------------------
 	// Constants
@@ -47,11 +48,56 @@ public class SettlementsController extends BaseController {
 		return result;
 	}
 
+	public BaseSettlement getClosestUnoccupiedSettlement(float x, float y) {
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			if (lSettlements.get(i).isAssigned() == false)
+				continue;
+
+			// TODO: unimplmented method
+
+			if (lSettlements.get(i).teamUid == TeamManager.CONTROLLED_NONE)
+				return lSettlements.get(i);
+
+		}
+		return null;
+	}
+
+	public int getNumUnoccupiedSettlements() {
+		int result = 0;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			if (lSettlements.get(i).isAssigned() == false)
+				continue;
+
+			if (lSettlements.get(i).teamUid == -TeamManager.CONTROLLED_NONE)
+				result++;
+
+		}
+		return result;
+	}
+
+	public BaseSettlement getSettlementByUid(int uid) {
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			if (lSettlements.get(i).isAssigned() == false)
+				continue;
+
+			if (lSettlements.get(i).uid == uid)
+				return lSettlements.get(i);
+
+		}
+		return null;
+	}
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
-	public SettlementsController(ControllerManager controllerManager, SettlementsManager settlements, int entityGroupUid) {
+	public SettlementController(ControllerManager controllerManager, SettlementsManager settlements, int entityGroupUid) {
 		super(controllerManager, CONTROLLER_NAME, entityGroupUid);
 
 		mSettlementsManager = settlements;
@@ -117,5 +163,15 @@ public class SettlementsController extends BaseController {
 		if (settlement.numSoldiers <= 0 && settlement.numWorkers <= 0) {
 			settlement.teamUid = unit.teamUid; // conquered
 		}
+	}
+
+	public boolean getIsSettlementLowDanger(int settlementUid) {
+		// TODO: Unimplemented method
+		return false;
+	}
+
+	public boolean getIsSettlementHighDanger(int settlementUid) {
+		// TODO: Unimplemented method
+		return false;
 	}
 }

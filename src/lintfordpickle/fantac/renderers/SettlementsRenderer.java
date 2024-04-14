@@ -1,8 +1,10 @@
 package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
-import lintfordpickle.fantac.controllers.SettlementsController;
+import lintfordpickle.fantac.controllers.SettlementController;
 import lintfordpickle.fantac.data.settlements.SettlementType;
+import lintfordpickle.fantac.data.teams.Team;
+import lintfordpickle.fantac.data.teams.TeamManager;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
@@ -23,7 +25,7 @@ public class SettlementsRenderer extends BaseRenderer {
 	// Variables
 	// --------------------------------------
 
-	private SettlementsController mSettlementController;
+	private SettlementController mSettlementController;
 	private SpriteSheetDefinition mGameSpritesheet;
 
 	// --------------------------------------
@@ -51,7 +53,7 @@ public class SettlementsRenderer extends BaseRenderer {
 	public void initialize(LintfordCore core) {
 
 		final var lControllerManager = core.controllerManager();
-		mSettlementController = (SettlementsController) lControllerManager.getControllerByNameRequired(SettlementsController.CONTROLLER_NAME, entityGroupID());
+		mSettlementController = (SettlementController) lControllerManager.getControllerByNameRequired(SettlementController.CONTROLLER_NAME, entityGroupID());
 
 	}
 
@@ -112,10 +114,12 @@ public class SettlementsRenderer extends BaseRenderer {
 			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lSpriteFrame, xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 
 			// Draw team flag
-			final var teamName = "FLAG0" + lSettlement.teamUid;
-			final var lFlagSpriteFrame = mGameSpritesheet.getSpriteFrame(teamName);
-			if (lFlagSpriteFrame != null)
-				lSpriteBatch.drawAroundCenter(mGameSpritesheet, lFlagSpriteFrame, xx, yy - lHeight * .5f, lFlagSpriteFrame.width() * 2.f, lFlagSpriteFrame.height() * 2.f, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+			if (lSettlement.teamUid > TeamManager.CONTROLLED_NONE) {
+				final var teamName = "FLAG0" + (lSettlement.teamUid - 1);
+				final var lFlagSpriteFrame = mGameSpritesheet.getSpriteFrame(teamName);
+				if (lFlagSpriteFrame != null)
+					lSpriteBatch.drawAroundCenter(mGameSpritesheet, lFlagSpriteFrame, xx, yy - lHeight * .5f, lFlagSpriteFrame.width() * 2.f, lFlagSpriteFrame.height() * 2.f, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+			}
 
 			// Draw workers / peons
 
