@@ -4,7 +4,7 @@
 //                                                         
 //           ABSTRACT METHODS MUST BE IMPLEMENTED          
 //                                                         
-// Generated on 04/14/2024 14:45:12
+// Generated on 04/14/2024 21:15:33
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionactions;
 
@@ -15,8 +15,8 @@ import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.teams.Team;
 import lintfordpickle.fantac.data.units.UnitDefinitions;
 
-/** ExecutionAction class created from MMPM action MoveTroops. */
-public class MoveTroops extends jbt.execution.task.leaf.action.ExecutionAction {
+/** ExecutionAction class created from MMPM action MoveWorkers. */
+public class MoveWorkers extends jbt.execution.task.leaf.action.ExecutionAction {
 	/**
 	 * Value of the parameter "fromSettlementUid" in case its value is specified at construction time. null otherwise.
 	 */
@@ -43,7 +43,7 @@ public class MoveTroops extends jbt.execution.task.leaf.action.ExecutionAction {
 	private java.lang.String numUnitsLoc;
 
 	/**
-	 * Constructor. Constructs an instance of MoveTroops that is able to run a lintfordpickle.fantac.data.ai.modelactions.MoveTroops.
+	 * Constructor. Constructs an instance of MoveWorkers that is able to run a lintfordpickle.fantac.data.ai.modelactions.MoveWorkers.
 	 * 
 	 * @param fromSettlementUid    value of the parameter "fromSettlementUid", or null in case it should be read from the context. If null, <code>fromSettlementUidLoc<code> cannot be null.
 	 * @param fromSettlementUidLoc
@@ -54,11 +54,8 @@ public class MoveTroops extends jbt.execution.task.leaf.action.ExecutionAction {
 	 * @param numUnits             value of the parameter "numUnits", or null in case it should be read from the context. If null, <code>numUnitsLoc<code> cannot be null.
 	 * @param numUnitsLoc
 	 *            in case <code>numUnits</code> is null, this variable represents the place in the context where the parameter's value will be retrieved from.
-	 * @param unitType             value of the parameter "unitType", or null in case it should be read from the context. If null, <code>unitTypeLoc<code> cannot be null.
-	 * @param unitTypeLoc
-	 *            in case <code>unitType</code> is null, this variable represents the place in the context where the parameter's value will be retrieved from.
 	 */
-	public MoveTroops(lintfordpickle.fantac.data.ai.modelactions.MoveTroops modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent, java.lang.Integer fromSettlementUid, java.lang.String fromSettlementUidLoc, java.lang.Integer toSettlementUid, java.lang.String toSettlementUidLoc,
+	public MoveWorkers(lintfordpickle.fantac.data.ai.modelactions.MoveWorkers modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent, java.lang.Integer fromSettlementUid, java.lang.String fromSettlementUidLoc, java.lang.Integer toSettlementUid, java.lang.String toSettlementUidLoc,
 			java.lang.Integer numUnits, java.lang.String numUnitsLoc) {
 		super(modelTask, executor, parent);
 
@@ -115,7 +112,7 @@ public class MoveTroops extends jbt.execution.task.leaf.action.ExecutionAction {
 		final var lGoToSettlementUid = getToSettlementUid();
 		final var lToSettlement = lSettlementController.getSettlementByUid(lGoToSettlementUid);
 
-		lJobController.sendArmy(lOurTeam.teamUid, lOurTeam.raceUid, UnitDefinitions.UNIT_SOLDIER_UID, lOurSettlement, lToSettlement);
+		lJobController.sendArmy(lOurTeam.teamUid, lOurTeam.raceUid, UnitDefinitions.UNIT_WORKER_UID, lOurSettlement, lToSettlement);
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {

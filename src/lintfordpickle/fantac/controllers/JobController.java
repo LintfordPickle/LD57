@@ -109,8 +109,9 @@ public class JobController extends BaseController implements IInputProcessor {
 				if (mFoundToSettlement != null) {
 
 					// TODO: This isn't using the correct race - we are just assuming the player is playing as demons
-					if (mFoundFromSettlement != mFoundToSettlement)
+					if (mFoundFromSettlement != mFoundToSettlement) {
 						sendArmy(mFoundFromSettlement.teamUid, TeamRace.RACE_DEMONS, mProcessingArmyUnitType, mFoundFromSettlement, mFoundToSettlement);
+					}
 				}
 
 				mProcessingInput = false;
@@ -152,7 +153,7 @@ public class JobController extends BaseController implements IInputProcessor {
 				final var rvx = RandomNumbers.random(-(float) Math.PI, (float) Math.PI);
 				final var rvy = RandomNumbers.random(-(float) Math.PI, (float) Math.PI);
 
-				mUnitController.unitsManager().addNewUnit(lJobToProcess.teamUid, lJobToProcess.raceUid, lJobToProcess.unitType, lFrom, lTo, lFrom.x, lFrom.y, rvx * launchFor, rvy * launchFor);
+				mUnitController.unitsManager().addNewUnit(lJobToProcess.teamUid, lJobToProcess.raceUid, lJobToProcess.unitType, lFrom, lTo, lFrom.x, lFrom.y, rvx * launchFor, rvy * launchFor, lJobToProcess.spd);
 
 				lJobToProcess.deployTimer = 0;
 				lJobToProcess.numUnits--;
@@ -173,6 +174,7 @@ public class JobController extends BaseController implements IInputProcessor {
 			return;
 
 		final var lNewJob = mJobsManager.getFreeInstanceItem();
+		final var spd = UnitDefinitions.getUnitDefByUid(unitType).speed;
 
 		int numToSend = 0;
 
@@ -187,7 +189,11 @@ public class JobController extends BaseController implements IInputProcessor {
 			break;
 		}
 
-		lNewJob.initialise(teamUid, raceUid, unitType, from, to, numToSend);
+		lNewJob.initialise(teamUid, raceUid, unitType, from, to, numToSend, spd);
+	}
+
+	public void removeAllJobs(int teamUid) {
+		// TODO: Unimplemented method
 	}
 
 	// --------------------------------------

@@ -4,18 +4,18 @@
 ====================================================================== 
 -->
 
-<project name="NewGame" basedir="." default="main">
+<project name="Hoomans" basedir="." default="main">
 
 	<property name="LintfordLib.dir">d:/dist/libs/LintfordLib</property>
 	<property name="JavaLauncher.dir">d:/dist/tools/build/launcher</property>
 	<property name="jre.dir">jre</property>
 
 	<property name="build-drive">d:</property>
-	<property name="project.name">NewGame</property>
+	<property name="project.name">Hoomans</property>
 
 	<property name="application.name">Core</property>
 
-	<property name="client-main-class">net.lintfordpickle.newgame.GameWindow</property>
+	<property name="client-main-class">lintfordpickle.fantac.GameWindow</property>
 
 	<property name="input.src.dir" value="src" />
 	<property name="input.lib.dir" value="libs" />

@@ -97,7 +97,7 @@ public class SettlementsRenderer extends BaseRenderer {
 			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_SCHOOL) {
 				lSpriteFrame = mGameSpritesheet.getSpriteFrame("PENTAGRAM");
 			} else {
-				lSpriteFrame = mGameSpritesheet.getSpriteFrame("CAMP");
+				lSpriteFrame = mGameSpritesheet.getSpriteFrame("VILLAGE");
 			}
 
 			if (lSpriteFrame == null)

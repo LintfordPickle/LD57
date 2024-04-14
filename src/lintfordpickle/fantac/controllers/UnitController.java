@@ -78,7 +78,7 @@ public class UnitController extends BaseController {
 		final var lNumUnits = lUnitInstances.size();
 		for (int i = lNumUnits - 1; i >= 0; i--) {
 			final var u = lUnitInstances.get(i);
-			final var lMovementSpeed = 2.f;
+			final var lMovementSpeed = u.spd;
 
 			// Get vector towards target
 			final var xx = u.to.x - u.x;
@@ -129,6 +129,24 @@ public class UnitController extends BaseController {
 					mUnitsManager.returnPooledItem(lUnitInstances.remove(i));
 				}
 			}
+		}
+	}
+
+	// --------------------------------------
+	// Methods
+	// --------------------------------------
+
+	public void removeAllUnits(int teamUid) {
+		final var lUnitInstances = mUnitsManager.unitsInField;
+		final var lNumUnits = lUnitInstances.size();
+		for (int i = lNumUnits - 1; i >= 0; i--) {
+			final var u = lUnitInstances.get(i);
+
+			if (u.teamUid != teamUid)
+				continue;
+
+			mUnitsManager.returnPooledItem(lUnitInstances.remove(i));
+
 		}
 	}
 

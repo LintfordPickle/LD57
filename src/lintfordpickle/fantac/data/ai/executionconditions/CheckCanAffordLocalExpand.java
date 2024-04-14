@@ -36,7 +36,10 @@ public class CheckCanAffordLocalExpand extends jbt.execution.task.leaf.condition
 
 		// TODO: Hard coded number - should be based on expansion aggression factor
 
-		if (lSettlement.numWorkers > 10)
+		final var lNumSoldiers = lSettlement.numSoldiers;
+		final var lNumWorkers = lSettlement.numWorkers;
+
+		if (lNumWorkers - lNumSoldiers >= lSettlement.numSoldiers)
 			return jbt.execution.core.ExecutionTask.Status.SUCCESS;
 
 		return jbt.execution.core.ExecutionTask.Status.FAILURE;

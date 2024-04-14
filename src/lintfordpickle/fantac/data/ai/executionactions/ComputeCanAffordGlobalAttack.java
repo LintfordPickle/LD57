@@ -8,6 +8,7 @@
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionactions;
 
+import lintfordpickle.fantac.controllers.SettlementController;
 import lintfordpickle.fantac.data.ai.ConstantsBtContext;
 import lintfordpickle.fantac.data.teams.Team;
 
@@ -24,12 +25,32 @@ public class ComputeCanAffordGlobalAttack extends jbt.execution.task.leaf.action
 	protected void internalSpawn() {
 		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
 
-		// TODO: Actually do something
+		final var settlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
+		final var team = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
 
-		getContext().setVariable(ConstantsBtContext.GLOBAL_ATTACK, true);
-		final var lOurTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
-		lOurTeam.isAttacking = true;
+		final var totalSettlements = settlementController.getTotalSettlements(team.teamUid);
+		final var totalSoldiers = settlementController.getTotalSoldiers(team.teamUid);
 
+		if (totalSettlements > 0) {
+			final float avg = (float) totalSoldiers / (float) totalSettlements;
+
+			// TODO: TODO: Hard-coded AI value for minimum soldier count before attack (global).
+
+//			if (avg > 5) {
+//				team.isAttacking = true;
+//				System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " is setting for attack.");
+//			} else {
+//				System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot attack.");
+//				team.isAttacking = false;
+//			}
+			// TODO: Check that we are properly defended before attacking
+			
+			team.isAttacking = true;
+			
+		} else {
+			System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot attack.");
+			team.isAttacking = false;
+		}
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {

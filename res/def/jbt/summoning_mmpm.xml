@@ -15,13 +15,13 @@
 
 		<!-- Computes the closest unclaimed settlement. -->
 		<Action name="ComputeClosestNeutralSettlement" />
-*
+
 		<!-- Computes the weakest enemy settlement. -->
 		<Action name="ComputeWeakestEnemySettlement" />
 
 		<!-- Computes the strongest enemy settlement. -->
 		<!-- <Action name="ComputeStrongestEnemySettlement" /> -->
-		
+
 		<Action name="SetRequestPopToExpand" />
 		<Action name="SetRequestPopToAttack" />
 
@@ -30,13 +30,13 @@
 			<Parameter name="fromSettlementUid" type="INTEGER" />
 			<Parameter name="toSettlementUid" type="INTEGER" />
 			<Parameter name="numUnits" type="INTEGER" />
-			<Parameter name="unitType" type="INTEGER" />
 		</Action>
 
-		<!-- Potentially missing nodes ... -->
-		<!--   + something to consolidate forces. -->
-		<!--   + moving people to the school to train as knight. -->
-		<!--   + send workers or soldiers. -->
+		<Action name="MoveWorkers">
+			<Parameter name="fromSettlementUid" type="INTEGER" />
+			<Parameter name="toSettlementUid" type="INTEGER" />
+			<Parameter name="numUnits" type="INTEGER" />
+		</Action>
 
 	</ActionSet>
 
@@ -44,17 +44,19 @@
 
 		<!-- Checks for the presence of any unoccupied settlements. -->
 		<Sensor name="AnyUnoccupiedSettlements" type="BOOLEAN" />
+
+		<!-- Checks for the presence of any schools to train workers (to
+		soldiers/demons). -->
+		<Sensor name="AnySchools" type="BOOLEAN" />
+
 		<Sensor name="CheckGlobalExpand" type="BOOLEAN" />
 		<Sensor name="CheckGlobalAttack" type="BOOLEAN" />
-		
+
 		<Sensor name="CheckCanAffordLocalExpand" type="BOOLEAN" />
 		<Sensor name="CheckCanAffordLocalAttack" type="BOOLEAN" />
-		
+
 		<Sensor name="CheckRequestPopExpandSet" type="BOOLEAN" />
 		<Sensor name="CheckRequestPopAttackSet" type="BOOLEAN" />
-
-		<!-- Potentially missing sensor nodes ... -->
-		<!--   + Danger checks and (re)actions -->
 
 	</SensorSet>
 

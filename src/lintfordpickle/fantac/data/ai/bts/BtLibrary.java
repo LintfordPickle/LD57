@@ -2,7 +2,7 @@
 //                   MACHINE GENERATED CODE                
 //                       DO NOT MODIFY                     
 //                                                         
-// Generated on 04/14/2024 21:01:27
+// Generated on 04/14/2024 22:57:59
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.bts;
 
@@ -37,37 +37,33 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 								null,
 								new jbt.model.task.composite.ModelSequence(
 										null,
-										new jbt.model.task.leaf.ModelVariableRenamer(
-												null, "FRED", "GEORGE"),
+										new lintfordpickle.fantac.data.ai.modelconditions.AnyUnoccupiedSettlements(
+												null),
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
 												null),
 										new lintfordpickle.fantac.data.ai.modelactions.ComputeClosestNeutralSettlement(
 												null),
-										new jbt.model.task.leaf.ModelWait(null,
-												500),
 										new jbt.model.task.composite.ModelSelector(
 												null,
 												new jbt.model.task.composite.ModelSequence(
 														null,
 														new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand(
 																null),
-														new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+														new lintfordpickle.fantac.data.ai.modelactions.MoveWorkers(
 																null,
 																null,
 																"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
 																null,
 																"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
 																null,
-																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
-																null,
-																"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
+																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")),
 												new lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToExpand(
 														null))),
 								new jbt.model.task.composite.ModelSequence(
 										null,
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(
 												null),
-										new lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement(
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack(
 												null),
 										new jbt.model.task.composite.ModelSelector(
 												null,
@@ -75,6 +71,8 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 														null,
 														new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack(
 																null),
+														new lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement(
+																null),
 														new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
 																null,
 																null,
@@ -82,34 +80,30 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 																null,
 																"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
 																null,
-																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
-																null,
-																"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
+																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")),
 												new lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToAttack(
 														null))),
 								new jbt.model.task.composite.ModelSequence(
 										null,
-										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
-												null),
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckRequestPopExpandSet(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
 												null),
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand(
 												null),
-										new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+										new lintfordpickle.fantac.data.ai.modelactions.MoveWorkers(
 												null,
 												null,
 												"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
 												null,
 												"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
 												null,
-												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
-												null,
-												"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
+												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")),
 								new jbt.model.task.composite.ModelSequence(
 										null,
-										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(
-												null),
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckRequestPopAttackSet(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(
 												null),
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack(
 												null),
@@ -120,9 +114,23 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 												null,
 												"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
 												null,
-												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
+												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")),
+								new jbt.model.task.composite.ModelSequence(
+										null,
+										new lintfordpickle.fantac.data.ai.modelconditions.AnySchools(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand(
+												null),
+										new lintfordpickle.fantac.data.ai.modelactions.MoveWorkers(
 												null,
-												"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")))));
+												null,
+												"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")))));
 
 		BtTeam = new jbt.model.task.decorator.ModelRepeat(
 				null,
@@ -130,19 +138,10 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 						null,
 						new lintfordpickle.fantac.data.ai.modelactions.ComputeAggression(
 								null),
-						new jbt.model.task.composite.ModelSequence(
-								null,
-								new jbt.model.task.decorator.ModelSucceeder(
-										null,
-										new jbt.model.task.composite.ModelSequence(
-												null,
-												new lintfordpickle.fantac.data.ai.modelconditions.AnyUnoccupiedSettlements(
-														null),
-												new lintfordpickle.fantac.data.ai.modelactions.ComputeCanAffordGlobalExpand(
-														null)))),
+						new lintfordpickle.fantac.data.ai.modelactions.ComputeCanAffordGlobalExpand(
+								null),
 						new lintfordpickle.fantac.data.ai.modelactions.ComputeCanAffordGlobalAttack(
-								null), new jbt.model.task.leaf.ModelWait(null,
-								100)));
+								null)));
 
 	}
 

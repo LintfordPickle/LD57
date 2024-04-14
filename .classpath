@@ -9,5 +9,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lwjgl3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/LintfordLib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jbt"/>
+	<classpathentry kind="lib" path="libs/JBTCore.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

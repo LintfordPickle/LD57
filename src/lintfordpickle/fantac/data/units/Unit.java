@@ -28,6 +28,8 @@ public class Unit extends OpenPooledBaseData {
 	public float vx;
 	public float vy;
 
+	public float spd;
+
 	// flags
 	public boolean highStep;
 
@@ -46,7 +48,7 @@ public class Unit extends OpenPooledBaseData {
 	// Core-Methods
 	// --------------------------------------
 
-	public void initialise(int teamUid, int raceUid, int unitTypeUid, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy) {
+	public void initialise(int teamUid, int raceUid, int unitTypeUid, BaseSettlement from, BaseSettlement to, float worldX, float worldY, float vx, float vy, float spd) {
 		this.teamUid = teamUid;
 		this.raceUid = raceUid;
 		this.unitTypeUid = unitTypeUid;
@@ -58,15 +60,19 @@ public class Unit extends OpenPooledBaseData {
 		this.y = worldY;
 		this.vx = vx;
 		this.vy = vy;
+		this.spd = spd;
 	}
 
 	public void reset() {
-		teamUid = -1;
+		this.teamUid = -1;
 
-		from = null;
-		to = null;
+		this.from = null;
+		this.to = null;
 
-		x = 0;
-		y = 0;
+		this.x = 0;
+		this.y = 0;
+		this.vx = 0;
+		this.vy = 0;
+		this.spd = 0;
 	}
 }

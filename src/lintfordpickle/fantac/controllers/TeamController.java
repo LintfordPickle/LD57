@@ -32,6 +32,18 @@ public class TeamController extends BaseController {
 		return mTeamManager.getTeamByUid(uid);
 	}
 
+	public int getNumberOfTeamsPlaying() {
+		var result = 0;
+		final var lTeams = mTeamManager.teams;
+		final var lNumTeams = lTeams.size();
+		for (int i = 0; i < lNumTeams; i++) {
+			if (lTeams.get(i).isPlaying)
+				result++;
+
+		}
+		return result;
+	}
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------

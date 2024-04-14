@@ -29,7 +29,6 @@ public class AnyUnoccupiedSettlements extends jbt.execution.task.leaf.condition.
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
-
 		final var lSettlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
 		if (lSettlementController.getNumUnoccupiedSettlements() > 0)
 			return jbt.execution.core.ExecutionTask.Status.SUCCESS;

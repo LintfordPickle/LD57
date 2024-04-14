@@ -8,6 +8,9 @@ public class Team {
 
 	public final int teamUid;
 	public final int raceUid;
+
+	public boolean isPlaying;
+
 	public final boolean playerControlled;
 
 	public float expandAgression = .5f;
@@ -27,6 +30,8 @@ public class Team {
 		this.teamUid = teamUid;
 		this.raceUid = raceUid;
 		this.playerControlled = playerControlled;
+
+		isPlaying = true;
 
 		requestPopExpandSettlementUid = -1;
 		requestPopAttackSettlementUid = -1;

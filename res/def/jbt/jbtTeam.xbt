@@ -7,26 +7,8 @@
           <Node id="Node_27" type="Sequence">
             <Children>
               <Node id="Node_28" name="ComputeAggression" type="Action" />
-              <Node id="Node_38" type="Sequence">
-                <Children>
-                  <Node id="Node_39" type="Succeeder">
-                    <Children>
-                      <Node id="Node_40" type="Sequence">
-                        <Children>
-                          <Node id="Node_36" name="AnyUnoccupiedSettlements" type="Condition" />
-                          <Node id="Node_37" name="ComputeCanAffordGlobalExpand" type="Action" />
-                        </Children>
-                      </Node>
-                    </Children>
-                  </Node>
-                </Children>
-              </Node>
+              <Node id="Node_37" name="ComputeCanAffordGlobalExpand" type="Action" />
               <Node id="Node_32" name="ComputeCanAffordGlobalAttack" type="Action" />
-              <Node id="Node_33" type="Wait">
-                <Parameters>
-                  <Parameter name="duration" fromcontext="false">100</Parameter>
-                </Parameters>
-              </Node>
             </Children>
           </Node>
         </Children>

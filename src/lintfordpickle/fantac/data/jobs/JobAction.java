@@ -21,6 +21,8 @@ public class JobAction extends ClosedPooledBaseData {
 	public int raceUid;
 	public int numUnits;
 
+	public float spd;
+
 	public float deployTimer;
 
 	// --------------------------------------
@@ -35,7 +37,7 @@ public class JobAction extends ClosedPooledBaseData {
 	// Core-Methods
 	// --------------------------------------
 
-	public void initialise(int teamUid, int raceUid, int unitType, BaseSettlement from, BaseSettlement to, int numUnits) {
+	public void initialise(int teamUid, int raceUid, int unitType, BaseSettlement from, BaseSettlement to, int numUnits, float spd) {
 		fromSettlement = from;
 		toSettlement = to;
 
@@ -43,6 +45,8 @@ public class JobAction extends ClosedPooledBaseData {
 		this.raceUid = raceUid;
 		this.unitType = unitType;
 		this.numUnits = numUnits;
+
+		this.spd = spd;
 
 		isComplete = false;
 

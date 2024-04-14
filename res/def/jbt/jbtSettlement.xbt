@@ -10,30 +10,19 @@
                 <Children>
                   <Node id="Node_3" type="Sequence">
                     <Children>
-                      <Node id="Node_34" type="VariableRenamer">
-                        <Parameters>
-                          <Parameter name="variableName" fromcontext="false">FRED</Parameter>
-                          <Parameter name="newVariableName" fromcontext="false">GEORGE</Parameter>
-                        </Parameters>
-                      </Node>
+                      <Node id="Node_40" name="AnyUnoccupiedSettlements" type="Condition" />
                       <Node id="Node_4" name="CheckGlobalExpand" type="Condition" />
                       <Node id="Node_5" name="ComputeClosestNeutralSettlement" type="Action" />
-                      <Node id="Node_13" type="Wait">
-                        <Parameters>
-                          <Parameter name="duration" fromcontext="false">500</Parameter>
-                        </Parameters>
-                      </Node>
                       <Node id="Node_17" type="Selector">
                         <Children>
                           <Node id="Node_16" type="Sequence">
                             <Children>
                               <Node id="Node_6" name="CheckCanAffordLocalExpand" type="Condition" />
-                              <Node id="Node_7" name="MoveTroops" type="Action">
+                              <Node id="Node_36" name="MoveWorkers" type="Action">
                                 <Parameters>
                                   <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
                                   <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
                                   <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
-                                  <Parameter name="unitType" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID</Parameter>
                                 </Parameters>
                               </Node>
                             </Children>
@@ -46,18 +35,18 @@
                   <Node id="Node_8" type="Sequence">
                     <Children>
                       <Node id="Node_9" name="CheckGlobalAttack" type="Condition" />
-                      <Node id="Node_10" name="ComputeWeakestEnemySettlement" type="Action" />
+                      <Node id="Node_41" name="CheckCanAffordLocalAttack" type="Condition" />
                       <Node id="Node_19" type="Selector">
                         <Children>
                           <Node id="Node_20" type="Sequence">
                             <Children>
                               <Node id="Node_11" name="CheckCanAffordLocalAttack" type="Condition" />
-                              <Node id="Node_12" name="MoveTroops" type="Action">
+                              <Node id="Node_10" name="ComputeWeakestEnemySettlement" type="Action" />
+                              <Node id="Node_35" name="MoveTroops" type="Action">
                                 <Parameters>
                                   <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
                                   <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
                                   <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
-                                  <Parameter name="unitType" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID</Parameter>
                                 </Parameters>
                               </Node>
                             </Children>
@@ -69,30 +58,42 @@
                   </Node>
                   <Node id="Node_24" type="Sequence">
                     <Children>
-                      <Node id="Node_27" name="CheckGlobalExpand" type="Condition" />
                       <Node id="Node_25" name="CheckRequestPopExpandSet" type="Condition" />
+                      <Node id="Node_27" name="CheckGlobalExpand" type="Condition" />
                       <Node id="Node_26" name="CheckCanAffordLocalExpand" type="Condition" />
-                      <Node id="Node_32" name="MoveTroops" type="Action">
+                      <Node id="Node_37" name="MoveWorkers" type="Action">
                         <Parameters>
                           <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
                           <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
                           <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
-                          <Parameter name="unitType" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID</Parameter>
                         </Parameters>
                       </Node>
                     </Children>
                   </Node>
                   <Node id="Node_28" type="Sequence">
                     <Children>
-                      <Node id="Node_29" name="CheckGlobalAttack" type="Condition" />
                       <Node id="Node_30" name="CheckRequestPopAttackSet" type="Condition" />
+                      <Node id="Node_29" name="CheckGlobalAttack" type="Condition" />
                       <Node id="Node_31" name="CheckCanAffordLocalAttack" type="Condition" />
-                      <Node id="Node_33" name="MoveTroops" type="Action">
+                      <Node id="Node_38" name="MoveTroops" type="Action">
                         <Parameters>
                           <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
                           <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
                           <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
-                          <Parameter name="unitType" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID</Parameter>
+                        </Parameters>
+                      </Node>
+                    </Children>
+                  </Node>
+                  <Node id="Node_42" type="Sequence">
+                    <Children>
+                      <Node id="Node_43" name="AnySchools" type="Condition" />
+                      <Node id="Node_44" name="CheckGlobalExpand" type="Condition" />
+                      <Node id="Node_46" name="CheckCanAffordLocalExpand" type="Condition" />
+                      <Node id="Node_45" name="MoveWorkers" type="Action">
+                        <Parameters>
+                          <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
+                          <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
+                          <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
                         </Parameters>
                       </Node>
                     </Children>

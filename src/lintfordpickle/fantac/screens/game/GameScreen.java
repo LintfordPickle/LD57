@@ -24,6 +24,7 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
+import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
@@ -128,26 +129,87 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		mGameWorld = new GameWorld();
 
 		// TODO:
+		setup3Players();
+
+	}
+
+	private void setup2Players() {
+		{
+			final var lPlayerTeam = mGameWorld.team().addTeam(true, TeamRace.RACE_DEMONS);
+			final var lNpcTeam = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
+
+			// team 1 - humans
+			// team 2 - demons
+
+			// setup settlements
+			final var lSettlement00 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -300, -200);
+			final var lSettlement01 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -330, 170);
+
+			lSettlement00.numWorkers = 8;
+			lSettlement01.numWorkers = 12;
+
+			final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -200);
+			final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
+			lSettlement02.numWorkers = 7;
+			lSettlement03.numWorkers = 15;
+
+			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_SCHOOL, -150, -50);
+			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, +350, -0); // pentagram
+		}
+
+		{ // Create some random towns
+
+			final int numRandomTowns = RandomNumbers.random(1, 3);
+			for (int i = 0; i < numRandomTowns; i++) {
+				final var xx = RandomNumbers.random(-100, 300);
+				final var yy = RandomNumbers.random(-200, 200);
+
+				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_TOWN, xx, yy);
+			}
+
+		}
+
+	}
+
+	private void setup3Players() {
 		final var lPlayerTeam = mGameWorld.team().addTeam(true, TeamRace.RACE_DEMONS);
-		final var lNpcTeam = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
+		final var lNpcTeam0 = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
+		final var lNpcTeam1 = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
 
-		// team 1 - humans
-		// team 2 - demons
+		{
 
-		// setup settlements
-		final var lSettlement00 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -300, -200);
-		final var lSettlement01 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -330, 170);
+			// setup settlements
+			final var lSettlement00 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -350, -200);
+			final var lSettlement01 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -290, -140);
+			lSettlement00.numWorkers = 8;
+			lSettlement01.numWorkers = 12;
+			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_SCHOOL, -150, -150); // pentagram
 
-		lSettlement00.numWorkers = 8;
-		lSettlement01.numWorkers = 12;
+			final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam0.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, 220);
+			final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam0.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
+			lSettlement02.numWorkers = 7;
+			lSettlement03.numWorkers = 15;
+			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, +350, -0);
 
-		final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -200);
-		final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
-		lSettlement02.numWorkers = 7;
-		lSettlement03.numWorkers = 15;
+			final int numRandomTowns = RandomNumbers.random(2, 3);
+			for (int i = 0; i < numRandomTowns; i++) {
+				final var xx = RandomNumbers.random(-150, 200);
+				final var yy = RandomNumbers.random(-150, 200);
 
-		mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, -150, -50);
-		mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_SCHOOL, +350, -0);
+				final var s = mGameWorld.settlements().addNewSettlement(lNpcTeam1.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, xx, yy);
+				s.numWorkers = RandomNumbers.random(5, 15);
+			}
+
+			
+			final int numUnoccupiedTowns = RandomNumbers.random(2, 4);
+			for (int i = 0; i < numUnoccupiedTowns; i++) {
+				final var xx = RandomNumbers.random(-150, 200);
+				final var yy = RandomNumbers.random(-150, 200);
+
+				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, xx, yy);
+			}
+
+		}
 
 	}
 

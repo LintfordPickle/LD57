@@ -36,7 +36,7 @@ public class CheckCanAffordLocalAttack extends jbt.execution.task.leaf.condition
 
 		// TODO: Hard coded number - should be based on attack aggression factor
 
-		if (lSettlement.numWorkers > 10)
+		if (lSettlement.numSoldiers > 4)
 			return jbt.execution.core.ExecutionTask.Status.SUCCESS;
 
 		return jbt.execution.core.ExecutionTask.Status.FAILURE;

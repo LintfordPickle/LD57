@@ -82,6 +82,10 @@ public class AiController extends BaseController {
 				if (lSettlement.isAssigned() == false)
 					continue;
 
+				final var lTeam = mTeamManager.getTeamByUid(lSettlement.teamUid);
+				if (lTeam.teamUid == TeamManager.CONTROLLED_NONE || lTeam.teamUid == TeamManager.CONTROLLED_PLAYER)
+					continue;
+
 				assignNewBtExecutor(lSettlement);
 			}
 		}
@@ -129,6 +133,7 @@ public class AiController extends BaseController {
 		final var lBtExecutor = BTExecutorFactory.createBTExecutor(lBehaviourTree, lContext);
 
 		mExecutors.add(lBtExecutor);
+		Debug.debugManager().logger().i(getClass().getSimpleName(), "New BtExecutor assigned to team: " + team.teamUid);
 
 	}
 
@@ -154,7 +159,9 @@ public class AiController extends BaseController {
 
 		final var lBtExecutor = BTExecutorFactory.createBTExecutor(lBehaviourTree, lContext);
 
+		settlement.btExecutor = lBtExecutor;
 		mExecutors.add(lBtExecutor);
+		Debug.debugManager().logger().i(getClass().getSimpleName(), "New BtExecutor assigned to settlment: " + settlement.uid + " (team:" + settlement.teamUid + ")");
 
 	}
 
@@ -166,6 +173,14 @@ public class AiController extends BaseController {
 		lContext.setVariable(ConstantsBtContext.CONTEXT_UNITACTION_CONTROLLER, mUnitController);
 
 		return lContext;
+	}
+
+	public void removeBtExecutor(BaseSettlement settlement) {
+		if (settlement == null)
+			return;
+
+		removeBtExecutor(settlement.btExecutor);
+		settlement.btExecutor = null;
 	}
 
 	public void removeBtExecutor(IBTExecutor btExecutor) {

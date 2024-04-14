@@ -1,8 +1,8 @@
 package lintfordpickle.fantac.controllers;
 
-import org.lwjgl.glfw.GLFW;
-
+import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
+import lintfordpickle.fantac.data.settlements.SettlementType;
 import lintfordpickle.fantac.data.settlements.SettlementsManager;
 import lintfordpickle.fantac.data.teams.TeamManager;
 import lintfordpickle.fantac.data.units.Unit;
@@ -25,6 +25,8 @@ public class SettlementController extends BaseController {
 	// --------------------------------------
 
 	private SettlementsManager mSettlementsManager;
+	private AiController mAiController;
+	private TeamController mTeamController;
 
 	// --------------------------------------
 	// Properties
@@ -32,21 +34,6 @@ public class SettlementController extends BaseController {
 
 	public SettlementsManager settlementsManager() {
 		return mSettlementsManager;
-	}
-
-	public int getBuildingCount(int teamUid) {
-		int result = 0;
-		final var lSettlements = mSettlementsManager.instances();
-		final var lNumSettlements = lSettlements.size();
-		for (int i = 0; i < lNumSettlements; i++) {
-			if (lSettlements.get(i).isAssigned() == false)
-				continue;
-
-			if (lSettlements.get(i).teamUid == teamUid)
-				result++;
-
-		}
-		return result;
 	}
 
 	public BaseSettlement getClosestUnoccupiedSettlement(float x, float y) {
@@ -75,9 +62,10 @@ public class SettlementController extends BaseController {
 		return result;
 	}
 
-	public BaseSettlement getWeakestEnemySettlement(int ourTeamUid) {
-		var result = (BaseSettlement) null;
-		int currentWeakest = Integer.MAX_VALUE;
+	public BaseSettlement getClosestSchool(int teamUid, float x, float y) {
+		float dist = Float.MAX_VALUE;
+		BaseSettlement result = null;
+
 		final var lSettlements = mSettlementsManager.instances();
 		final var lNumSettlements = lSettlements.size();
 		for (int i = 0; i < lNumSettlements; i++) {
@@ -85,11 +73,41 @@ public class SettlementController extends BaseController {
 			if (s.isAssigned() == false)
 				continue;
 
-			// TOOD: Incomplete
+			if (s.teamUid != teamUid)
+				continue;
 
-			if (s.teamUid != ourTeamUid && s.numWorkers < currentWeakest) {
+			if (s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_SCHOOL && s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_CASTLE)
+				continue;
+
+			final var xx = s.x - x;
+			final var yy = s.y - y;
+			float d = xx * xx + yy * yy;
+			if (d < dist) {
+				dist = d;
 				result = s;
-				currentWeakest = s.numWorkers;
+			}
+
+		}
+		return result;
+	}
+
+	public BaseSettlement getWeakestEnemySettlement(int ourTeamUid) {
+		var result = (BaseSettlement) null;
+		var currentWeakest = Integer.MAX_VALUE;
+
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			final var workersDef = s.numWorkers * UnitDefinitions.worker.defense;
+			final var soldiersDef = s.numSoldiers * UnitDefinitions.worker.defense;
+
+			if (s.teamUid != ourTeamUid && (workersDef + soldiersDef) < currentWeakest) {
+				result = s;
+				currentWeakest = (workersDef + soldiersDef);
 			}
 
 		}
@@ -125,6 +143,70 @@ public class SettlementController extends BaseController {
 		return null;
 	}
 
+	public int getTotalSettlements(int teamUid) {
+		var result = 0;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid)
+				result++;
+
+		}
+		return result;
+	}
+
+	public int getTotalSettlementOfType(int teamUid, int settlementTypeUid) {
+		var result = 0;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid && s.settlementTypeUid == settlementTypeUid)
+				result++;
+
+		}
+		return result;
+	}
+
+	public int getTotalWorkers(int teamUid) {
+		var result = 0;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid)
+				result += s.numWorkers;
+
+		}
+		return result;
+	}
+
+	public int getTotalSoldiers(int teamUid) {
+		var result = 0;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid)
+				result += s.numSoldiers;
+
+		}
+		return result;
+	}
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -140,6 +222,17 @@ public class SettlementController extends BaseController {
 	// --------------------------------------
 
 	@Override
+	public void initialize(LintfordCore core) {
+		super.initialize(core);
+
+		final var lControllerManager = core.controllerManager();
+
+		mAiController = (AiController) lControllerManager.getControllerByNameRequired(AiController.CONTROLLER_NAME, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mTeamController = (TeamController) lControllerManager.getControllerByNameRequired(TeamController.CONTROLLER_NAME, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+
+	}
+
+	@Override
 	public void update(LintfordCore core) {
 		super.update(core);
 
@@ -152,15 +245,26 @@ public class SettlementController extends BaseController {
 				continue;
 
 			lSettlement.update(core);
-
-			if (core.input().keyboard().isKeyDown(GLFW.GLFW_KEY_G))
-				lSettlement.reset();
 		}
 	}
 
 	// --------------------------------------
 	// Methods
 	// --------------------------------------
+
+	public void removeAllSettlements(int teamUid) {
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid)
+				s.teamUid = TeamManager.CONTROLLED_NONE;
+
+		}
+	}
 
 	public BaseSettlement getSettlementAtPosition(float worldX, float worldY, float radius) {
 		final var lSettlements = mSettlementsManager.instances();
@@ -182,23 +286,44 @@ public class SettlementController extends BaseController {
 		if (settlement.teamUid == unit.teamUid)
 			return;
 
-		// TODO: Attacking / Defending calcs
+		// 1 soldier takes out 1 soldier
+		// 1 soldier takes out 2 workers
+		// 1 worker reduces 1 soldier to 2 workers
+		// 1 worker takes out 1 worker
 
-		boolean deducted = false;
+		var isAttackerASoldier = unit.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID;
+		var livesToExpend = isAttackerASoldier ? 3 : 1;
+
 		if (settlement.numSoldiers > 0) {
-			// atacking soldiers
-			settlement.numSoldiers--;
-			deducted = true;
-		} else if (settlement.numWorkers > 0) {
-			// attacking workers
-			settlement.numWorkers--;
-			deducted = true;
+			if (isAttackerASoldier) {
+				// soldier on soldier
+				settlement.numSoldiers--;
+				livesToExpend = 0;
+			} else {
+				settlement.numSoldiers--;
+				settlement.numWorkers += 2;
+				livesToExpend = 0;
+			}
 		}
 
-		if (settlement.numSoldiers <= 0 && settlement.numWorkers <= 0) {
-			settlement.teamUid = unit.teamUid; // conquered
+		if (livesToExpend > 0 && settlement.numWorkers > 0) {
+			if (isAttackerASoldier) {
+				// soldier on worker
+				settlement.numWorkers -= 3;
+				livesToExpend = 0;
+			} else {
+				settlement.numWorkers--;
+				livesToExpend = 0;
+			}
+		}
 
-			if (deducted == false) {
+		if (settlement.numWorkers < 0)
+			settlement.numWorkers = 0;
+
+		if (settlement.numSoldiers <= 0 && settlement.numWorkers <= 0) {
+			takeOverSettlement(settlement, unit.teamUid);
+
+			if (livesToExpend > 0) {
 				if (unit.unitTypeUid == UnitDefinitions.UNIT_WORKER_UID) {
 					settlement.numWorkers++;
 				} else if (unit.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID) {
@@ -206,6 +331,26 @@ public class SettlementController extends BaseController {
 				}
 			}
 
+		}
+	}
+
+	private void takeOverSettlement(BaseSettlement settlement, int teamUid) {
+		if (settlement.teamUid == teamUid)
+			return;
+
+		settlement.teamUid = teamUid; // conquered
+
+		final var lNewOwner = mTeamController.getTeamByUid(teamUid);
+		if (lNewOwner.playerControlled) {
+			// Try and remove
+			if (settlement.btExecutor != null) {
+				mAiController.removeBtExecutor(settlement);
+			}
+		}
+
+		if (lNewOwner.playerControlled == false) {
+			// Try and add
+			mAiController.assignNewBtExecutor(settlement);
 		}
 	}
 
@@ -218,4 +363,5 @@ public class SettlementController extends BaseController {
 		// TODO: Unimplemented method
 		return false;
 	}
+
 }

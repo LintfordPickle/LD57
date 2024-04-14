@@ -10,8 +10,8 @@ public class ConstantsGame {
 
 	public static final String FOOTER_TEXT = "(c) 2024 LintfordPickle";
 
-	public static final String APPLICATION_NAME = "New Game Template";
-	public static final String WINDOW_TITLE = "New Game Template";
+	public static final String APPLICATION_NAME = "Hoomans v. Deemons";
+	public static final String WINDOW_TITLE = "Hoomans v. Deemons";
 
 	public static final float ASPECT_RATIO = 16.f / 9.f;
 

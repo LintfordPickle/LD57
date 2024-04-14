@@ -8,6 +8,7 @@
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionactions;
 
+import lintfordpickle.fantac.controllers.SettlementController;
 import lintfordpickle.fantac.data.ai.ConstantsBtContext;
 import lintfordpickle.fantac.data.teams.Team;
 
@@ -24,11 +25,30 @@ public class ComputeCanAffordGlobalExpand extends jbt.execution.task.leaf.action
 	protected void internalSpawn() {
 		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
 
-		// TODO: Actually do something
+		final var settlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
+		final var team = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
 
-		getContext().setVariable(ConstantsBtContext.GLOBAL_EXPAND, true);
-		final var lOurTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
-		lOurTeam.isExpanding = true;
+		final var totalSettlements = settlementController.getTotalSettlements(team.teamUid);
+		final var totalPop = settlementController.getTotalWorkers(team.teamUid);
+
+		if (totalSettlements > 0) {
+			final float avg = (float) totalPop / (float) totalSettlements;
+
+			// TODO: Hard-coded AI value for minimum pop count before expansion (global).
+
+//			if (avg > 10) {
+//				team.isExpanding = true;
+//				System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " is expanding.");
+//			} else {
+//				System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot expand.");
+//				team.isExpanding = false;
+//			}
+
+			team.isExpanding = true;
+		} else {
+			System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot expand.");
+			team.isExpanding = false;
+		}
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
