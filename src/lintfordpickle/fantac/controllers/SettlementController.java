@@ -6,6 +6,7 @@ import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.settlements.SettlementsManager;
 import lintfordpickle.fantac.data.teams.TeamManager;
 import lintfordpickle.fantac.data.units.Unit;
+import lintfordpickle.fantac.data.units.UnitDefinitions;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -49,19 +50,50 @@ public class SettlementController extends BaseController {
 	}
 
 	public BaseSettlement getClosestUnoccupiedSettlement(float x, float y) {
+		float dist = Float.MAX_VALUE;
+		BaseSettlement result = null;
+
 		final var lSettlements = mSettlementsManager.instances();
 		final var lNumSettlements = lSettlements.size();
 		for (int i = 0; i < lNumSettlements; i++) {
-			if (lSettlements.get(i).isAssigned() == false)
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
 				continue;
 
-			// TODO: unimplmented method
+			if (s.teamUid != TeamManager.CONTROLLED_NONE)
+				continue;
 
-			if (lSettlements.get(i).teamUid == TeamManager.CONTROLLED_NONE)
-				return lSettlements.get(i);
+			final var xx = s.x - x;
+			final var yy = s.y - y;
+			float d = xx * xx + yy * yy;
+			if (d < dist) {
+				dist = d;
+				result = s;
+			}
 
 		}
-		return null;
+		return result;
+	}
+
+	public BaseSettlement getWeakestEnemySettlement(int ourTeamUid) {
+		var result = (BaseSettlement) null;
+		int currentWeakest = Integer.MAX_VALUE;
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			// TOOD: Incomplete
+
+			if (s.teamUid != ourTeamUid && s.numWorkers < currentWeakest) {
+				result = s;
+				currentWeakest = s.numWorkers;
+			}
+
+		}
+		return result;
 	}
 
 	public int getNumUnoccupiedSettlements() {
@@ -152,16 +184,28 @@ public class SettlementController extends BaseController {
 
 		// TODO: Attacking / Defending calcs
 
+		boolean deducted = false;
 		if (settlement.numSoldiers > 0) {
 			// atacking soldiers
 			settlement.numSoldiers--;
-		} else {
+			deducted = true;
+		} else if (settlement.numWorkers > 0) {
 			// attacking workers
 			settlement.numWorkers--;
+			deducted = true;
 		}
 
 		if (settlement.numSoldiers <= 0 && settlement.numWorkers <= 0) {
 			settlement.teamUid = unit.teamUid; // conquered
+
+			if (deducted == false) {
+				if (unit.unitTypeUid == UnitDefinitions.UNIT_WORKER_UID) {
+					settlement.numWorkers++;
+				} else if (unit.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID) {
+					settlement.numSoldiers++;
+				}
+			}
+
 		}
 	}
 

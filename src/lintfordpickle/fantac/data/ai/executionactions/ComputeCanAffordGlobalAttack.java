@@ -19,7 +19,6 @@ public class ComputeCanAffordGlobalAttack extends jbt.execution.task.leaf.action
 	 */
 	public ComputeCanAffordGlobalAttack(lintfordpickle.fantac.data.ai.modelactions.ComputeCanAffordGlobalAttack modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
-
 	}
 
 	protected void internalSpawn() {
@@ -29,7 +28,7 @@ public class ComputeCanAffordGlobalAttack extends jbt.execution.task.leaf.action
 
 		getContext().setVariable(ConstantsBtContext.GLOBAL_ATTACK, true);
 		final var lOurTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
-		lOurTeam.isAttacking = false;
+		lOurTeam.isAttacking = true;
 
 	}
 

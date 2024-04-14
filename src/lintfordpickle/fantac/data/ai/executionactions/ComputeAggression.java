@@ -20,7 +20,6 @@ public class ComputeAggression extends jbt.execution.task.leaf.action.ExecutionA
 
 	protected void internalSpawn() {
 		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
-
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {

@@ -8,61 +8,51 @@
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionconditions;
 
+import lintfordpickle.fantac.data.ai.ConstantsBtContext;
+import lintfordpickle.fantac.data.settlements.BaseSettlement;
+
 /**
- * ExecutionCondition class created from MMPM condition
- * CheckCanAffordLocalAttack.
+ * ExecutionCondition class created from MMPM condition CheckCanAffordLocalAttack.
  */
-public class CheckCanAffordLocalAttack extends
-		jbt.execution.task.leaf.condition.ExecutionCondition {
+public class CheckCanAffordLocalAttack extends jbt.execution.task.leaf.condition.ExecutionCondition {
 
 	/**
-	 * Constructor. Constructs an instance of CheckCanAffordLocalAttack that is
-	 * able to run a
-	 * lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack.
+	 * Constructor. Constructs an instance of CheckCanAffordLocalAttack that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack.
 	 */
-	public CheckCanAffordLocalAttack(
-			lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack modelTask,
-			jbt.execution.core.BTExecutor executor,
-			jbt.execution.core.ExecutionTask parent) {
+	public CheckCanAffordLocalAttack(lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
 
 	}
 
 	protected void internalSpawn() {
-		/*
-		 * Do not remove this first line unless you know what it does and you
-		 * need not do it.
-		 */
-		this.getExecutor().requestInsertionIntoList(
-				jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
-		/* TODO: this method's implementation must be completed. */
-		System.out.println(this.getClass().getCanonicalName() + " spawned");
+		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
-		/*
-		 * TODO: this method's implementation must be completed. This function
-		 * should only return Status.SUCCESS, Status.FAILURE or Status.RUNNING.
-		 * No other values are allowed.
-		 */
-		return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+
+		final var lSettlement = (BaseSettlement) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_SETTLEMENT_OURS);
+		if (lSettlement == null)
+			return jbt.execution.core.ExecutionTask.Status.FAILURE;
+
+		// TODO: Hard coded number - should be based on attack aggression factor
+
+		if (lSettlement.numWorkers > 10)
+			return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+
+		return jbt.execution.core.ExecutionTask.Status.FAILURE;
 	}
 
 	protected void internalTerminate() {
-		/* TODO: this method's implementation must be completed. */
 	}
 
 	protected void restoreState(jbt.execution.core.ITaskState state) {
-		/* TODO: this method's implementation must be completed. */
 	}
 
 	protected jbt.execution.core.ITaskState storeState() {
-		/* TODO: this method's implementation must be completed. */
 		return null;
 	}
 
 	protected jbt.execution.core.ITaskState storeTerminationState() {
-		/* TODO: this method's implementation must be completed. */
 		return null;
 	}
 }

@@ -133,15 +133,16 @@ public class MoveTroops extends jbt.execution.task.leaf.action.ExecutionAction {
 		final var lJobController = (JobController) getContext().getVariable(ConstantsBtContext.CONTEXT_JOBACTION_CONTROLLER);
 		final var lSettlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
 
-		final var lUnoccupiedSettlementUid = getToSettlementUid();
-		final var lToSettlement = lSettlementController.getSettlementByUid(lUnoccupiedSettlementUid);
+		final var lGoToSettlementUid = getToSettlementUid();
+		final var lToSettlement = lSettlementController.getSettlementByUid(lGoToSettlementUid);
 
 		lJobController.sendArmy(lOurTeam.teamUid, lOurTeam.raceUid, UnitDefinitions.UNIT_WORKER_UID, lOurSettlement, lToSettlement);
-
-		System.out.println(this.getClass().getCanonicalName() + " spawned");
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
+
+		// sendArmy is instant
+
 		return jbt.execution.core.ExecutionTask.Status.SUCCESS;
 	}
 

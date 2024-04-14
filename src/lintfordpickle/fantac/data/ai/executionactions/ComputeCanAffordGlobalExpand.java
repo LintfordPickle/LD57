@@ -19,7 +19,6 @@ public class ComputeCanAffordGlobalExpand extends jbt.execution.task.leaf.action
 	 */
 	public ComputeCanAffordGlobalExpand(lintfordpickle.fantac.data.ai.modelactions.ComputeCanAffordGlobalExpand modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
-
 	}
 
 	protected void internalSpawn() {

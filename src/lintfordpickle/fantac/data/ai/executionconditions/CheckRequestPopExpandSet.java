@@ -4,20 +4,23 @@
 //                                                         
 //           ABSTRACT METHODS MUST BE IMPLEMENTED          
 //                                                         
-// Generated on 04/14/2024 15:00:06
+// Generated on 04/14/2024 20:35:42
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionconditions;
 
+import lintfordpickle.fantac.controllers.SettlementController;
 import lintfordpickle.fantac.data.ai.ConstantsBtContext;
 import lintfordpickle.fantac.data.teams.Team;
 
-/** ExecutionCondition class created from MMPM condition CheckGlobalExpand. */
-public class CheckGlobalExpand extends jbt.execution.task.leaf.condition.ExecutionCondition {
+/**
+ * ExecutionCondition class created from MMPM condition CheckRequestPopExpandSet.
+ */
+public class CheckRequestPopExpandSet extends jbt.execution.task.leaf.condition.ExecutionCondition {
 
 	/**
-	 * Constructor. Constructs an instance of CheckGlobalExpand that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand.
+	 * Constructor. Constructs an instance of CheckRequestPopExpandSet that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckRequestPopExpandSet.
 	 */
-	public CheckGlobalExpand(lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
+	public CheckRequestPopExpandSet(lintfordpickle.fantac.data.ai.modelconditions.CheckRequestPopExpandSet modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
 
 	}
@@ -29,10 +32,20 @@ public class CheckGlobalExpand extends jbt.execution.task.leaf.condition.Executi
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
 		final var lTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
 
-		if (lTeam.isExpanding == false)
+		final var lSettlementUidToExpand = lTeam.requestPopExpandSettlementUid;
+		if (lSettlementUidToExpand == -1) {
 			return jbt.execution.core.ExecutionTask.Status.FAILURE;
+		}
 
-		return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+		final var settlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
+		final var settlementToExpand = settlementController.getSettlementByUid(lSettlementUidToExpand);
+
+		if (settlementToExpand != null) {
+			getContext().setVariable(ConstantsBtContext.CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID, settlementToExpand.uid);
+			return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+		}
+
+		return jbt.execution.core.ExecutionTask.Status.FAILURE;
 	}
 
 	protected void internalTerminate() {

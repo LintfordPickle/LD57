@@ -1,5 +1,5 @@
 <Configuration>
-	<DomainFile>D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\raw\jbt\summoning_mmpm.xml</DomainFile>
+	<DomainFile>D:\dev\java\ludumdare\55 - Summoning\projects\FanTac\res\def\jbt\summoning_mmpm.xml</DomainFile>
 	
 	<ModelActionsPackage>lintfordpickle.fantac.data.ai.modelactions</ModelActionsPackage>
 	<ModelConditionsPackage>lintfordpickle.fantac.data.ai.modelconditions</ModelConditionsPackage>

@@ -27,8 +27,6 @@ public class ComputeClosestNeutralSettlement extends jbt.execution.task.leaf.act
 
 	protected void internalSpawn() {
 		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
-
-		System.out.println(this.getClass().getCanonicalName() + " spawned");
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {

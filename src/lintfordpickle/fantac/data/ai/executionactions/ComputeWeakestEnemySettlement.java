@@ -8,60 +8,55 @@
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionactions;
 
+import lintfordpickle.fantac.controllers.SettlementController;
+import lintfordpickle.fantac.data.ai.ConstantsBtContext;
+import lintfordpickle.fantac.data.settlements.BaseSettlement;
+
 /**
  * ExecutionAction class created from MMPM action ComputeWeakestEnemySettlement.
  */
-public class ComputeWeakestEnemySettlement extends
-		jbt.execution.task.leaf.action.ExecutionAction {
+public class ComputeWeakestEnemySettlement extends jbt.execution.task.leaf.action.ExecutionAction {
 
 	/**
-	 * Constructor. Constructs an instance of ComputeWeakestEnemySettlement that
-	 * is able to run a
-	 * lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement.
+	 * Constructor. Constructs an instance of ComputeWeakestEnemySettlement that is able to run a lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement.
 	 */
-	public ComputeWeakestEnemySettlement(
-			lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement modelTask,
-			jbt.execution.core.BTExecutor executor,
-			jbt.execution.core.ExecutionTask parent) {
+	public ComputeWeakestEnemySettlement(lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
 
 	}
 
 	protected void internalSpawn() {
-		/*
-		 * Do not remove this first line unless you know what it does and you
-		 * need not do it.
-		 */
-		this.getExecutor().requestInsertionIntoList(
-				jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
-		/* TODO: this method's implementation must be completed. */
-		System.out.println(this.getClass().getCanonicalName() + " spawned");
+		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
-		/*
-		 * TODO: this method's implementation must be completed. This function
-		 * should only return Status.SUCCESS, Status.FAILURE or Status.RUNNING.
-		 * No other values are allowed.
-		 */
-		return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+
+		final var lOurSettlement = (BaseSettlement) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_SETTLEMENT_OURS);
+		final var lSettlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
+		final var lUnoccupiedSettlement = lSettlementController.getWeakestEnemySettlement(lOurSettlement.teamUid);
+
+		if (lUnoccupiedSettlement != null) {
+
+			getContext().setVariable(ConstantsBtContext.CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID, lOurSettlement.uid);
+			getContext().setVariable(ConstantsBtContext.CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID, lUnoccupiedSettlement.uid);
+
+			return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+		}
+
+		return jbt.execution.core.ExecutionTask.Status.FAILURE;
 	}
 
 	protected void internalTerminate() {
-		/* TODO: this method's implementation must be completed. */
 	}
 
 	protected void restoreState(jbt.execution.core.ITaskState state) {
-		/* TODO: this method's implementation must be completed. */
 	}
 
 	protected jbt.execution.core.ITaskState storeState() {
-		/* TODO: this method's implementation must be completed. */
 		return null;
 	}
 
 	protected jbt.execution.core.ITaskState storeTerminationState() {
-		/* TODO: this method's implementation must be completed. */
 		return null;
 	}
 }

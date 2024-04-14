@@ -2,7 +2,7 @@
 //                   MACHINE GENERATED CODE                
 //                       DO NOT MODIFY                     
 //                                                         
-// Generated on 04/14/2024 17:53:03
+// Generated on 04/14/2024 21:01:27
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.bts;
 
@@ -29,46 +29,100 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 
 	/* Static initialization of all the trees. */
 	static {
-		BtSettlement = new jbt.model.task.decorator.ModelRepeat(
+		BtSettlement = new jbt.model.task.composite.ModelSequence(
 				null,
-				new jbt.model.task.composite.ModelSelector(
+				new jbt.model.task.decorator.ModelRepeat(
 						null,
-						new jbt.model.task.composite.ModelSequence(
+						new jbt.model.task.composite.ModelSelector(
 								null,
-								new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
-										null),
-								new lintfordpickle.fantac.data.ai.modelactions.ComputeClosestNeutralSettlement(
-										null),
-								new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand(
-										null),
-								new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+								new jbt.model.task.composite.ModelSequence(
 										null,
+										new jbt.model.task.leaf.ModelVariableRenamer(
+												null, "FRED", "GEORGE"),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
+												null),
+										new lintfordpickle.fantac.data.ai.modelactions.ComputeClosestNeutralSettlement(
+												null),
+										new jbt.model.task.leaf.ModelWait(null,
+												500),
+										new jbt.model.task.composite.ModelSelector(
+												null,
+												new jbt.model.task.composite.ModelSequence(
+														null,
+														new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand(
+																null),
+														new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+																null,
+																null,
+																"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
+												new lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToExpand(
+														null))),
+								new jbt.model.task.composite.ModelSequence(
 										null,
-										"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(
+												null),
+										new lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement(
+												null),
+										new jbt.model.task.composite.ModelSelector(
+												null,
+												new jbt.model.task.composite.ModelSequence(
+														null,
+														new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack(
+																null),
+														new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+																null,
+																null,
+																"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
+												new lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToAttack(
+														null))),
+								new jbt.model.task.composite.ModelSequence(
 										null,
-										"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckRequestPopExpandSet(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand(
+												null),
+										new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+												null,
+												null,
+												"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
+								new jbt.model.task.composite.ModelSequence(
 										null,
-										"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
-										null,
-										"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")),
-						new jbt.model.task.composite.ModelSequence(
-								null,
-								new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(
-										null),
-								new lintfordpickle.fantac.data.ai.modelactions.ComputeWeakestEnemySettlement(
-										null),
-								new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack(
-										null),
-								new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
-										null,
-										null,
-										"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
-										null,
-										"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
-										null,
-										"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
-										null,
-										"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID"))));
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckRequestPopAttackSet(
+												null),
+										new lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalAttack(
+												null),
+										new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+												null,
+												null,
+												"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID",
+												null,
+												"CONTEXT_VARS_MOVETROOPS_UNIT_TYPE_UID")))));
 
 		BtTeam = new jbt.model.task.decorator.ModelRepeat(
 				null,

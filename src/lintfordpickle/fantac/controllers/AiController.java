@@ -64,25 +64,26 @@ public class AiController extends BaseController {
 		mUnitController = (UnitController) lControllerManager.getControllerByNameRequired(UnitController.CONTROLLER_NAME, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mJobController = (JobController) lControllerManager.getControllerByNameRequired(JobController.CONTROLLER_NAME, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 
-		final var lNumTeams = mTeamManager.teams.size();
-		for (int i = 0; i < lNumTeams; i++) {
-			final var lTeam = mTeamManager.teams.get(i);
-			if (lTeam.teamUid == TeamManager.CONTROLLED_NONE || lTeam.teamUid == TeamManager.CONTROLLED_PLAYER)
-				continue;
+		if (ConstantsGame.IS_AI_ENABLED) {
+			final var lNumTeams = mTeamManager.teams.size();
+			for (int i = 0; i < lNumTeams; i++) {
+				final var lTeam = mTeamManager.teams.get(i);
+				if (lTeam.teamUid == TeamManager.CONTROLLED_NONE || lTeam.teamUid == TeamManager.CONTROLLED_PLAYER)
+					continue;
 
-			assignNewBtExecutor(lTeam);
-		}
+				assignNewBtExecutor(lTeam);
+			}
 
-		final var lSettlementManager = mSettlementController.settlementsManager();
-		final var lSettlements = lSettlementManager.instances();
-		final var lNumInstances = lSettlements.size();
-		for (int i = 0; i < lNumInstances; i++) {
-			final var lSettlement = lSettlements.get(i);
-			if (lSettlement.isAssigned() == false)
-				continue;
+			final var lSettlementManager = mSettlementController.settlementsManager();
+			final var lSettlements = lSettlementManager.instances();
+			final var lNumInstances = lSettlements.size();
+			for (int i = 0; i < lNumInstances; i++) {
+				final var lSettlement = lSettlements.get(i);
+				if (lSettlement.isAssigned() == false)
+					continue;
 
-			assignNewBtExecutor(lSettlement);
-
+				assignNewBtExecutor(lSettlement);
+			}
 		}
 	}
 

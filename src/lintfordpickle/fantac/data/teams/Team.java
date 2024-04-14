@@ -16,6 +16,9 @@ public class Team {
 	public boolean isExpanding;
 	public boolean isAttacking;
 
+	public int requestPopExpandSettlementUid;
+	public int requestPopAttackSettlementUid;
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -24,5 +27,8 @@ public class Team {
 		this.teamUid = teamUid;
 		this.raceUid = raceUid;
 		this.playerControlled = playerControlled;
+
+		requestPopExpandSettlementUid = -1;
+		requestPopAttackSettlementUid = -1;
 	}
 }

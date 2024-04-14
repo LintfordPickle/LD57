@@ -21,6 +21,9 @@
 
 		<!-- Computes the strongest enemy settlement. -->
 		<!-- <Action name="ComputeStrongestEnemySettlement" /> -->
+		
+		<Action name="SetRequestPopToExpand" />
+		<Action name="SetRequestPopToAttack" />
 
 		<!-- Moves a type of unit from one settlement to another -->
 		<Action name="MoveTroops">
@@ -43,8 +46,12 @@
 		<Sensor name="AnyUnoccupiedSettlements" type="BOOLEAN" />
 		<Sensor name="CheckGlobalExpand" type="BOOLEAN" />
 		<Sensor name="CheckGlobalAttack" type="BOOLEAN" />
+		
 		<Sensor name="CheckCanAffordLocalExpand" type="BOOLEAN" />
 		<Sensor name="CheckCanAffordLocalAttack" type="BOOLEAN" />
+		
+		<Sensor name="CheckRequestPopExpandSet" type="BOOLEAN" />
+		<Sensor name="CheckRequestPopAttackSet" type="BOOLEAN" />
 
 		<!-- Potentially missing sensor nodes ... -->
 		<!--   + Danger checks and (re)actions -->

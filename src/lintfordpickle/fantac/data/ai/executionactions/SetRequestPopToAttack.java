@@ -4,22 +4,21 @@
 //                                                         
 //           ABSTRACT METHODS MUST BE IMPLEMENTED          
 //                                                         
-// Generated on 04/14/2024 15:02:25
+// Generated on 04/14/2024 20:15:05
 // ******************************************************* 
-package lintfordpickle.fantac.data.ai.executionconditions;
+package lintfordpickle.fantac.data.ai.executionactions;
 
 import lintfordpickle.fantac.data.ai.ConstantsBtContext;
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
+import lintfordpickle.fantac.data.teams.Team;
 
-/**
- * ExecutionCondition class created from MMPM condition CheckCanAffordLocalExpand.
- */
-public class CheckCanAffordLocalExpand extends jbt.execution.task.leaf.condition.ExecutionCondition {
+/** ExecutionAction class created from MMPM action SetRequestPopToAttack. */
+public class SetRequestPopToAttack extends jbt.execution.task.leaf.action.ExecutionAction {
 
 	/**
-	 * Constructor. Constructs an instance of CheckCanAffordLocalExpand that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand.
+	 * Constructor. Constructs an instance of SetRequestPopToAttack that is able to run a lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToAttack.
 	 */
-	public CheckCanAffordLocalExpand(lintfordpickle.fantac.data.ai.modelconditions.CheckCanAffordLocalExpand modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
+	public SetRequestPopToAttack(lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToAttack modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
 
 	}
@@ -30,14 +29,13 @@ public class CheckCanAffordLocalExpand extends jbt.execution.task.leaf.condition
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
 
+		final var lTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
 		final var lSettlement = (BaseSettlement) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_SETTLEMENT_OURS);
-		if (lSettlement == null)
-			return jbt.execution.core.ExecutionTask.Status.FAILURE;
 
-		// TODO: Hard coded number - should be based on expansion aggression factor
-
-		if (lSettlement.numWorkers > 10)
+		if (lTeam.requestPopAttackSettlementUid == -1) {
+			lTeam.requestPopAttackSettlementUid = lSettlement.uid;
 			return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+		}
 
 		return jbt.execution.core.ExecutionTask.Status.FAILURE;
 	}
