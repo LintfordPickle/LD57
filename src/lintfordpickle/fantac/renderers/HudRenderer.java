@@ -5,6 +5,7 @@ import lintfordpickle.fantac.controllers.JobController;
 import lintfordpickle.fantac.controllers.SettlementController;
 import lintfordpickle.fantac.controllers.TeamController;
 import lintfordpickle.fantac.controllers.UnitController;
+import lintfordpickle.fantac.data.teams.Team;
 import lintfordpickle.fantac.data.teams.TeamRace;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
@@ -129,28 +130,27 @@ public class HudRenderer extends BaseRenderer {
 			final var lTeamIndexOffset = i - 1; // not counting UNOCCUPIED
 			final var lHudRect = getTeamHudRectangle(lTeamIndexOffset, lNumTeams - 1);
 
-			var lTeamColor = ColorConstants.WHITE;
-			if (lTeamIndexOffset == 0)
-				lTeamColor = ColorConstants.RED;
-			if (lTeamIndexOffset == 1)
-				lTeamColor = ColorConstants.BLUE_SKY;
-
+			var lTeamColor = Team.getTeamColor(t.teamUid);
 			final var lSpriteFrame = mGameSpritesheet.getSpriteFrame("HUDTEAMPANEL");
 			lSpriteBatch.draw(mGameSpritesheet, lSpriteFrame, lHudRect, -0.2f, lTeamColor);
 
-			final var s_wor = mSettlementController.getTotalWorkers(t.teamUid);
-			final var u_wor = mUnitController.getTotalWorkers(t.teamUid);
-			final var j_wor = mJobController.getTotalWorkers(t.teamUid);
-			final var lTotalWorkers = s_wor + u_wor + j_wor;
+			int totalWorkers = 0;
+			int totalSoldiers = 0;
+			if (t.isPlaying) {
+				final var s_wor = mSettlementController.getTotalWorkers(t.teamUid);
+				final var u_wor = mUnitController.getTotalWorkers(t.teamUid);
+				final var j_wor = mJobController.getTotalWorkers(t.teamUid);
+				totalWorkers = s_wor + u_wor + j_wor;
 
-			final var s_sol = mSettlementController.getTotalSoldiers(t.teamUid);
-			final var u_sol = mUnitController.getTotalSoldiers(t.teamUid);
-			final var j_sol = mJobController.getTotalSoldiers(t.teamUid);
-			final var lTotalSoldiers = s_sol + u_sol + j_sol;
+				final var s_sol = mSettlementController.getTotalSoldiers(t.teamUid);
+				final var u_sol = mUnitController.getTotalSoldiers(t.teamUid);
+				final var j_sol = mJobController.getTotalSoldiers(t.teamUid);
+				totalSoldiers = s_sol + u_sol + j_sol;
+			}
 
 			lFontBatch.drawText("PLAYER " + i, lHudRect.x() + 16, lHudRect.y() + 16, -0.1f, ColorConstants.WHITE, 1.f);
-			lFontBatch.drawText("W: " + lTotalWorkers, lHudRect.x() + 16, lHudRect.y() + 40, -0.1f, ColorConstants.WHITE, 1.f);
-			lFontBatch.drawText("S: " + lTotalSoldiers, lHudRect.x() + 16, lHudRect.y() + 60, -0.1f, ColorConstants.WHITE, 1.f);
+			lFontBatch.drawText("W: " + totalWorkers, lHudRect.x() + 16, lHudRect.y() + 40, -0.1f, ColorConstants.WHITE, 1.f);
+			lFontBatch.drawText("S: " + totalSoldiers, lHudRect.x() + 16, lHudRect.y() + 60, -0.1f, ColorConstants.WHITE, 1.f);
 
 			// portrait
 			SpriteFrame portraitFrame = null;
@@ -160,8 +160,12 @@ public class HudRenderer extends BaseRenderer {
 				portraitFrame = mGameSpritesheet.getSpriteFrame("PORTRAITDEMON");
 			}
 
+			var portraitColor = ColorConstants.WHITE;
+			if (t.isPlaying == false)
+				portraitColor = ColorConstants.getWhiteWithAlpha(0.15f);
+
 			if (portraitFrame != null) {
-				lSpriteBatch.draw(mGameSpritesheet, portraitFrame, lHudRect.x() + 165, lHudRect.y() + 20, 29 * 2, 29 * 2, -0.2f, ColorConstants.WHITE);
+				lSpriteBatch.draw(mGameSpritesheet, portraitFrame, lHudRect.x() + 165, lHudRect.y() + 20, 29 * 2, 29 * 2, -0.2f, portraitColor);
 			}
 		}
 

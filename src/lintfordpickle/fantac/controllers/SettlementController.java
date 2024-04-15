@@ -88,7 +88,7 @@ public class SettlementController extends BaseController {
 		return result;
 	}
 
-	public BaseSettlement getClosestSchool(int teamUid, float x, float y) {
+	public BaseSettlement getOurClosestSchool(int teamUid, float x, float y) {
 		float dist = Float.MAX_VALUE;
 		BaseSettlement result = null;
 
@@ -100,6 +100,32 @@ public class SettlementController extends BaseController {
 				continue;
 
 			if (s.teamUid != teamUid)
+				continue;
+
+			if (s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_PENTAGRAM && s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_CASTLE)
+				continue;
+
+			final var xx = s.x - x;
+			final var yy = s.y - y;
+			float d = xx * xx + yy * yy;
+			if (d < dist) {
+				dist = d;
+				result = s;
+			}
+
+		}
+		return result;
+	}
+
+	public BaseSettlement getClosestSchool(float x, float y) {
+		float dist = Float.MAX_VALUE;
+		BaseSettlement result = null;
+
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
 				continue;
 
 			if (s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_PENTAGRAM && s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_CASTLE)
@@ -320,24 +346,33 @@ public class SettlementController extends BaseController {
 		var isAttackerASoldier = unit.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID;
 		var livesToExpend = isAttackerASoldier ? 3 : 1;
 
+		// we are attacking a soldier
 		if (settlement.numSoldiers > 0) {
 			if (isAttackerASoldier) {
-				// soldier on soldier
+				// soldier => soldier
 				settlement.numSoldiers--;
 				livesToExpend = 0;
 			} else {
-				settlement.numSoldiers--;
-				settlement.numWorkers += 2;
+				// worker => soldier
+				// [old] settlement.numWorkers += 2;
+
+				settlement.soldDmgCounter++;
+				if (settlement.soldDmgCounter >= 3) {
+					settlement.numSoldiers--;
+					settlement.soldDmgCounter = 0;
+				}
+
 				livesToExpend = 0;
 			}
 		}
 
 		if (livesToExpend > 0 && settlement.numWorkers > 0) {
 			if (isAttackerASoldier) {
-				// soldier on worker
+				// soldier => worker
 				settlement.numWorkers -= 3;
 				livesToExpend = 0;
 			} else {
+				// worker => worker
 				settlement.numWorkers--;
 				livesToExpend = 0;
 			}
@@ -364,6 +399,7 @@ public class SettlementController extends BaseController {
 			return;
 
 		settlement.teamUid = teamUid; // conquered
+		settlement.soldDmgCounter = 0;
 
 		final var lNewOwner = mTeamController.getTeamByUid(teamUid);
 		if (lNewOwner.playerControlled) {

@@ -33,6 +33,48 @@
                       </Node>
                     </Children>
                   </Node>
+                  <Node id="Node_56" type="Sequence">
+                    <Children>
+                      <Node id="Node_57" type="Inverter">
+                        <Children>
+                          <Node id="Node_58" name="AnySchools" type="Condition" />
+                        </Children>
+                      </Node>
+                      <Node id="Node_61" type="Selector">
+                        <Children>
+                          <Node id="Node_72" type="Inverter">
+                            <Children>
+                              <Node id="Node_60" name="ComputeClosestSchool" type="Action" />
+                            </Children>
+                          </Node>
+                          <Node id="Node_62" type="Sequence">
+                            <Children>
+                              <Node id="Node_68" name="CheckGlobalAttackOverride" type="Condition" />
+                              <Node id="Node_63" name="MoveTroops" type="Action">
+                                <Parameters>
+                                  <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
+                                  <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
+                                  <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
+                                </Parameters>
+                              </Node>
+                            </Children>
+                          </Node>
+                          <Node id="Node_64" type="Sequence">
+                            <Children>
+                              <Node id="Node_69" name="CheckGlobalExpandOverride" type="Condition" />
+                              <Node id="Node_66" name="MoveWorkers" type="Action">
+                                <Parameters>
+                                  <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
+                                  <Parameter name="toSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID</Parameter>
+                                  <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
+                                </Parameters>
+                              </Node>
+                            </Children>
+                          </Node>
+                        </Children>
+                      </Node>
+                    </Children>
+                  </Node>
                   <Node id="Node_8" type="Sequence">
                     <Children>
                       <Node id="Node_9" name="CheckGlobalAttack" type="Condition" />

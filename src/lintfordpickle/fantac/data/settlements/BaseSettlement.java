@@ -23,6 +23,11 @@ public class BaseSettlement extends ClosedPooledBaseData {
 	public int numWorkers;
 	public int numSoldiers; // knights / demons
 
+	// Because a soldier is worth more than a worker, and because the units attack individually (as they arrive at a hostile destination)
+	// we need to track the health of the individual soldiers over them. This is needed, otherwise an army of workers attacking a settlement
+	// with even a single soldier in garrison wouild never succeed.
+	public int soldDmgCounter;
+
 	public double rengenWorkerPool;
 	public double rengenSoldierPool;
 
@@ -176,5 +181,7 @@ public class BaseSettlement extends ClosedPooledBaseData {
 		numWorkers = 5;
 		settlementTypeUid = SettlementType.SETTLEMENT_TYPE_NONE;
 
+		mFlagSpriteInstance = null;
+		mSettlementInstance = null;
 	}
 }

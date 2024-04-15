@@ -2,7 +2,7 @@
 //                   MACHINE GENERATED CODE                
 //                       DO NOT MODIFY                     
 //                                                         
-// Generated on 04/15/2024 08:59:43
+// Generated on 04/15/2024 21:57:58
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.bts;
 
@@ -61,6 +61,42 @@ public class BtLibrary implements jbt.execution.core.IBTLibrary {
 																null)),
 												new lintfordpickle.fantac.data.ai.modelactions.SetRequestPopToExpand(
 														null))),
+								new jbt.model.task.composite.ModelSequence(
+										null,
+										new jbt.model.task.decorator.ModelInverter(
+												null,
+												new lintfordpickle.fantac.data.ai.modelconditions.AnySchools(
+														null)),
+										new jbt.model.task.composite.ModelSelector(
+												null,
+												new jbt.model.task.decorator.ModelInverter(
+														null,
+														new lintfordpickle.fantac.data.ai.modelactions.ComputeClosestSchool(
+																null)),
+												new jbt.model.task.composite.ModelSequence(
+														null,
+														new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttackOverride(
+																null),
+														new lintfordpickle.fantac.data.ai.modelactions.MoveTroops(
+																null,
+																null,
+																"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")),
+												new jbt.model.task.composite.ModelSequence(
+														null,
+														new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpandOverride(
+																null),
+														new lintfordpickle.fantac.data.ai.modelactions.MoveWorkers(
+																null,
+																null,
+																"CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_TO_SETTLEMENT_UID",
+																null,
+																"CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID")))),
 								new jbt.model.task.composite.ModelSequence(
 										null,
 										new lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalAttack(

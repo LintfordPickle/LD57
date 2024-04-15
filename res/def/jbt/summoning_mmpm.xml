@@ -19,6 +19,7 @@
 		<!-- Computes the weakest enemy settlement. -->
 		<Action name="ComputeWeakestEnemySettlement" />
 		<Action name="ComputeClosestEnemySettlement" />
+		<Action name="ComputeClosestSchool" />
 
 		<!-- Computes the strongest enemy settlement. -->
 		<!-- <Action name="ComputeStrongestEnemySettlement" /> -->

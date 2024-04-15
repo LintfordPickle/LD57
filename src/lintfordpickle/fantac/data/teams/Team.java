@@ -1,6 +1,28 @@
 package lintfordpickle.fantac.data.teams;
 
+import net.lintfordlib.core.graphics.Color;
+import net.lintfordlib.core.graphics.ColorConstants;
+
 public class Team {
+
+	private static final Color team0Color = new Color(ColorConstants.RED);
+	private static final Color team1Color = new Color(ColorConstants.BLUE_SKY);
+	private static final Color team2Color = new Color(ColorConstants.YELLOW);
+	private static final Color team3Color = new Color(ColorConstants.GREEN);
+
+	public static Color getTeamColor(int teamUid) {
+		switch (teamUid) {
+		default:
+		case 0:
+			return team0Color;
+		case 1:
+			return team1Color;
+		case 2:
+			return team2Color;
+		case 3:
+			return team3Color;
+		}
+	}
 
 	// --------------------------------------
 	// Variables

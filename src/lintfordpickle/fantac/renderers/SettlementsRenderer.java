@@ -3,6 +3,7 @@ package lintfordpickle.fantac.renderers;
 import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.controllers.SettlementController;
 import lintfordpickle.fantac.data.settlements.SettlementType;
+import lintfordpickle.fantac.data.teams.Team;
 import lintfordpickle.fantac.data.teams.TeamManager;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
@@ -119,6 +120,10 @@ public class SettlementsRenderer extends BaseRenderer {
 				continue;
 
 			final var lSettlementSpriteFrame = lSettlement.mSettlementInstance.currentSpriteFrame();
+
+			if (lSettlementSpriteFrame == null)
+				continue;
+
 			final var lWidth = lSettlementSpriteFrame.width() * 2.f;
 			final var lHeight = lSettlementSpriteFrame.height() * 2.f;
 
@@ -134,12 +139,7 @@ public class SettlementsRenderer extends BaseRenderer {
 				final var lFlagSpriteFrame = lSettlement.mFlagSpriteInstance.currentSpriteFrame();
 				if (lFlagSpriteFrame != null) {
 
-					var lTeamColor = ColorConstants.WHITE;
-					if (lSettlement.teamUid == 1)
-						lTeamColor = ColorConstants.RED;
-					if (lSettlement.teamUid == 2)
-						lTeamColor = ColorConstants.BLUE_SKY;
-
+					final var lTeamColor = Team.getTeamColor(lSettlement.teamUid);
 					lSpriteBatch.drawAroundCenter(mGameSpritesheet, lFlagSpriteFrame, xx, yy - lHeight * .5f, lFlagSpriteFrame.width() * 2.f, lFlagSpriteFrame.height() * 2.f, 0.f, 0.f, 0.f, -0.1f, lTeamColor);
 				}
 			}
@@ -151,10 +151,6 @@ public class SettlementsRenderer extends BaseRenderer {
 			final var lNumSoldiersTextWidth = lFontUnit.getStringWidth("" + lSettlement.numSoldiers);
 
 			lFontUnit.drawText("" + lSettlement.numSoldiers, xx - lNumSoldiersTextWidth * .5f, yy + lWidth * .5f + lFontUnit.fontHeight() + 2, -0.1f, ColorConstants.BLUE, 1.f);
-
-//			if (ConstantsGame.IS_DEBUG_RENDERING_MODE) {
-//				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), xx, yy, lSettlement.radius);
-//			}
 
 		}
 

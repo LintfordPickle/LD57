@@ -41,6 +41,16 @@ public class NewGameInfo implements GameInfo {
 	}
 
 	@Override
+	public int uiCanvasResolutionWidth() {
+		return ConstantsGame.GAME_CANVAS_WIDTH;
+	}
+	
+	@Override
+	public int uiCanvasResolutionHeight() {
+		return ConstantsGame.GAME_CANVAS_HEIGHT;
+	}
+	
+	@Override
 	public boolean stretchGameResolution() {
 		return true;
 	}
