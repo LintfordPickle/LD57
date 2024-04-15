@@ -3,6 +3,7 @@
   "ItemFilepaths": [
     "ps_footsteps.json",
     "ps_demonsteps.json",
-    "ps_stepfire.json"
+    "ps_stepfire.json",
+    "leaf.json"
   ]
 }

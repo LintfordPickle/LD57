@@ -25,10 +25,8 @@
       "positionRelOffsetRot": 0.0,
       "useSharedParticleSystem": false,
       "childEmitters": [],
-      "name": "EM_TEST2",
-      "displayName": "EM_TEST2"
+      "name": "EM_TEST2"
     }
   ],
-  "name": "EM_TEST",
-  "displayName": "EM_TEST"
+  "name": "EM_TEST"
 }

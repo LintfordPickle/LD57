@@ -16,10 +16,10 @@
   "trim": false,
   "allowRotations": false,
   "spritePadding": 2,
-  "textureWidthMax": 256,
-  "textureWidthActual": 256,
-  "textureHeightMax": 256,
-  "textureHeightActual": 256,
+  "textureWidthMax": 512,
+  "textureWidthActual": 512,
+  "textureHeightMax": 512,
+  "textureHeightActual": 511,
   "forcePoTTextures": true,
   "autoSizeTexture": false,
   "itemFilenames": [
@@ -36,6 +36,18 @@
         "ATTACK_03",
         "ATTACK_04",
         "ATTACK_05"
+      ]
+    },
+    "flag": {
+      "loopAnimation": true,
+      "frameDuration": 100,
+      "animationSprites": [
+        "FLAG00",
+        "FLAG01",
+        "FLAG02",
+        "FLAG03",
+        "FLAG04",
+        "FLAG05"
       ]
     }
   }
