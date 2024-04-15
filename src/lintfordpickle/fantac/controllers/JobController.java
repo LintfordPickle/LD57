@@ -32,9 +32,9 @@ public class JobController extends BaseController implements IInputProcessor {
 	private SettlementController mSettlementController;
 	private float mMouseCooldownTimer;
 
-	private boolean mSingleClickActions = true;
 	private boolean mProcessingInput;
 	private int mProcessingArmyUnitType;
+	private BaseSettlement mTempFoundFromSettlement;
 	private BaseSettlement mFoundFromSettlement;
 	private BaseSettlement mFoundToSettlement;
 
@@ -43,10 +43,6 @@ public class JobController extends BaseController implements IInputProcessor {
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
-
-	public boolean isMulticlick() {
-		return !mSingleClickActions;
-	}
 
 	public JobsManager jobsManager() {
 		return mJobsManager;
@@ -111,15 +107,8 @@ public class JobController extends BaseController implements IInputProcessor {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
-		if (mSingleClickActions) {
-			if (handleSingleClickInput(core))
-				return true;
-
-		} else {
-			if (handleMultiClickInput(core))
-				return true;
-
-		}
+		if (handleSingleClickInput(core))
+			return true;
 
 		return super.handleInput(core);
 	}
@@ -133,6 +122,10 @@ public class JobController extends BaseController implements IInputProcessor {
 
 			mFoundFromSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
 			if (mFoundFromSettlement != null) {
+
+				if (mFoundFromSettlement.teamUid == 1)
+					mFoundFromSettlement.isSelected = true;
+
 				final var lOwner = mTeamController.getTeamByUid(mFoundFromSettlement.teamUid);
 				if (lOwner != null && lOwner.playerControlled) {
 					mProcessingInput = true;
@@ -148,19 +141,20 @@ public class JobController extends BaseController implements IInputProcessor {
 			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
 
 			mFoundFromSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
-			if (mFoundFromSettlement != null) {
+			if (mFoundFromSettlement != null && mFoundFromSettlement.teamUid == 1) {
 				mProcessingInput = true;
+				mFoundFromSettlement.isSelected = true;
 
 				return true;
 			}
 		}
 
 		if (mProcessingInput) {
-			if (core.input().mouse().isMouseLeftButtonDown() == false && core.input().mouse().isMouseRightButtonDown() == false) {
-				// check if a settlement was selected (under the mouse)
-				final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
-				final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
+			// check if a settlement was selected (under the mouse)
+			final var lMouseX = core.gameCamera().getMouseWorldSpaceX();
+			final var lMouseY = core.gameCamera().getMouseWorldSpaceY();
 
+			if (core.input().mouse().isMouseLeftButtonDown() == false && core.input().mouse().isMouseRightButtonDown() == false) {
 				mFoundToSettlement = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
 				if (mFoundToSettlement != null) {
 
@@ -171,22 +165,43 @@ public class JobController extends BaseController implements IInputProcessor {
 				}
 
 				mProcessingInput = false;
+				mFoundFromSettlement.isSelected = false;
+				mFoundFromSettlement.isHoverWorkers = false;
+				mFoundFromSettlement.isHoverSoldier = false;
+
+				if (mTempFoundFromSettlement != null) {
+					mTempFoundFromSettlement.isHoverSoldier = false;
+					mTempFoundFromSettlement.isHoverWorkers = false;
+					mTempFoundFromSettlement.isSelected = false;
+					mTempFoundFromSettlement = null;
+				}
+
 				mFoundFromSettlement = null;
 				mFoundToSettlement = null;
 				mProcessingArmyUnitType = -1;
 
 			} else {
-				// Still working on it
+				final var t = mSettlementController.getSettlementAtPosition(lMouseX, lMouseY, 4);
+				if (t != null && t.uid != mFoundFromSettlement.uid) {
+					mTempFoundFromSettlement = t;
+					if (mProcessingArmyUnitType == UnitDefinitions.UNIT_SOLDIER_UID) {
+						mTempFoundFromSettlement.isHoverSoldier = true;
+					} else {
+						mTempFoundFromSettlement.isHoverWorkers = true;
+					}
+
+				} else {
+					if (mTempFoundFromSettlement != null) {
+						mTempFoundFromSettlement.isHoverSoldier = false;
+						mTempFoundFromSettlement.isHoverWorkers = false;
+						mTempFoundFromSettlement.isSelected = false;
+
+						mTempFoundFromSettlement = null;
+					}
+				}
 			}
 		}
 
-		return false;
-	}
-
-	private boolean handleMultiClickInput(LintfordCore core) {
-
-		
-		
 		return false;
 	}
 

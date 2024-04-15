@@ -152,6 +152,26 @@ public class SettlementsRenderer extends BaseRenderer {
 
 			lFontUnit.drawText("" + lSettlement.numSoldiers, xx - lNumSoldiersTextWidth * .5f, yy + lWidth * .5f + lFontUnit.fontHeight() + 2, -0.1f, ColorConstants.BLUE, 1.f);
 
+			if (lSettlement.isSelected) {
+				lSpriteBatch.draw(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SELECT_LEFT_32"), lSettlement.x - lWidth / 2, lSettlement.y - lHeight / 2, 32 * 2, 32 * 2, -0.1f, ColorConstants.WHITE);
+
+				final var xxx = lSettlement.x + lWidth / 2 - 32 * 2;
+				lSpriteBatch.draw(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SELECT_RIGHT_32"), xxx, lSettlement.y - lHeight / 2, 32 * 2, 32 * 2, -0.1f, ColorConstants.WHITE);
+			}
+
+			if (lSettlement.isHoverWorkers) {
+				lSpriteBatch.draw(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SELECT_LEFT_32"), lSettlement.x - lWidth / 2, lSettlement.y - lHeight / 2, 32 * 2, 32 * 2, -0.1f, ColorConstants.WHITE);
+
+				final var xxx = lSettlement.x + lWidth / 2 - 32 * 2;
+				lSpriteBatch.draw(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SELECT_RIGHT_32"), xxx, lSettlement.y - lHeight / 2, 32 * 2, 32 * 2, -0.1f, ColorConstants.WHITE);
+			}
+
+			if (lSettlement.isHoverSoldier) {
+				lSpriteBatch.draw(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SELECT_LEFT_32"), lSettlement.x - lWidth / 2, lSettlement.y - lHeight / 2, 32 * 2, 32 * 2, -0.1f, ColorConstants.RED);
+
+				final var xxx = lSettlement.x + lWidth / 2 - 32 * 2;
+				lSpriteBatch.draw(mGameSpritesheet, mGameSpritesheet.getSpriteFrame("SELECT_RIGHT_32"), xxx, lSettlement.y - lHeight / 2, 32 * 2, 32 * 2, -0.1f, ColorConstants.RED);
+			}
 		}
 
 		lSpriteBatch.end();

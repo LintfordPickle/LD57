@@ -20,6 +20,10 @@ public class BaseSettlement extends ClosedPooledBaseData {
 	public float y;
 	public final float radius = 38.f;
 
+	public boolean isSelected;
+	public boolean isHoverWorkers;
+	public boolean isHoverSoldier;
+
 	public int numWorkers;
 	public int numSoldiers; // knights / demons
 
