@@ -356,7 +356,6 @@ public class SettlementController extends BaseController {
 					settlement.numSoldiers++;
 				}
 			}
-
 		}
 	}
 

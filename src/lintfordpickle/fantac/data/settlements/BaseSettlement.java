@@ -4,6 +4,7 @@ import jbt.execution.core.IBTExecutor;
 import lintfordpickle.fantac.data.teams.TeamManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.entities.instances.ClosedPooledBaseData;
+import net.lintfordlib.core.graphics.sprites.SpriteInstance;
 import net.lintfordlib.core.maths.MathHelper;
 
 public class BaseSettlement extends ClosedPooledBaseData {
@@ -31,6 +32,9 @@ public class BaseSettlement extends ClosedPooledBaseData {
 
 	// TODO: This needs a better solution after the LD. The Settlements shouldn't own a reference to the executor
 	public IBTExecutor btExecutor;
+
+	// TODO: This needs a better solution after the LD. The Settlements shouldn't own a reference to the executor
+	public SpriteInstance mFlagSpriteInstance;
 
 	// --------------------------------------
 	// Constructor

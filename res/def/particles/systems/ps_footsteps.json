@@ -27,9 +27,9 @@
       "className": "ParticleAlphaModifier"
     }
   ],
-  "maxParticleCount": 64,
-  "particleLifeMin": 500.0,
-  "particleLifeMax": 500.0,
+  "maxParticleCount": 150,
+  "particleLifeMin": 1500.0,
+  "particleLifeMax": 1500.0,
   "spritesheetName": "SPRITESHEET_PARTICLES",
   "spriteName": "FOOTSTEP",
   "textureFilterMode": 0,

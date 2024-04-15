@@ -42,6 +42,38 @@ public class JobController extends BaseController implements IInputProcessor {
 		return mJobsManager;
 	}
 
+	public int getTotalWorkers(int teamUid) {
+		var result = 0;
+		final var lJobInstances = mJobsManager.instances();
+		final var lNumJobs = lJobInstances.size();
+		for (int i = 0; i < lNumJobs; i++) {
+			final var s = lJobInstances.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid && s.unitType == UnitDefinitions.UNIT_WORKER_UID)
+				result += s.numUnits;
+
+		}
+		return result;
+	}
+
+	public int getTotalSoldiers(int teamUid) {
+		var result = 0;
+		final var lJobInstances = mJobsManager.instances();
+		final var lNumJobs = lJobInstances.size();
+		for (int i = 0; i < lNumJobs; i++) {
+			final var s = lJobInstances.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid == teamUid && s.unitType == UnitDefinitions.UNIT_SOLDIER_UID)
+				result += s.numUnits;
+
+		}
+		return result;
+	}
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -172,6 +204,9 @@ public class JobController extends BaseController implements IInputProcessor {
 	public void sendArmy(int teamUid, int raceUid, int unitType, BaseSettlement from, BaseSettlement to) {
 		if (from == null || to == null)
 			return;
+
+		if (from.uid == to.uid)
+			return; // TODO: One of the AI paths tries to send (soldiers) units to itself.
 
 		final var lNewJob = mJobsManager.getFreeInstanceItem();
 		final var spd = UnitDefinitions.getUnitDefByUid(unitType).speed;

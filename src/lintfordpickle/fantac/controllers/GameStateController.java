@@ -1,6 +1,7 @@
 package lintfordpickle.fantac.controllers;
 
 import lintfordpickle.fantac.data.IGameStateListener;
+import lintfordpickle.fantac.data.teams.TeamManager;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
@@ -59,29 +60,43 @@ public class GameStateController extends BaseController {
 	public void update(LintfordCore core) {
 		super.update(core);
 
+		int numTeamsPlaying = 0;
+
 		// Cuurent win/lose condition is control of all buidlings on the map
 		final var lTeamManager = mTeamController.teamManager();
 		final var lTeams = lTeamManager.teams;
 		final var lNumTeams = lTeams.size();
 		for (int i = 0; i < lNumTeams; i++) {
 			final var lTeam = lTeams.get(i);
+
+			if (lTeam.isPlaying == false || lTeam.teamUid == TeamManager.CONTROLLED_NONE)
+				continue;
+
+			numTeamsPlaying++;
+
 			final var lNumSettlements = mSettlementController.getTotalSettlements(lTeam.teamUid);
 
 			if (lNumSettlements <= 0) {
-				// mTeamController.setTeamLost();
+
+				lTeam.isPlaying = false;
+
 				mUnitController.removeAllUnits(lTeam.teamUid);
 				mSettlementController.removeAllSettlements(lTeam.teamUid);
 				mJobController.removeAllJobs(lTeam.teamUid);
 			}
-
 		}
 
-//		if (mSettlementsController.getBuildingCount(Team.TEAM_1_UID) == 0) {
-//			mGameStateListener.onGameLost(Team.TEAM_1_UID);
-//		}
+		final var lPlayerTeam = lTeamManager.playerTeam();
+		if (lPlayerTeam != null) {
+			// only check win/lost conditions if the player team is not null (maybe its two ais playing against each other conway style).
 
-//		if (mTeamController.getNumberOfTeamsPlaying() <= 1) {
-//			mGameStateListener.onGameWon(Team.TEAM_1_UID);
-//		}
+			if (lPlayerTeam.isPlaying == false) {
+				mGameStateListener.onGameLost(lPlayerTeam.teamUid);
+			} else {
+				if (numTeamsPlaying == 1) {
+					mGameStateListener.onGameWon(lPlayerTeam.teamUid);
+				}
+			}
+		}
 	}
 }

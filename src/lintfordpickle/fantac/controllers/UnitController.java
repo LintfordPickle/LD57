@@ -40,6 +40,30 @@ public class UnitController extends BaseController {
 		return mUnitsManager;
 	}
 
+	public int getTotalWorkers(int teamUid) {
+		int result = 0;
+		final var lUnitInstances = mUnitsManager.unitsInField;
+		final var lNumUnits = lUnitInstances.size();
+		for (int i = 0; i < lNumUnits; i++) {
+			final var u = lUnitInstances.get(i);
+			if (u.teamUid == teamUid && u.unitTypeUid == UnitDefinitions.UNIT_WORKER_UID)
+				result++;
+		}
+		return result;
+	}
+
+	public int getTotalSoldiers(int teamUid) {
+		int result = 0;
+		final var lUnitInstances = mUnitsManager.unitsInField;
+		final var lNumUnits = lUnitInstances.size();
+		for (int i = 0; i < lNumUnits; i++) {
+			final var u = lUnitInstances.get(i);
+			if (u.teamUid == teamUid && u.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID)
+				result++;
+		}
+		return result;
+	}
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -117,7 +141,10 @@ public class UnitController extends BaseController {
 					else if (u.unitTypeUid == UnitDefinitions.UNIT_SOLDIER_UID)
 						u.to.numSoldiers++;
 
-					mUnitsManager.returnPooledItem(lUnitInstances.remove(i));
+					final var ret_u = lUnitInstances.remove(i);
+					ret_u.reset();
+					
+					mUnitsManager.returnPooledItem(ret_u);
 
 				} else {
 					// otherwise, attack
@@ -126,7 +153,10 @@ public class UnitController extends BaseController {
 					// Attack animation
 					mAnimationController.playAttackAnimation(u.x, u.y);
 
-					mUnitsManager.returnPooledItem(lUnitInstances.remove(i));
+					final var ret_u = lUnitInstances.remove(i);
+					ret_u.reset();
+					
+					mUnitsManager.returnPooledItem(ret_u);
 				}
 			}
 		}

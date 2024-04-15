@@ -37,9 +37,9 @@
       "className": "ParticlePhysicsModifier"
     }
   ],
-  "maxParticleCount": 64,
-  "particleLifeMin": 400.0,
-  "particleLifeMax": 1000.0,
+  "maxParticleCount": 100,
+  "particleLifeMin": 1200.0,
+  "particleLifeMax": 1200.0,
   "spritesheetName": "SPRITESHEET_PARTICLES",
   "spriteName": "TEXTUREPARTICLEFIRE",
   "textureFilterMode": 0,

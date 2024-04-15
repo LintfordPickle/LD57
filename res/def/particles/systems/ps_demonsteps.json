@@ -20,9 +20,9 @@
       "className": "ParticleTurnToFaceModifier"
     }
   ],
-  "maxParticleCount": 64,
-  "particleLifeMin": 1000.0,
-  "particleLifeMax": 1500.0,
+  "maxParticleCount": 150,
+  "particleLifeMin": 2000.0,
+  "particleLifeMax": 2000.0,
   "spritesheetName": "SPRITESHEET_PARTICLES",
   "spriteName": "DEMONFOOTSTEP",
   "textureFilterMode": 0,

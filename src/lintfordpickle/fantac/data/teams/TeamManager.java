@@ -18,11 +18,17 @@ public class TeamManager {
 	// --------------------------------------
 
 	private int mTeamUidCounter;
+	private Team mPlayerTeam;
+
 	public final List<Team> teams = new ArrayList<>();
 
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public Team playerTeam() {
+		return mPlayerTeam;
+	}
 
 	public Team getTeamByUid(int uid) {
 		final var lNumTeams = teams.size();
@@ -38,7 +44,7 @@ public class TeamManager {
 	// --------------------------------------
 
 	public TeamManager() {
-		startNewGame();
+		setupNewGame();
 
 	}
 
@@ -46,8 +52,10 @@ public class TeamManager {
 	// Methods
 	// --------------------------------------
 
-	public void startNewGame() {
+	public void setupNewGame() {
 		teams.clear();
+
+		mPlayerTeam = null;
 
 		final var lNewTeam = new Team(CONTROLLED_NONE, TeamRace.RACE_UNOCCUPIED, false);
 		teams.add(lNewTeam);
@@ -55,8 +63,17 @@ public class TeamManager {
 		mTeamUidCounter = 1;
 	}
 
-	public Team addTeam(boolean playerControlled, int raceUid) {
-		final var lNewTeam = new Team(mTeamUidCounter++, raceUid, playerControlled);
+	public Team addPlayerTeam(int raceUid) {
+		if (mPlayerTeam != null)
+			return mPlayerTeam; // only add one team
+
+		mPlayerTeam = new Team(mTeamUidCounter++, raceUid, true);
+		teams.add(mPlayerTeam);
+		return mPlayerTeam;
+	}
+
+	public Team addComputerTeam(int raceUid) {
+		final var lNewTeam = new Team(mTeamUidCounter++, raceUid, false);
 		teams.add(lNewTeam);
 		return lNewTeam;
 	}

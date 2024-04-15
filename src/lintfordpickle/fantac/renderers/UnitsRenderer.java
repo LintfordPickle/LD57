@@ -1,7 +1,6 @@
 package lintfordpickle.fantac.renderers;
 
 import lintfordpickle.fantac.ConstantsGame;
-import lintfordpickle.fantac.controllers.TeamController;
 import lintfordpickle.fantac.controllers.UnitController;
 import lintfordpickle.fantac.data.teams.TeamRace;
 import lintfordpickle.fantac.data.units.UnitDefinitions;
@@ -27,7 +26,6 @@ public class UnitsRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	private UnitController mUnitController;
-	private TeamController mTeamController;
 	private SpriteSheetDefinition mGameSpritesheet;
 
 	// --------------------------------------
@@ -77,6 +75,23 @@ public class UnitsRenderer extends BaseRenderer {
 	public void update(LintfordCore core) {
 		super.update(core);
 
+		final var lUnitsManager = mUnitController.unitsManager();
+		final var lUnits = lUnitsManager.unitsInField;
+		final var lNumUnitInstance = lUnits.size();
+		for (int i = 0; i < lNumUnitInstance; i++) {
+			final var u = lUnits.get(i);
+
+			if (u.stimer > 0.f)
+				u.stimer -= core.gameTime().elapsedTimeMilli();
+			else
+				u.highStep = false;
+
+			if (u.highStep == false && u.stimer <= 0.f) {
+				u.highStep = RandomNumbers.getRandomChance(30);
+				u.stimer = 100.f;
+			}
+		}
+
 	}
 
 	@Override
@@ -94,16 +109,6 @@ public class UnitsRenderer extends BaseRenderer {
 			final var lSpriteFrame = getSpriteFrame(u.raceUid, u.unitTypeUid);
 			final var lWidth = lSpriteFrame.width() * 2.f;
 			final var lHeight = lSpriteFrame.height() * 2.f;
-
-			if (u.stimer > 0.f)
-				u.stimer -= core.gameTime().elapsedTimeMilli();
-			else
-				u.highStep = false;
-
-			if (u.highStep == false && u.stimer <= 0.f) {
-				u.highStep = RandomNumbers.getRandomChance(30);
-				u.stimer = 100.f;
-			}
 
 			final var xx = u.x;
 			final var yy = u.y - (u.highStep ? 3.f : 0.f);

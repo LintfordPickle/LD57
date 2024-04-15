@@ -1,8 +1,12 @@
 package lintfordpickle.fantac.screens.game;
 
+import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.screens.MainMenu;
 import lintfordpickle.fantac.screens.menu.CreditsScreen;
+import net.lintfordlib.assets.ResourceManager;
+import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.MenuEntry;
 import net.lintfordlib.screenmanager.MenuScreen;
@@ -26,12 +30,14 @@ public class LostScreen extends MenuScreen {
 
 	private SceneHeader mSceneHeader;
 
+	private SpriteSheetDefinition mGameSpritesheetDef;
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
 	public LostScreen(ScreenManager screenManager, SceneHeader sceneHeader) {
-		super(screenManager, "We've Lost");
+		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;
 
@@ -39,7 +45,7 @@ public class LostScreen extends MenuScreen {
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
 		lLayout.setDrawBackground(true, ColorConstants.WHITE);
 		lLayout.showTitle(true);
-		lLayout.title("Paused");
+		lLayout.title("You hate to see it!");
 
 		final var lRestartEntry = new MenuEntry(mScreenManager, this, "Restart");
 		lRestartEntry.registerClickListener(this, SCREEN_BUTTON_RESTART);
@@ -53,7 +59,7 @@ public class LostScreen extends MenuScreen {
 
 		mLayouts.add(lLayout);
 
-		mIsPopup = true;
+		mIsPopup = false;
 		mShowBackgroundScreens = true;
 
 		mBlockGamepadInputInBackground = true;
@@ -61,6 +67,35 @@ public class LostScreen extends MenuScreen {
 		mBlockMouseInputInBackground = true;
 
 		mShowContextualKeyHints = false;
+
+		mScreenPaddingTop = 50;
+	}
+
+	@Override
+	public void loadResources(ResourceManager resourceManager) {
+		super.loadResources(resourceManager);
+
+		mGameSpritesheetDef = resourceManager.spriteSheetManager().getSpriteSheet("SPRITESHEET_GAME", ConstantsGame.GAME_RESOURCE_GROUP_ID);
+	}
+
+	@Override
+	public void unloadResources() {
+		super.unloadResources();
+
+		mGameSpritesheetDef = null;
+	}
+
+	@Override
+	public void draw(LintfordCore core) {
+		super.draw(core);
+
+		final var s = mRendererManager.uiSpriteBatch();
+
+		s.begin(core.gameCamera());
+		final var sf = mGameSpritesheetDef.getSpriteFrame("LOSTTEXT");
+		s.draw(mGameSpritesheetDef, sf, -sf.width() * .5f, core.gameCamera().boundingRectangle().top(), sf.width(), sf.height(), -0.1f, ColorConstants.WHITE);
+		s.end();
+
 	}
 
 	// --------------------------------------

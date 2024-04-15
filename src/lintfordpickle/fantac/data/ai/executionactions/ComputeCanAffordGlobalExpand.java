@@ -38,15 +38,12 @@ public class ComputeCanAffordGlobalExpand extends jbt.execution.task.leaf.action
 
 			if (avg > 10) {
 				team.isExpanding = true;
-				System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " is expanding.");
 			} else {
-				System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot expand.");
 				team.isExpanding = false;
 			}
 
 			// team.isExpanding = true;
 		} else {
-			System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot expand.");
 			team.isExpanding = false;
 		}
 	}

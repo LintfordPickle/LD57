@@ -18,6 +18,7 @@ import lintfordpickle.fantac.data.settlements.SettlementType;
 import lintfordpickle.fantac.data.teams.TeamManager;
 import lintfordpickle.fantac.data.teams.TeamRace;
 import lintfordpickle.fantac.renderers.AnimationRenderer;
+import lintfordpickle.fantac.renderers.HudRenderer;
 import lintfordpickle.fantac.renderers.SettlementsRenderer;
 import lintfordpickle.fantac.renderers.UnitsRenderer;
 import net.lintfordlib.assets.ResourceManager;
@@ -64,6 +65,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	private UnitsRenderer mUnitsRenderer;
 	private AnimationRenderer mAnimationRenderer;
 	private ParticleFrameworkRenderer mParticleFrameworkRenderer;
+	private HudRenderer mHudRenderer;
 
 	// --------------------------------------
 	// Constructor
@@ -154,78 +156,33 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		final var lRandomPlayer1VillageChange = 40;
 		final var lRandomPlayer2VillageChange = 60;
 
+		final var lPlayerTeam = mGameWorld.team().addPlayerTeam(TeamRace.RACE_DEMONS);
+		final var lNpcTeam = mGameWorld.team().addComputerTeam(TeamRace.RACE_HUMANS);
+
 		{
-			final var lPlayerTeam = mGameWorld.team().addTeam(true, TeamRace.RACE_DEMONS);
-			final var lNpcTeam = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
-
-			// team 1 - humans
-			// team 2 - demons
-
-			// setup settlements
 			final var lSettlement00 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_BADTOWN, -360, -180);
 			final var lSettlement01 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_BADTOWN, -280, -20);
 
 			if (RandomNumbers.getRandomChance(lRandomPlayer1VillageChange))
 				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, -100, -50);
 			if (RandomNumbers.getRandomChance(lRandomPlayer1VillageChange))
-				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, -170, 200);
+				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, -170, 120);
 			if (RandomNumbers.getRandomChance(lRandomPlayer2VillageChange))
-				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, 170, 160);
+				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, 110, 140);
 			if (RandomNumbers.getRandomChance(lRandomPlayer2VillageChange))
 				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, 120, -140);
 
 			lSettlement00.numWorkers = 8;
 			lSettlement01.numWorkers = 12;
 
-			final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -200);
-			final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
+			final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, -150);
+			final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +250, 120);
 			lSettlement02.numWorkers = 7;
 			lSettlement03.numWorkers = 15;
 
-			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_PENTAGRAM, -10, -230); // pentagram
-			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, +350, -0);
+			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_PENTAGRAM, -10, -230);
+			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, +350, -50);
 		}
-	}
-
-	private void setup3Players() {
-		final var lPlayerTeam = mGameWorld.team().addTeam(true, TeamRace.RACE_DEMONS);
-		final var lNpcTeam0 = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
-		final var lNpcTeam1 = mGameWorld.team().addTeam(false, TeamRace.RACE_HUMANS);
-
-		{
-
-			// setup settlements
-			final var lSettlement00 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -350, -200);
-			final var lSettlement01 = mGameWorld.settlements().addNewSettlement(lPlayerTeam.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, -290, -140);
-			lSettlement00.numWorkers = 8;
-			lSettlement01.numWorkers = 12;
-			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_PENTAGRAM, -150, -150); // pentagram
-
-			final var lSettlement02 = mGameWorld.settlements().addNewSettlement(lNpcTeam0.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +300, 220);
-			final var lSettlement03 = mGameWorld.settlements().addNewSettlement(lNpcTeam0.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, +270, 170);
-			lSettlement02.numWorkers = 7;
-			lSettlement03.numWorkers = 15;
-			mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_CASTLE, +350, -0);
-
-			final int numRandomTowns = RandomNumbers.random(2, 3);
-			for (int i = 0; i < numRandomTowns; i++) {
-				final var xx = RandomNumbers.random(-150, 200);
-				final var yy = RandomNumbers.random(-150, 200);
-
-				final var s = mGameWorld.settlements().addNewSettlement(lNpcTeam1.teamUid, SettlementType.SETTLEMENT_TYPE_TOWN, xx, yy);
-				s.numWorkers = RandomNumbers.random(5, 15);
-			}
-
-			final int numUnoccupiedTowns = RandomNumbers.random(2, 4);
-			for (int i = 0; i < numUnoccupiedTowns; i++) {
-				final var xx = RandomNumbers.random(-150, 200);
-				final var yy = RandomNumbers.random(-150, 200);
-
-				mGameWorld.settlements().addNewSettlement(TeamManager.CONTROLLED_NONE, SettlementType.SETTLEMENT_TYPE_VILLAGE, xx, yy);
-			}
-
-		}
-
 	}
 
 	// CONTROLLERS ---------------------------------
@@ -264,6 +221,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		mUnitsRenderer = new UnitsRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mSettlementRenderer = new SettlementsRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mAnimationRenderer = new AnimationRenderer(mRendererManager, mAnimationController, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mHudRenderer = new HudRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 	}
 
 	@Override
@@ -272,6 +230,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		mUnitsRenderer.initialize(core);
 		mAnimationRenderer.initialize(core);
 		mParticleFrameworkRenderer.initialize(core);
+		mHudRenderer.initialize(core);
 	}
 
 	@Override
@@ -280,6 +239,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		mUnitsRenderer.loadResources(resourceManager);
 		mAnimationRenderer.loadResources(resourceManager);
 		mParticleFrameworkRenderer.loadResources(resourceManager);
+		mHudRenderer.loadResources(resourceManager);
 
 	}
 

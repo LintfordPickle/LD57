@@ -1,8 +1,12 @@
 package lintfordpickle.fantac.screens.game;
 
+import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.screens.MainMenu;
 import lintfordpickle.fantac.screens.menu.CreditsScreen;
+import net.lintfordlib.assets.ResourceManager;
+import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.screenmanager.MenuEntry;
 import net.lintfordlib.screenmanager.MenuScreen;
@@ -27,12 +31,14 @@ public class WonScreen extends MenuScreen {
 
 	private SceneHeader mSceneHeader;
 
+	private SpriteSheetDefinition mGameSpritesheetDef;
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
 	public WonScreen(ScreenManager screenManager, SceneHeader sceneHeader) {
-		super(screenManager, "We've Won");
+		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;
 
@@ -40,7 +46,7 @@ public class WonScreen extends MenuScreen {
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
 		lLayout.setDrawBackground(true, ColorConstants.WHITE);
 		lLayout.showTitle(true);
-		lLayout.title("Paused");
+		lLayout.title("You love to see it!");
 
 		final var lContinueEntry = new MenuEntry(mScreenManager, this, "Continue");
 		lContinueEntry.registerClickListener(this, SCREEN_BUTTON_CONTINUE);
@@ -58,7 +64,7 @@ public class WonScreen extends MenuScreen {
 
 		mLayouts.add(lLayout);
 
-		mIsPopup = true;
+		mIsPopup = false;
 		mShowBackgroundScreens = true;
 
 		mBlockGamepadInputInBackground = true;
@@ -66,6 +72,35 @@ public class WonScreen extends MenuScreen {
 		mBlockMouseInputInBackground = true;
 
 		mShowContextualKeyHints = false;
+
+		mScreenPaddingTop = 50;
+	}
+
+	@Override
+	public void loadResources(ResourceManager resourceManager) {
+		super.loadResources(resourceManager);
+
+		mGameSpritesheetDef = resourceManager.spriteSheetManager().getSpriteSheet("SPRITESHEET_GAME", ConstantsGame.GAME_RESOURCE_GROUP_ID);
+	}
+
+	@Override
+	public void unloadResources() {
+		super.unloadResources();
+
+		mGameSpritesheetDef = null;
+	}
+
+	@Override
+	public void draw(LintfordCore core) {
+		super.draw(core);
+
+		final var s = mRendererManager.uiSpriteBatch();
+
+		s.begin(core.gameCamera());
+		final var sf = mGameSpritesheetDef.getSpriteFrame("WONTEXT");
+		s.draw(mGameSpritesheetDef, sf, -sf.width() * .5f, core.gameCamera().boundingRectangle().top(), sf.width(), sf.height(), -0.1f, ColorConstants.WHITE);
+		s.end();
+
 	}
 
 	// --------------------------------------

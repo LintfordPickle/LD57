@@ -44,11 +44,10 @@ public class ComputeCanAffordGlobalAttack extends jbt.execution.task.leaf.action
 //				team.isAttacking = false;
 //			}
 			// TODO: Check that we are properly defended before attacking
-			
+
 			team.isAttacking = true;
-			
+
 		} else {
-			System.out.println("[" + getClass().getSimpleName() + "] team " + team.teamUid + " cannot attack.");
 			team.isAttacking = false;
 		}
 	}
