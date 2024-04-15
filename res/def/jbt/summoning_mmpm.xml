@@ -18,9 +18,13 @@
 
 		<!-- Computes the weakest enemy settlement. -->
 		<Action name="ComputeWeakestEnemySettlement" />
+		<Action name="ComputeClosestEnemySettlement" />
 
 		<!-- Computes the strongest enemy settlement. -->
 		<!-- <Action name="ComputeStrongestEnemySettlement" /> -->
+
+		<Action name="ResetGlobalExpand" />
+		<Action name="ResetGlobalAttack" />
 
 		<Action name="SetRequestPopToExpand" />
 		<Action name="SetRequestPopToAttack" />
@@ -50,7 +54,9 @@
 		<Sensor name="AnySchools" type="BOOLEAN" />
 
 		<Sensor name="CheckGlobalExpand" type="BOOLEAN" />
+		<Sensor name="CheckGlobalExpandOverride" type="BOOLEAN" />
 		<Sensor name="CheckGlobalAttack" type="BOOLEAN" />
+		<Sensor name="CheckGlobalAttackOverride" type="BOOLEAN" />
 
 		<Sensor name="CheckCanAffordLocalExpand" type="BOOLEAN" />
 		<Sensor name="CheckCanAffordLocalAttack" type="BOOLEAN" />

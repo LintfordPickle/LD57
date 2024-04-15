@@ -24,6 +24,8 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
+import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.data.DataManager;
@@ -44,6 +46,8 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	// Data
 	private GameWorld mGameWorld;
 	private ParticleFrameworkData mParticleFrameworkData;
+
+	private Texture mGameBackgroundTexture;
 
 	// Controllers
 	private GameStateController mGameStateController;
@@ -89,6 +93,14 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	}
 
 	@Override
+	public void loadResources(ResourceManager resourceManager) {
+		super.loadResources(resourceManager);
+
+		mGameBackgroundTexture = resourceManager.textureManager().getTexture("TEXTURE_GAME_BACKGROUND", ConstantsGame.GAME_RESOURCE_GROUP_ID);
+
+	}
+
+	@Override
 	public void update(LintfordCore core, boolean otherScreenHasFocus, boolean coveredByOtherScreen) {
 		super.update(core, otherScreenHasFocus, coveredByOtherScreen);
 
@@ -106,6 +118,10 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 		GL11.glClearColor(0.08f, .02f, 0.03f, 1.f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+		spriteBatch().begin(core.gameCamera());
+		spriteBatch().draw(mGameBackgroundTexture, 0, 0, 960/2, 576/2, -960/2, -576 / 2, 960, 576, -0.1f, ColorConstants.WHITE);
+		spriteBatch().end();
 
 		super.draw(core);
 
@@ -129,7 +145,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		mGameWorld = new GameWorld();
 
 		// TODO:
-		setup3Players();
+		setup2Players();
 
 	}
 
@@ -200,7 +216,6 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 				s.numWorkers = RandomNumbers.random(5, 15);
 			}
 
-			
 			final int numUnoccupiedTowns = RandomNumbers.random(2, 4);
 			for (int i = 0; i < numUnoccupiedTowns; i++) {
 				final var xx = RandomNumbers.random(-150, 200);

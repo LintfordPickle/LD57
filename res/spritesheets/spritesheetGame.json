@@ -63,6 +63,18 @@
       "anchorPoints": []
     },
     {
+      "name": "VILLAGE",
+      "x": 34,
+      "y": 108,
+      "w": 32,
+      "h": 32,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorPoints": []
+    },
+    {
       "name": "FLAG00",
       "x": 34,
       "y": 18,
@@ -238,12 +250,12 @@
       "frameDuration": 50,
       "minimumViableRuntime": 0,
       "animationSpriteIndices": [
-        10,
         11,
         12,
         13,
         14,
-        15
+        15,
+        16
       ]
     }
   }

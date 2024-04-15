@@ -25,6 +25,7 @@
                                   <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
                                 </Parameters>
                               </Node>
+                              <Node id="Node_47" name="ResetGlobalExpand" type="Action" />
                             </Children>
                           </Node>
                           <Node id="Node_22" name="SetRequestPopToExpand" type="Action" />
@@ -41,7 +42,12 @@
                           <Node id="Node_20" type="Sequence">
                             <Children>
                               <Node id="Node_11" name="CheckCanAffordLocalAttack" type="Condition" />
-                              <Node id="Node_10" name="ComputeWeakestEnemySettlement" type="Action" />
+                              <Node id="Node_49" type="RandomSelector">
+                                <Children>
+                                  <Node id="Node_10" name="ComputeWeakestEnemySettlement" type="Action" />
+                                  <Node id="Node_50" name="ComputeClosestEnemySettlement" type="Action" />
+                                </Children>
+                              </Node>
                               <Node id="Node_35" name="MoveTroops" type="Action">
                                 <Parameters>
                                   <Parameter name="fromSettlementUid" fromcontext="true">CONTEXT_VARS_MOVETROOPS_FROM_SETTLEMENT_UID</Parameter>
@@ -49,6 +55,7 @@
                                   <Parameter name="numUnits" fromcontext="true">CONTEXT_VARS_MOVETROOPS_UNIT_NUM_UID</Parameter>
                                 </Parameters>
                               </Node>
+                              <Node id="Node_48" name="ResetGlobalAttack" type="Action" />
                             </Children>
                           </Node>
                           <Node id="Node_21" name="SetRequestPopToAttack" type="Action" />
@@ -59,7 +66,12 @@
                   <Node id="Node_24" type="Sequence">
                     <Children>
                       <Node id="Node_25" name="CheckRequestPopExpandSet" type="Condition" />
-                      <Node id="Node_27" name="CheckGlobalExpand" type="Condition" />
+                      <Node id="Node_51" type="Selector">
+                        <Children>
+                          <Node id="Node_27" name="CheckGlobalExpand" type="Condition" />
+                          <Node id="Node_53" name="CheckGlobalExpandOverride" type="Condition" />
+                        </Children>
+                      </Node>
                       <Node id="Node_26" name="CheckCanAffordLocalExpand" type="Condition" />
                       <Node id="Node_37" name="MoveWorkers" type="Action">
                         <Parameters>
@@ -87,7 +99,12 @@
                   <Node id="Node_42" type="Sequence">
                     <Children>
                       <Node id="Node_43" name="AnySchools" type="Condition" />
-                      <Node id="Node_44" name="CheckGlobalExpand" type="Condition" />
+                      <Node id="Node_54" type="Selector">
+                        <Children>
+                          <Node id="Node_44" name="CheckGlobalExpand" type="Condition" />
+                          <Node id="Node_55" name="CheckGlobalExpandOverride" type="Condition" />
+                        </Children>
+                      </Node>
                       <Node id="Node_46" name="CheckCanAffordLocalExpand" type="Condition" />
                       <Node id="Node_45" name="MoveWorkers" type="Action">
                         <Parameters>

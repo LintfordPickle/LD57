@@ -4,36 +4,31 @@
 //                                                         
 //           ABSTRACT METHODS MUST BE IMPLEMENTED          
 //                                                         
-// Generated on 04/14/2024 15:00:06
+// Generated on 04/15/2024 08:31:43
 // ******************************************************* 
-package lintfordpickle.fantac.data.ai.executionconditions;
+package lintfordpickle.fantac.data.ai.executionactions;
 
 import lintfordpickle.fantac.data.ai.ConstantsBtContext;
-import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.teams.Team;
 
-/** ExecutionCondition class created from MMPM condition CheckGlobalExpand. */
-public class CheckGlobalExpand extends jbt.execution.task.leaf.condition.ExecutionCondition {
+/** ExecutionAction class created from MMPM action ResetGlobalExpand. */
+public class ResetGlobalExpand extends jbt.execution.task.leaf.action.ExecutionAction {
 
 	/**
-	 * Constructor. Constructs an instance of CheckGlobalExpand that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand.
+	 * Constructor. Constructs an instance of ResetGlobalExpand that is able to run a lintfordpickle.fantac.data.ai.modelactions.ResetGlobalExpand.
 	 */
-	public CheckGlobalExpand(lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
+	public ResetGlobalExpand(lintfordpickle.fantac.data.ai.modelactions.ResetGlobalExpand modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
 
 	}
 
 	protected void internalSpawn() {
 		this.getExecutor().requestInsertionIntoList(jbt.execution.core.BTExecutor.BTExecutorList.TICKABLE, this);
+		final var lTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
+		lTeam.isExpanding = false;
 	}
 
 	protected jbt.execution.core.ExecutionTask.Status internalTick() {
-		final var lTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
-		final var lSettlement = (BaseSettlement) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_SETTLEMENT_OURS);
-
-		if (lTeam.isExpanding == false)
-			return jbt.execution.core.ExecutionTask.Status.FAILURE;
-
 		return jbt.execution.core.ExecutionTask.Status.SUCCESS;
 	}
 

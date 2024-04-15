@@ -62,6 +62,32 @@ public class SettlementController extends BaseController {
 		return result;
 	}
 
+	public BaseSettlement getClosestEnemySettlement(int teamUid, float x, float y) {
+		float dist = Float.MAX_VALUE;
+		BaseSettlement result = null;
+
+		final var lSettlements = mSettlementsManager.instances();
+		final var lNumSettlements = lSettlements.size();
+		for (int i = 0; i < lNumSettlements; i++) {
+			final var s = lSettlements.get(i);
+			if (s.isAssigned() == false)
+				continue;
+
+			if (s.teamUid != teamUid)
+				continue;
+
+			final var xx = s.x - x;
+			final var yy = s.y - y;
+			float d = xx * xx + yy * yy;
+			if (d < dist) {
+				dist = d;
+				result = s;
+			}
+
+		}
+		return result;
+	}
+
 	public BaseSettlement getClosestSchool(int teamUid, float x, float y) {
 		float dist = Float.MAX_VALUE;
 		BaseSettlement result = null;

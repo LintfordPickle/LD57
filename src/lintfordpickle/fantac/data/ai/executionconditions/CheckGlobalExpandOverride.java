@@ -4,7 +4,7 @@
 //                                                         
 //           ABSTRACT METHODS MUST BE IMPLEMENTED          
 //                                                         
-// Generated on 04/14/2024 15:00:06
+// Generated on 04/15/2024 08:28:37
 // ******************************************************* 
 package lintfordpickle.fantac.data.ai.executionconditions;
 
@@ -12,13 +12,15 @@ import lintfordpickle.fantac.data.ai.ConstantsBtContext;
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.teams.Team;
 
-/** ExecutionCondition class created from MMPM condition CheckGlobalExpand. */
-public class CheckGlobalExpand extends jbt.execution.task.leaf.condition.ExecutionCondition {
+/**
+ * ExecutionCondition class created from MMPM condition CheckGlobalExpandOverride.
+ */
+public class CheckGlobalExpandOverride extends jbt.execution.task.leaf.condition.ExecutionCondition {
 
 	/**
-	 * Constructor. Constructs an instance of CheckGlobalExpand that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand.
+	 * Constructor. Constructs an instance of CheckGlobalExpandOverride that is able to run a lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpandOverride.
 	 */
-	public CheckGlobalExpand(lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpand modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
+	public CheckGlobalExpandOverride(lintfordpickle.fantac.data.ai.modelconditions.CheckGlobalExpandOverride modelTask, jbt.execution.core.BTExecutor executor, jbt.execution.core.ExecutionTask parent) {
 		super(modelTask, executor, parent);
 
 	}
@@ -31,8 +33,17 @@ public class CheckGlobalExpand extends jbt.execution.task.leaf.condition.Executi
 		final var lTeam = (Team) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_TEAM_OURS);
 		final var lSettlement = (BaseSettlement) getContext().getVariable(ConstantsBtContext.CONTEXT_VARS_SETTLEMENT_OURS);
 
-		if (lTeam.isExpanding == false)
+		if (lTeam.isExpanding == false) {// this means the avg. global pop is down
+
+			// but if our settlement pop is higher than avg + 1.5x, then go for it
+			// TODO: Hard-coded AI value
+			// TODO: We need to check that soliders are in-need, so we don't delete our settlements
+//			if (lSettlement.numWorkers > 10) {
+//				return jbt.execution.core.ExecutionTask.Status.SUCCESS;
+//			}
+
 			return jbt.execution.core.ExecutionTask.Status.FAILURE;
+		}
 
 		return jbt.execution.core.ExecutionTask.Status.SUCCESS;
 	}

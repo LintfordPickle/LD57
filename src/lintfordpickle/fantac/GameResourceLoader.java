@@ -72,7 +72,7 @@ public class GameResourceLoader extends ResourceMapLoader {
 		final var lHudBounds = core.HUD().boundingRectangle();
 
 		mTextureBatch.begin(core.HUD());
-		mTextureBatch.draw(mLoadingBackgroundTexture, 0.f, 0.f, 960.f, 540.f, core.HUD().boundingRectangle(), -0.01f, ColorConstants.WHITE);
+		mTextureBatch.draw(mLoadingBackgroundTexture, 0.f, 0.f, 960.f, 576.f, core.HUD().boundingRectangle(), -0.01f, ColorConstants.WHITE);
 
 		final var lDstX = lHudBounds.right() - 6.f - 32.f;
 		final var lDstY = lHudBounds.bottom() - 6.f - 32.f;
