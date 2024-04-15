@@ -37,7 +37,7 @@ public class AnySchools extends jbt.execution.task.leaf.condition.ExecutionCondi
 		final var settlementController = (SettlementController) getContext().getVariable(ConstantsBtContext.CONTEXT_SETTLEMENT_CONTROLLER);
 
 		final var lNumCastles = settlementController.getTotalSettlementOfType(team.teamUid, SettlementType.SETTLEMENT_TYPE_CASTLE);
-		final var lNumSchools = settlementController.getTotalSettlementOfType(team.teamUid, SettlementType.SETTLEMENT_TYPE_SCHOOL);
+		final var lNumSchools = settlementController.getTotalSettlementOfType(team.teamUid, SettlementType.SETTLEMENT_TYPE_PENTAGRAM);
 
 		if (lNumCastles > 0 || lNumSchools > 0) {
 			final var lClosestSchool = settlementController.getClosestSchool(team.teamUid, settlement.x, settlement.y);

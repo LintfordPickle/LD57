@@ -87,14 +87,14 @@ public class SettlementsRenderer extends BaseRenderer {
 			if (lSettlement.isAssigned() == false)
 				continue;
 
-			// TODO: Draw the settlements
-
 			SpriteFrame lSpriteFrame = null;
 			if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_TOWN) {
 				lSpriteFrame = mGameSpritesheet.getSpriteFrame("TOWN");
+			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_BADTOWN) {
+				lSpriteFrame = mGameSpritesheet.getSpriteFrame("BADTOWN");
 			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_CASTLE) {
 				lSpriteFrame = mGameSpritesheet.getSpriteFrame("CASTLE");
-			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_SCHOOL) {
+			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_PENTAGRAM) {
 				lSpriteFrame = mGameSpritesheet.getSpriteFrame("PENTAGRAM");
 			} else {
 				lSpriteFrame = mGameSpritesheet.getSpriteFrame("VILLAGE");
@@ -122,7 +122,6 @@ public class SettlementsRenderer extends BaseRenderer {
 			}
 
 			// Draw workers / peons
-
 			final var lNumWorkersTextWidth = lFontUnit.getStringWidth("" + lSettlement.numWorkers);
 			lFontUnit.drawText("" + lSettlement.numWorkers, xx - lNumWorkersTextWidth * .5f, yy + lWidth * .5f, -0.1f, 1.f);
 

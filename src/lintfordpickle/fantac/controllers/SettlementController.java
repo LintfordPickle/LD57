@@ -102,7 +102,7 @@ public class SettlementController extends BaseController {
 			if (s.teamUid != teamUid)
 				continue;
 
-			if (s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_SCHOOL && s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_CASTLE)
+			if (s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_PENTAGRAM && s.settlementTypeUid != SettlementType.SETTLEMENT_TYPE_CASTLE)
 				continue;
 
 			final var xx = s.x - x;

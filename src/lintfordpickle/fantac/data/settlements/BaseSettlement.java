@@ -61,12 +61,13 @@ public class BaseSettlement extends ClosedPooledBaseData {
 	public void update(LintfordCore core) {
 
 		switch (settlementTypeUid) {
+		case SettlementType.SETTLEMENT_TYPE_BADTOWN:
 		case SettlementType.SETTLEMENT_TYPE_TOWN:
 			updateTown(core);
 			break;
 
 		case SettlementType.SETTLEMENT_TYPE_CASTLE:
-		case SettlementType.SETTLEMENT_TYPE_SCHOOL:
+		case SettlementType.SETTLEMENT_TYPE_PENTAGRAM:
 			updateSchool(core);
 			break;
 
