@@ -32,7 +32,7 @@ public class CreditsScreen extends MenuScreen {
 		final var lFontUnit = mRendererManager.uiTextFont();
 		lFontUnit.begin(core.HUD());
 		final var lTextPadding = 2.f;
-		lFontUnit.drawText("New Game Template", lHudBounds.left() + lTextPadding, lHudBounds.bottom() - lFontUnit.fontHeight() - lTextPadding, -0.01f, ColorConstants.WHITE, 1.f);
+		lFontUnit.drawText("CREATED BY LINTFORD PICKLE FOR LD55", lHudBounds.left() + lTextPadding, lHudBounds.bottom() - lFontUnit.fontHeight() - lTextPadding, -0.01f, ColorConstants.WHITE, 1.f);
 		lFontUnit.end();
 
 	}

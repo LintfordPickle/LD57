@@ -1,6 +1,7 @@
 package lintfordpickle.fantac.screens.game;
 
 import lintfordpickle.fantac.ConstantsGame;
+import lintfordpickle.fantac.data.GameOptions;
 import lintfordpickle.fantac.screens.MainMenu;
 import lintfordpickle.fantac.screens.menu.CreditsScreen;
 import net.lintfordlib.assets.ResourceManager;
@@ -30,17 +31,18 @@ public class WonScreen extends MenuScreen {
 	// --------------------------------------
 
 	private SceneHeader mSceneHeader;
-
+	private GameOptions mGameOptions;
 	private SpriteSheetDefinition mGameSpritesheetDef;
 
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
-	public WonScreen(ScreenManager screenManager, SceneHeader sceneHeader) {
+	public WonScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions gameOptions) {
 		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;
+		mGameOptions = gameOptions;
 
 		final var lLayout = new ListLayout(this);
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
@@ -119,7 +121,7 @@ public class WonScreen extends MenuScreen {
 			return;
 
 		case SCREEN_BUTTON_RESTART:
-			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), mSceneHeader));
+			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), mSceneHeader, mGameOptions));
 			screenManager().createLoadingScreen(new LoadingScreen(screenManager(), true, lLoadingScreen));
 			break;
 

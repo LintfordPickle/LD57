@@ -1,5 +1,8 @@
 package lintfordpickle.fantac.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lintfordpickle.fantac.data.jobs.JobsManager;
 import lintfordpickle.fantac.data.settlements.BaseSettlement;
 import lintfordpickle.fantac.data.teams.TeamRace;
@@ -27,16 +30,23 @@ public class JobController extends BaseController implements IInputProcessor {
 	private TeamController mTeamController;
 	private UnitController mUnitController;
 	private SettlementController mSettlementController;
-
 	private float mMouseCooldownTimer;
+
+	private boolean mSingleClickActions = true;
 	private boolean mProcessingInput;
 	private int mProcessingArmyUnitType;
 	private BaseSettlement mFoundFromSettlement;
 	private BaseSettlement mFoundToSettlement;
 
+	private final List<BaseSettlement> mSelectedSettlements = new ArrayList<>();
+
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public boolean isMulticlick() {
+		return !mSingleClickActions;
+	}
 
 	public JobsManager jobsManager() {
 		return mJobsManager;
@@ -101,6 +111,20 @@ public class JobController extends BaseController implements IInputProcessor {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
+		if (mSingleClickActions) {
+			if (handleSingleClickInput(core))
+				return true;
+
+		} else {
+			if (handleMultiClickInput(core))
+				return true;
+
+		}
+
+		return super.handleInput(core);
+	}
+
+	private boolean handleSingleClickInput(LintfordCore core) {
 		if (!mProcessingInput && core.input().mouse().tryAcquireMouseLeftClickTimed(hashCode(), this)) {
 			mProcessingArmyUnitType = UnitDefinitions.UNIT_WORKER_UID;
 
@@ -156,7 +180,14 @@ public class JobController extends BaseController implements IInputProcessor {
 			}
 		}
 
-		return super.handleInput(core);
+		return false;
+	}
+
+	private boolean handleMultiClickInput(LintfordCore core) {
+
+		
+		
+		return false;
 	}
 
 	@Override

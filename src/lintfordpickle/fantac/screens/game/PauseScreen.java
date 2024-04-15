@@ -1,7 +1,9 @@
 package lintfordpickle.fantac.screens.game;
 
+import lintfordpickle.fantac.data.GameOptions;
 import lintfordpickle.fantac.screens.MainMenu;
 import lintfordpickle.fantac.screens.menu.CreditsScreen;
+import lintfordpickle.fantac.screens.menu.MainMenuBackground;
 import lintfordpickle.fantac.screens.menu.OptionsScreen;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.data.scene.SceneHeader;
@@ -28,15 +30,17 @@ public class PauseScreen extends MenuScreen {
 	// --------------------------------------
 
 	private SceneHeader mSceneHeader;
+	private GameOptions mGameOptions;
 
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
-	public PauseScreen(ScreenManager screenManager, SceneHeader sceneHeader) {
+	public PauseScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions gameOptions) {
 		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;
+		mGameOptions = gameOptions;
 
 		final var lLayout = new ListLayout(this);
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
@@ -91,12 +95,12 @@ public class PauseScreen extends MenuScreen {
 			break;
 
 		case SCREEN_BUTTON_RESTART:
-			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), mSceneHeader));
+			final var lLoadingScreen = new LoadingScreen(screenManager(), true, new GameScreen(screenManager(), mSceneHeader, mGameOptions));
 			screenManager().createLoadingScreen(new LoadingScreen(screenManager(), true, lLoadingScreen));
 			break;
 
 		case SCREEN_BUTTON_EXIT:
-			screenManager().createLoadingScreen(new LoadingScreen(screenManager(), false, new CreditsScreen(mScreenManager), new MainMenu(screenManager())));
+			screenManager().createLoadingScreen(new LoadingScreen(screenManager(), false, new MainMenuBackground(mScreenManager), new CreditsScreen(mScreenManager), new MainMenu(screenManager())));
 			break;
 
 		}

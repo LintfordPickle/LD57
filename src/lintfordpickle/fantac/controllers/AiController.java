@@ -39,6 +39,8 @@ public class AiController extends BaseController {
 	private UnitController mUnitController;
 	private JobController mJobController;
 
+	private float mStartGameCountdown;
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -48,6 +50,8 @@ public class AiController extends BaseController {
 
 		mTeamManager = teamManager;
 		mBtLibrary = new BtLibrary();
+
+		mStartGameCountdown = 3500;
 
 	}
 
@@ -100,6 +104,11 @@ public class AiController extends BaseController {
 	@Override
 	public void update(LintfordCore core) {
 		super.update(core);
+
+		if (mStartGameCountdown > 0) {
+			mStartGameCountdown -= (float) core.gameTime().elapsedTimeMilli();
+			return;
+		}
 
 		final int lNumBtExecutorsToUpdate = mExecutors.size();
 		for (int i = 0; i < lNumBtExecutorsToUpdate; i++) {

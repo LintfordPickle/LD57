@@ -1,5 +1,7 @@
 package lintfordpickle.fantac.renderers;
 
+import org.lwjgl.opengl.GL11;
+
 import lintfordpickle.fantac.ConstantsGame;
 import lintfordpickle.fantac.controllers.JobController;
 import lintfordpickle.fantac.controllers.SettlementController;
@@ -120,6 +122,8 @@ public class HudRenderer extends BaseRenderer {
 
 		lSpriteBatch.begin(core.gameCamera());
 		lFontBatch.begin(core.gameCamera());
+
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
 		final var lTeamManager = mTeamController.teamManager();
 		final var lTeams = lTeamManager.teams;

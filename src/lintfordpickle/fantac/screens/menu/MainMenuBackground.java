@@ -61,7 +61,7 @@ public class MainMenuBackground extends Screen {
 		core.config().display().reapplyGlViewport();
 
 		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.draw(mBackgroundTexture, 0, 0, 960, 540, lCanvasBox.left(), lCanvasBox.top(), lCanvasBox.width(), lCanvasBox.height(), -0.85f, ColorConstants.WHITE);
+		lTextureBatch.draw(mBackgroundTexture, 0, 0, 960, 576, lCanvasBox.left(), lCanvasBox.top(), lCanvasBox.width(), lCanvasBox.height(), -0.85f, ColorConstants.WHITE);
 		lTextureBatch.end();
 
 	}
