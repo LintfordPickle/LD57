@@ -7,7 +7,6 @@ import lintfordpickle.fantac.data.teams.TeamManager;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
-import net.lintfordlib.core.graphics.sprites.SpriteFrame;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManager;
@@ -77,6 +76,23 @@ public class SettlementsRenderer extends BaseRenderer {
 				s.mFlagSpriteInstance = mGameSpritesheet.getSpriteInstance("flag");
 			}
 
+			if (s.mSettlementInstance == null) {
+				if (s.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_TOWN) {
+					s.mSettlementInstance = mGameSpritesheet.getSpriteInstance("TOWN");
+				} else if (s.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_BADTOWN) {
+					s.mSettlementInstance = mGameSpritesheet.getSpriteInstance("BADTOWN");
+				} else if (s.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_CASTLE) {
+					s.mSettlementInstance = mGameSpritesheet.getSpriteInstance("CASTLE");
+				} else if (s.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_PENTAGRAM) {
+					s.mSettlementInstance = mGameSpritesheet.getSpriteInstance("pentagram");
+				} else {
+					s.mSettlementInstance = mGameSpritesheet.getSpriteInstance("VILLAGE");
+				}
+			}
+
+			if (s.mSettlementInstance != null)
+				s.mSettlementInstance.update(core);
+
 			if (s.mFlagSpriteInstance != null)
 				s.mFlagSpriteInstance.update(core);
 		}
@@ -99,31 +115,19 @@ public class SettlementsRenderer extends BaseRenderer {
 			if (lSettlement.isAssigned() == false)
 				continue;
 
-			SpriteFrame lSpriteFrame = null;
-			if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_TOWN) {
-				lSpriteFrame = mGameSpritesheet.getSpriteFrame("TOWN");
-			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_BADTOWN) {
-				lSpriteFrame = mGameSpritesheet.getSpriteFrame("BADTOWN");
-			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_CASTLE) {
-				lSpriteFrame = mGameSpritesheet.getSpriteFrame("CASTLE");
-			} else if (lSettlement.settlementTypeUid == SettlementType.SETTLEMENT_TYPE_PENTAGRAM) {
-				lSpriteFrame = mGameSpritesheet.getSpriteFrame("PENTAGRAM");
-			} else {
-				lSpriteFrame = mGameSpritesheet.getSpriteFrame("VILLAGE");
-			}
-
-			if (lSpriteFrame == null)
+			if (lSettlement.mSettlementInstance == null)
 				continue;
 
-			final var lWidth = lSpriteFrame.width() * 2.f;
-			final var lHeight = lSpriteFrame.height() * 2.f;
+			final var lSettlementSpriteFrame = lSettlement.mSettlementInstance.currentSpriteFrame();
+			final var lWidth = lSettlementSpriteFrame.width() * 2.f;
+			final var lHeight = lSettlementSpriteFrame.height() * 2.f;
 
 			final var xx = lSettlement.x;
 			final var yy = lSettlement.y;
 
 			// Draw settlement base
 
-			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lSpriteFrame, xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
+			lSpriteBatch.drawAroundCenter(mGameSpritesheet, lSettlementSpriteFrame, xx, yy, lWidth, lHeight, 0.f, 0.f, 0.f, -0.1f, ColorConstants.WHITE);
 
 			// Draw team flag
 			if (lSettlement.teamUid > TeamManager.CONTROLLED_NONE && lSettlement.mFlagSpriteInstance != null) {

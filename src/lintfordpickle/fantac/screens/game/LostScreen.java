@@ -68,8 +68,12 @@ public class LostScreen extends MenuScreen {
 
 		mShowContextualKeyHints = false;
 
-		mScreenPaddingTop = 50;
+		mScreenPaddingTop = 120;
 	}
+
+	// --------------------------------------
+	// Core-Methods
+	// --------------------------------------
 
 	@Override
 	public void loadResources(ResourceManager resourceManager) {
@@ -93,7 +97,7 @@ public class LostScreen extends MenuScreen {
 
 		s.begin(core.gameCamera());
 		final var sf = mGameSpritesheetDef.getSpriteFrame("LOSTTEXT");
-		s.draw(mGameSpritesheetDef, sf, -sf.width() * .5f, core.gameCamera().boundingRectangle().top(), sf.width(), sf.height(), -0.1f, ColorConstants.WHITE);
+		s.draw(mGameSpritesheetDef, sf, -sf.width() * .5f, core.gameCamera().boundingRectangle().top() + 32, sf.width(), sf.height(), -0.1f, ColorConstants.WHITE);
 		s.end();
 
 	}

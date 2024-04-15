@@ -35,6 +35,7 @@ public class BaseSettlement extends ClosedPooledBaseData {
 
 	// TODO: This needs a better solution after the LD. The Settlements shouldn't own a reference to the executor
 	public SpriteInstance mFlagSpriteInstance;
+	public SpriteInstance mSettlementInstance;
 
 	// --------------------------------------
 	// Constructor
