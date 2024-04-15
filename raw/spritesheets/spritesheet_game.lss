@@ -19,7 +19,7 @@
   "textureWidthMax": 512,
   "textureWidthActual": 512,
   "textureHeightMax": 512,
-  "textureHeightActual": 511,
+  "textureHeightActual": 512,
   "forcePoTTextures": true,
   "autoSizeTexture": false,
   "itemFilenames": [
@@ -48,6 +48,17 @@
         "FLAG03",
         "FLAG04",
         "FLAG05"
+      ]
+    },
+    "pentagram": {
+      "loopAnimation": true,
+      "frameDuration": 100,
+      "animationSprites": [
+        "PENTAGRAM00",
+        "PENTAGRAM01",
+        "PENTAGRAM02",
+        "PENTAGRAM03",
+        "PENTAGRAM04"
       ]
     }
   }
