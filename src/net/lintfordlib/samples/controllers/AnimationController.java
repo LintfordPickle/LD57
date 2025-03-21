@@ -11,7 +11,7 @@ public class AnimationController extends FafAnimationController {
 
 	public static final String CONTROLLER_NAME = "Animations Controller";
 
-	public static final String ATTACK_ANIM = "attack";
+	public static final String EXPLOSION_ANIM = "explosion";
 
 	// --------------------------------------
 	// Constructor
@@ -25,9 +25,7 @@ public class AnimationController extends FafAnimationController {
 	// Methods
 	// --------------------------------------
 
-	public void playAttackAnimation(float worldX, float worldY) {
-		playFafAnimation(ATTACK_ANIM, worldX, worldY);
-
+	public void playBigExplosionAnimation(float worldX, float worldY) {
+		playAnimationByName(EXPLOSION_ANIM, worldX, worldY);
 	}
-
 }

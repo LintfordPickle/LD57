@@ -7,10 +7,9 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.textures.Texture;
-import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
-import net.lintfordlib.renderers.StructuredRendererManager;
+import net.lintfordlib.renderers.SimpleRendererManager;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.NewGameKeyActions;
 import net.lintfordlib.samples.controllers.AnimationController;
@@ -33,8 +32,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	private GameOptions mGameOptions;
 
 	// Data
-	private GameWorld mGameWorld;
-	private ParticleFrameworkData mParticleFrameworkData;
+	private GameWorld mGameWorld; // reference to data related to the scene
 
 	private Texture mGameBackgroundTexture;
 
@@ -51,7 +49,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	// --------------------------------------
 
 	public GameScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions options) {
-		super(screenManager, new StructuredRendererManager(screenManager.core(), ConstantsGame.GAME_RESOURCE_GROUP_ID));
+		super(screenManager, new SimpleRendererManager(screenManager.core(), ConstantsGame.GAME_RESOURCE_GROUP_ID));
 
 		mSceneHeader = sceneHeader;
 		mGameOptions = options;
@@ -60,6 +58,14 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	// --------------------------------------
 	// Core-Methods
 	// --------------------------------------
+
+	@Override
+	public void loadResources(ResourceManager resourceManager) {
+		super.loadResources(resourceManager);
+
+		mGameBackgroundTexture = resourceManager.textureManager().getTexture("TEXTURE_GAME_BACKGROUND", ConstantsGame.GAME_RESOURCE_GROUP_ID);
+
+	}
 
 	@Override
 	public void handleInput(LintfordCore core) {
@@ -72,14 +78,16 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 		// For simple games you could add code to handle the player input here.
 		// However usually, components would be updated in dedicated BaseControllers (see the CONTROLLERS Section below).
-	}
 
-	@Override
-	public void loadResources(ResourceManager resourceManager) {
-		super.loadResources(resourceManager);
+		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_SPACE, this)) {
+			// Game-specific controller abstracts the animation logic and lets you just play 'explosion'.
+			mAnimationController.playBigExplosionAnimation(0, 0);
+		}
 
-		mGameBackgroundTexture = resourceManager.textureManager().getTexture("TEXTURE_GAME_BACKGROUND", ConstantsGame.GAME_RESOURCE_GROUP_ID);
-
+		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_LEFT_CONTROL, this)) {
+			// Game-specific controller abstracts the animation logic and let you play a named animation frame from a spritesheet.
+			mAnimationController.playAnimationByName("explosion", (float) Math.cos(core.gameTime().totalTimeSeconds()) * 100.f, (float) Math.sin(core.gameTime().totalTimeSeconds()) * 100.f);
+		}
 	}
 
 	@Override
@@ -135,9 +143,6 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	@Override
 	protected void createData(DataManager dataManager) {
-		mParticleFrameworkData = new ParticleFrameworkData(dataManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
-		mParticleFrameworkData.loadFromMetaFiles();
-
 		mGameWorld = new GameWorld();
 	}
 
@@ -167,7 +172,8 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	@Override
 	protected void createRendererStructure(LintfordCore core) {
-		// TODO Auto-generated method stub
+		mRendererManager.addRenderer(mAnimationRenderer);
+		mRendererManager.addRenderer(mHudRenderer);
 
 	}
 

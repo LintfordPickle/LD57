@@ -2,11 +2,9 @@ package net.lintfordlib.samples.renderers;
 
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.core.rendering.RenderPass;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManagerBase;
-import net.lintfordlib.samples.ConstantsGame;
 
 public class HudRenderer extends BaseRenderer {
 
@@ -15,12 +13,6 @@ public class HudRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	public static final String RENDERER_NAME = "Hud Renderer";
-
-	// --------------------------------------
-	// Variables
-	// --------------------------------------
-
-	private SpriteSheetDefinition mHudSpritesheet;
 
 	// --------------------------------------
 	// Properties
@@ -48,14 +40,20 @@ public class HudRenderer extends BaseRenderer {
 		super.initialize(core);
 
 		// Get any controllers or renderers created with the game screen.
-
 	}
 
 	@Override
 	public void loadResources(ResourceManager resourceManager) {
 		super.loadResources(resourceManager);
 
-		mHudSpritesheet = resourceManager.spriteSheetManager().getSpriteSheet("SPRITESHEET_HUD", ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		// load hud related game resources
+	}
+
+	@Override
+	public void unloadResources() {
+		super.unloadResources();
+
+		// unload hud related game resources
 	}
 
 	@Override
@@ -74,13 +72,12 @@ public class HudRenderer extends BaseRenderer {
 
 	@Override
 	public void draw(LintfordCore core, RenderPass renderPass) {
-		final var lSpriteBatch = mRendererManager.sharedResources().uiSpriteBatch();
-		final var lFontBatch = mRendererManager.sharedResources().uiHeaderFont();
+		final var lHudBounds = core.HUD().boundingRectangle();
 
-		lSpriteBatch.begin(core.gameCamera());
-		lFontBatch.begin(core.gameCamera());
+		final var lFontBatch = mRendererManager.sharedResources().uiTitleFont();
 
-		lSpriteBatch.end();
+		lFontBatch.begin(core.HUD());
+		lFontBatch.drawShadowedText("Hud Renderer", lHudBounds.left() + 10.f, lHudBounds.top() + 40.f, .1f, 1.f, 1.f, 1.f);
 		lFontBatch.end();
 	}
 }

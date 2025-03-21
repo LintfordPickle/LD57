@@ -12,7 +12,6 @@ import net.lintfordlib.screenmanager.ScreenManagerConstants.FILLTYPE;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_ALIGNMENT;
 import net.lintfordlib.screenmanager.ScreenManagerConstants.LAYOUT_WIDTH;
 import net.lintfordlib.screenmanager.entries.MenuEnumEntry;
-import net.lintfordlib.screenmanager.entries.MenuSliderEntry;
 import net.lintfordlib.screenmanager.layouts.ListLayout;
 import net.lintfordlib.screenmanager.screens.LoadingScreen;
 
@@ -25,7 +24,6 @@ public class SelectScreen extends MenuScreen {
 	private static final int BUTTON_PLAY = 11;
 	private static final int BUTTON_BACK = 12;
 
-	private final MenuSliderEntry mNumPlayersSlider;
 	private final MenuEnumEntry mDifficulty;
 
 	// ---------------------------------------------
@@ -45,16 +43,6 @@ public class SelectScreen extends MenuScreen {
 		lLayout.cropPaddingTop(10.f);
 		lLayout.cropPaddingBottom(10.f);
 
-		mNumPlayersSlider = new MenuSliderEntry(pScreenManager, this);
-		mNumPlayersSlider.label("Players");
-
-		mNumPlayersSlider.setBounds(2, 4, 1);
-		mNumPlayersSlider.setValue(2);
-		mNumPlayersSlider.showValue(true);
-		mNumPlayersSlider.showValueUnit(false);
-		mNumPlayersSlider.showValueGuides(false);
-		mNumPlayersSlider.horizontalFillType(FILLTYPE.FILL_CONTAINER);
-
 		mDifficulty = new MenuEnumEntry(pScreenManager, this, "Difficulty");
 		mDifficulty.addItems("Easy", "Normal", "Hard");
 		mDifficulty.horizontalFillType(FILLTYPE.FILL_CONTAINER);
@@ -70,7 +58,6 @@ public class SelectScreen extends MenuScreen {
 		lBackEntry.horizontalFillType(FILLTYPE.FILL_CONTAINER);
 		lBackEntry.registerClickListener(this, BUTTON_BACK);
 
-		lLayout.addMenuEntry(mNumPlayersSlider);
 		lLayout.addMenuEntry(mDifficulty);
 		lLayout.addMenuEntry(MenuEntry.menuSeparator());
 		lLayout.addMenuEntry(lStartGameEntry);
@@ -84,7 +71,6 @@ public class SelectScreen extends MenuScreen {
 		mShowBackgroundScreens = false;
 
 		mLayouts.add(lLayout);
-
 	}
 
 	// ---------------------------------------------

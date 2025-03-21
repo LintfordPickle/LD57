@@ -2,12 +2,10 @@ package net.lintfordlib.samples.data;
 
 public class GameWorld {
 
-	// --------------------------------------
-	// Variables
-	// --------------------------------------
+	// This class would typically hold data pertaining to the game world.
 
 	// --------------------------------------
-	// Properties
+	// Variables
 	// --------------------------------------
 
 	// --------------------------------------
