@@ -1,8 +1,8 @@
 {
-  "outputDataFilename": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\res\\spritesheets\\spritesheetGame.json",
+  "outputDataFilename": "D:\\dev\\java\\_razorrunner\\projects\\LintfordLibSamples\\res\\spritesheets\\spritesheetGame.json",
   "outputNameDataFilename": null,
-  "outputImageFilename": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\res\\textures\\textureGame.png",
-  "workingDirectory": "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\raw\\spritesheets\\game",
+  "outputImageFilename": "D:\\dev\\java\\_razorrunner\\projects\\LintfordLibSamples\\res\\textures\\textureGame.png",
+  "workingDirectory": "D:\\dev\\java\\_razorrunner\\projects\\LintfordLibSamples\\raw\\spritesheets\\game",
   "spriteSheetName": "SPRITESHEET_GAME",
   "textureName": "TEXTURE_GAME",
   "dataPackageName": "enter.package.name",
@@ -16,49 +16,28 @@
   "trim": false,
   "allowRotations": false,
   "spritePadding": 2,
-  "textureWidthMax": 512,
-  "textureWidthActual": 512,
-  "textureHeightMax": 512,
-  "textureHeightActual": 512,
+  "textureWidthMax": 256,
+  "textureWidthActual": 256,
+  "textureHeightMax": 256,
+  "textureHeightActual": 256,
   "forcePoTTextures": true,
   "autoSizeTexture": false,
   "itemFilenames": [
-    "D:\\dev\\java\\ludumdare\\55 - Summoning\\projects\\FanTac\\raw\\spritesheets\\game\\*.*"
+    "D:\\dev\\java\\_razorrunner\\projects\\LintfordLibSamples\\raw\\spritesheets\\game\\*.*"
   ],
   "animationItems": {
-    "attack": {
+    "explosion": {
       "loopAnimation": false,
       "frameDuration": 50,
       "animationSprites": [
-        "ATTACK_00",
-        "ATTACK_01",
-        "ATTACK_02",
-        "ATTACK_03",
-        "ATTACK_04",
-        "ATTACK_05"
-      ]
-    },
-    "flag": {
-      "loopAnimation": true,
-      "frameDuration": 100,
-      "animationSprites": [
-        "FLAG00",
-        "FLAG01",
-        "FLAG02",
-        "FLAG03",
-        "FLAG04",
-        "FLAG05"
-      ]
-    },
-    "pentagram": {
-      "loopAnimation": true,
-      "frameDuration": 100,
-      "animationSprites": [
-        "PENTAGRAM00",
-        "PENTAGRAM01",
-        "PENTAGRAM02",
-        "PENTAGRAM03",
-        "PENTAGRAM04"
+        "EXPLOSION_BIG_00",
+        "EXPLOSION_BIG_01",
+        "EXPLOSION_BIG_02",
+        "EXPLOSION_BIG_03",
+        "EXPLOSION_BIG_04",
+        "EXPLOSION_BIG_05",
+        "EXPLOSION_BIG_06",
+        "EXPLOSION_BIG_07"
       ]
     }
   }
