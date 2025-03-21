@@ -1,6 +1,6 @@
 <!-- 
 ====================================================================== 
-     Project     :	LD 55 - Summoning (x86-64)
+     Project     :	Sample Project
      
      Required on environment path:
       - LINT_LIBS_PATH
@@ -10,14 +10,12 @@
 ====================================================================== 
 -->
 <project name="x86-64" basedir="." default="main">
-
-	<!-- TODO: Alternative to this would be separate LintfordLib jar file in dist directory and classpath -->
 	
 	<target name="main" depends="clean, init, copy.dep, compile, createjar, notify.jre, bundle.jre, copy.launcher, config.launcher" />
 
 	<property environment="env" />
 
-	<property name="PROJECT_NAME" value="FanTac" />
+	<property name="PROJECT_NAME" value="Sample" />
 	<property name="APPLICATION_NAME" value="Core" />
 	<property name="PLATFORM_NAME" value="x86_64" />
 
@@ -29,7 +27,7 @@
 	<property name="JavaLauncher.dir" value="${TOOLS_PATH}/build/launcher" />
 	<property name="jre.dir">jre</property>
 
-	<property name="client-main-class">lintfordpickle.fantac.GameWindow</property>
+	<property name="client-main-class">net.lintfordlib.samples.GameWindow</property>
 	<property name="compile-target-version" value="21" />
 	<property name="compile-source-version" value="21" />
 
@@ -170,10 +168,9 @@
 	<target name="bundle.jre" depends="check.jre" unless="jre.dir.exists">
 		<echo message="Bundling JRE to ${dist.jre}" />
 		
-		<echo message="jlink --module-path '${dist.jre}\jmods' --add-modules java.base,java.sql,java.desktop,java.management,java.xml,jdk.unsupported,jdk.management --output ${dist.jre}  --compress 2 --strip-debug --no-header-files --no-man-pages" />
 		<exec executable="cmd">
 			<arg value="/c" />
-			<arg value='jlink --module-path "${dist.jre}\jmods" --add-modules java.base,java.sql,java.desktop,java.management,java.xml,jdk.unsupported,jdk.management --output ${dist.jre}  --compress 2 --strip-debug --no-header-files --no-man-pages' />
+			<arg value='jlink --module-path "D:\IDE\java\jdk-21.0.1\jmods" --add-modules java.base,java.sql,java.desktop,java.management,java.xml,jdk.unsupported,jdk.management --output ${dist.jre}  --compress 2 --strip-debug --no-header-files --no-man-pages' />
 		</exec>
 	</target>
 
