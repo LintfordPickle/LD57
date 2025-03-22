@@ -3,7 +3,7 @@
   "textureName": "TEXTURE_PARTICLES",
   "spriteFrames": [
     {
-      "name": "LEAF",
+      "name": "PARTICLE_LEAF",
       "x": 0,
       "y": 3,
       "w": 16,
@@ -12,22 +12,11 @@
       "pivotY": 0,
       "scaleX": 1.0,
       "scaleY": 1.0,
+      "anchorToPointName": null,
       "anchorPoints": []
     },
     {
-      "name": "TEXTUREPARTICLEFIRE",
-      "x": 18,
-      "y": 3,
-      "w": 16,
-      "h": 16,
-      "pivotX": 0,
-      "pivotY": 0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "anchorPoints": []
-    },
-    {
-      "name": "DEMONFOOTSTEP",
+      "name": "PARTICLE_00",
       "x": 0,
       "y": 0,
       "w": 2,
@@ -36,10 +25,11 @@
       "pivotY": 0,
       "scaleX": 1.0,
       "scaleY": 1.0,
+      "anchorToPointName": null,
       "anchorPoints": []
     },
     {
-      "name": "FOOTSTEP",
+      "name": "PARTICLE_TEST",
       "x": 4,
       "y": 0,
       "w": 2,
@@ -48,18 +38,7 @@
       "pivotY": 0,
       "scaleX": 1.0,
       "scaleY": 1.0,
-      "anchorPoints": []
-    },
-    {
-      "name": "MONKFOOTSTEP",
-      "x": 8,
-      "y": 0,
-      "w": 2,
-      "h": 1,
-      "pivotX": 0,
-      "pivotY": 0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
+      "anchorToPointName": null,
       "anchorPoints": []
     }
   ],
