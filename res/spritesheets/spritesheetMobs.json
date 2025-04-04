@@ -1,0 +1,20 @@
+{
+  "spriteSheetName": "SPRITESHEET_MOBS",
+  "textureName": "TEXTURE_MOBS",
+  "spriteFrames": [
+    {
+      "name": "PLAYER",
+      "x": 0,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    }
+  ],
+  "animationFramesMap": {}
+}

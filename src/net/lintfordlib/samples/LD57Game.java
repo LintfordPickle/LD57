@@ -1,6 +1,7 @@
 package net.lintfordlib.samples;
 
 import net.lintfordlib.GameInfo;
+import net.lintfordlib.GameVersion;
 import net.lintfordlib.assets.ResourceLoader;
 import net.lintfordlib.controllers.music.MusicController;
 import net.lintfordlib.core.LintfordCore;
@@ -13,7 +14,25 @@ import net.lintfordlib.samples.screens.menu.MainMenuBackground;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.toast.ToastManager;
 
-public abstract class NewGameBase extends LintfordCore {
+public class LD57Game extends LintfordCore {
+
+	// ---------------------------------------------
+	// Constants
+	// ---------------------------------------------
+
+	private final int APP_VERSION_MAJ = 0;
+	private final int APP_VERSION_MIN = 1;
+	private final int APP_VERSION_BUILD = 1;
+
+	private final String APP_POSTFIX = "05042025";
+
+	// ---------------------------------------------
+	// Entry Point
+	// ---------------------------------------------
+
+	public static void main(String[] args) {
+		new LD57Game(new Ld57GameInfo(), args).createWindow();
+	}
 
 	// ---------------------------------------------
 	// Variables
@@ -37,8 +56,10 @@ public abstract class NewGameBase extends LintfordCore {
 	// Constructor
 	// ---------------------------------------------
 
-	public NewGameBase(GameInfo pGameInfo, String[] pArgs) {
+	public LD57Game(GameInfo pGameInfo, String[] pArgs) {
 		super(pGameInfo, pArgs, false);
+
+		setGameVersion();
 
 		mEntityGroupID = ConstantsGame.GAME_RESOURCE_GROUP_ID;
 		mIsFixedTimeStep = true;
@@ -138,6 +159,14 @@ public abstract class NewGameBase extends LintfordCore {
 		super.onDraw();
 
 		mScreenManager.draw(this);
+	}
+
+	// ---------------------------------------------
+	// Methods
+	// ---------------------------------------------
+
+	private void setGameVersion() {
+		GameVersion.setGameVersion(APP_VERSION_MAJ, APP_VERSION_MIN, APP_VERSION_BUILD, APP_POSTFIX);
 	}
 
 }

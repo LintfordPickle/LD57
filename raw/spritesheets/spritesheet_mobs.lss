@@ -1,0 +1,29 @@
+{
+  "outputDataFilename": "..\\..\\res\\spritesheets\\spritesheetMobs.json",
+  "outputNameDataFilename": null,
+  "outputImageFilename": "..\\..\\res\\textures\\textureMobs.png",
+  "workingDirectory": "mobs\\",
+  "spriteSheetName": "SPRITESHEET_MOBS",
+  "textureName": "TEXTURE_MOBS",
+  "dataPackageName": "enter.package.name",
+  "exportDataFile": true,
+  "exportTextureFile": true,
+  "exportNamesFile": false,
+  "sortMode": "Area",
+  "borderPadding": 0,
+  "shapeOutlines": false,
+  "crop": false,
+  "trim": false,
+  "allowRotations": false,
+  "spritePadding": 2,
+  "textureWidthMax": 256,
+  "textureWidthActual": 256,
+  "textureHeightMax": 256,
+  "textureHeightActual": 256,
+  "forcePoTTextures": true,
+  "autoSizeTexture": false,
+  "itemFilenames": [
+    "mobs\\*.*"
+  ],
+  "animationItems": { }
+}

@@ -3,7 +3,7 @@ package net.lintfordlib.samples;
 import net.lintfordlib.GameInfo;
 import net.lintfordlib.core.debug.Debug.DebugLogLevel;
 
-public class NewGameInfo implements GameInfo {
+public class Ld57GameInfo implements GameInfo {
 
 	@Override
 	public DebugLogLevel debugLogLevel() {

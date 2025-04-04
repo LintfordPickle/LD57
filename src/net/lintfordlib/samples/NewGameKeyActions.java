@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import net.lintfordlib.core.input.GameKeyActions;
 
 // this class is needed because, although the game can register new event actions in the startup, we need to further allocate a 'use' string 
-// so we know what is to be mapped in the keybindings screen.
+// so we know what is to be mapped in the key-bindings screen.
 
 //@formatter:off
 

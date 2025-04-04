@@ -5,20 +5,29 @@ import org.lwjgl.opengl.GL11;
 
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
+import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.textures.Texture;
+import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.data.DataManager;
 import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.renderers.SimpleRendererManager;
+import net.lintfordlib.renderers.particles.ParticleFrameworkRenderer;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.NewGameKeyActions;
 import net.lintfordlib.samples.controllers.AnimationController;
+import net.lintfordlib.samples.controllers.CameraFollowController;
 import net.lintfordlib.samples.controllers.GameStateController;
+import net.lintfordlib.samples.controllers.LevelController;
+import net.lintfordlib.samples.controllers.MobController;
+import net.lintfordlib.samples.controllers.PlayerController;
 import net.lintfordlib.samples.data.GameOptions;
 import net.lintfordlib.samples.data.GameWorld;
 import net.lintfordlib.samples.data.IGameStateListener;
 import net.lintfordlib.samples.renderers.AnimationRenderer;
 import net.lintfordlib.samples.renderers.HudRenderer;
+import net.lintfordlib.samples.renderers.LevelRenderer;
+import net.lintfordlib.samples.renderers.MobRenderer;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.BaseGameScreen;
 
@@ -33,16 +42,25 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	// Data
 	private GameWorld mGameWorld; // reference to data related to the scene
+	private ParticleFrameworkData mParticleData;
 
 	private Texture mGameBackgroundTexture;
 
 	// Controllers
 	private GameStateController mGameStateController;
 	private AnimationController mAnimationController;
+	private LevelController mLevelController;
+	private MobController mMobController;
+	private PlayerController mPlayerController;
+	private CameraFollowController mCameraFollowController;
+	private ParticleFrameworkController mParticleFrameworkController;
 
 	// Renderers
+	private LevelRenderer mLevelRenderer;
 	private AnimationRenderer mAnimationRenderer;
 	private HudRenderer mHudRenderer;
+	private ParticleFrameworkRenderer mParticleFrameworkRenderer;
+	private MobRenderer mMobRenderer;
 
 	// --------------------------------------
 	// Constructor
@@ -58,6 +76,16 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	// --------------------------------------
 	// Core-Methods
 	// --------------------------------------
+
+	@Override
+	public void initialize() {
+		super.initialize();
+
+		// by this stage, all the controller should be fully initialized themselves ..
+
+		mMobController.startNewGame(0);
+		mLevelController.startNewGame(0);
+	}
 
 	@Override
 	public void loadResources(ResourceManager resourceManager) {
@@ -144,6 +172,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	@Override
 	protected void createData(DataManager dataManager) {
 		mGameWorld = new GameWorld();
+		mParticleData = new ParticleFrameworkData(dataManager, entityGroupUid());
 	}
 
 	// CONTROLLERS ---------------------------------
@@ -152,7 +181,11 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	protected void createControllers(ControllerManager controllerManager) {
 		mGameStateController = new GameStateController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mAnimationController = new AnimationController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
-
+		mLevelController = new LevelController(controllerManager, mGameWorld, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mParticleFrameworkController = new ParticleFrameworkController(controllerManager, mParticleData, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mMobController = new MobController(controllerManager, mGameWorld, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mPlayerController = new PlayerController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mCameraFollowController = new CameraFollowController(controllerManager, mGameCamera, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mGameStateController.setGameStateListener(this);
 	}
 
@@ -160,6 +193,11 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	protected void initializeControllers(LintfordCore core) {
 		mGameStateController.initialize(core);
 		mAnimationController.initialize(core);
+		mMobController.initialize(core);
+		mPlayerController.initialize(core);
+		mParticleFrameworkController.initialize(core);
+		mCameraFollowController.initialize(core);
+		mLevelController.initialize(core);
 	}
 
 	// RENDERERS -----------------------------------
@@ -167,14 +205,19 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	@Override
 	protected void createRenderers(LintfordCore core) {
 		mAnimationRenderer = new AnimationRenderer(mRendererManager, mAnimationController, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mLevelRenderer = new LevelRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mMobRenderer = new MobRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mParticleFrameworkRenderer = new ParticleFrameworkRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mHudRenderer = new HudRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 	}
 
 	@Override
 	protected void createRendererStructure(LintfordCore core) {
 		mRendererManager.addRenderer(mAnimationRenderer);
+		mRendererManager.addRenderer(mLevelRenderer);
+		mRendererManager.addRenderer(mMobRenderer);
+		mRendererManager.addRenderer(mParticleFrameworkRenderer);
 		mRendererManager.addRenderer(mHudRenderer);
-
 	}
 
 	// --------------------------------------

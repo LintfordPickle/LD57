@@ -1,5 +1,7 @@
 package net.lintfordlib.samples.renderers;
 
+import org.lwjgl.opengl.GL11;
+
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.rendering.RenderPass;
@@ -72,12 +74,14 @@ public class HudRenderer extends BaseRenderer {
 
 	@Override
 	public void draw(LintfordCore core, RenderPass renderPass) {
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+
 		final var lHudBounds = core.HUD().boundingRectangle();
 
 		final var lFontBatch = mRendererManager.sharedResources().uiTitleFont();
 
 		lFontBatch.begin(core.HUD());
-		lFontBatch.drawShadowedText("Hud Renderer", lHudBounds.left() + 10.f, lHudBounds.top() + 40.f, .1f, 1.f, 1.f, 1.f);
+		lFontBatch.drawShadowedText("Hud Renderer", lHudBounds.left() + 10.f, lHudBounds.top() + 10.f, .1f, 1.f, 1.f, 1.f);
 		lFontBatch.end();
 	}
 }

@@ -100,7 +100,9 @@ public class PauseScreen extends MenuScreen {
 			break;
 
 		case SCREEN_BUTTON_EXIT:
-			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, new MainMenuBackground(screenManager), new CreditsScreen(screenManager), new MainMenu(screenManager)));
+			final var lMenuBackgroundScreen = new MainMenuBackground(screenManager);
+			final var lMainMenuScreen = new MainMenu(screenManager);
+			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, lMenuBackgroundScreen, lMainMenuScreen));
 			break;
 
 		}
