@@ -1,6 +1,8 @@
 package net.lintfordlib.samples.data.level;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.lintfordlib.samples.ConstantsGame;
 
@@ -24,10 +26,10 @@ public class CellLevel {
 	public static final byte LEVEL_BLOCK_HEALTH_GEMS = (byte) 10;
 
 	public static final int LEVEL_ITEMS_NOTHING = 0;
-	public static final int LEVEL_ITEMS_GOLD = 1;
-	public static final int LEVEL_ITEMS_GEMS = 2;
-	public static final int LEVEL_ITEMS_SPAWNER = 3;
-	public static final int LEVEL_ITEMS_ENTERANCE = 4;
+	public static final int LEVEL_ITEMS_ENTRANCE = 1;
+	public static final int LEVEL_ITEMS_GOLD = 2;
+	public static final int LEVEL_ITEMS_GEMS = 3;
+	public static final int LEVEL_ITEMS_SPAWNER = 4;
 	public static final int LEVEL_ITEMS_TREASURE = 5;
 
 	// ---------------------------------------------
@@ -41,11 +43,32 @@ public class CellLevel {
 
 	private int[] mBlockTypeIndices = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 	private byte[] mLevelBlockHealth = new byte[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
-	private int[] mItemIndices = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
+	private int[] mItemTypeUids = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
+
+	// distance away from opening
+	private transient int[] mTileDepth = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
+
+	private transient float[] mItemTimers = new float[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
+	private transient float[] mItemHealth = new float[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
+
+	private int mEntranceTileCoord;
+	private transient List<Integer> spawnerIndices = new ArrayList<>();
 
 	// ---------------------------------------------
 	// Properties
 	// ---------------------------------------------
+
+	public List<Integer> spawnerIndices() {
+		return spawnerIndices;
+	}
+
+	public int[] tileDepth() {
+		return mTileDepth;
+	}
+
+	public float[] itemTimers() {
+		return mItemTimers;
+	}
 
 	public String name() {
 		return mLevelName;
@@ -74,18 +97,33 @@ public class CellLevel {
 		return mBlockTypeIndices[pLevelTileCoord];
 	}
 
-	public int getLevelBlockType(int pTileX, int pTileY) {
-		final int lTileCoord = getLevelTileCoord(pTileX, pTileY);
+	public int getLevelBlockType(int tileX, int tileY) {
+		final int lTileCoord = getLevelTileCoord(tileX, tileY);
 		if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 			return LEVEL_TILE_COORD_INVALID;
 
 		return mBlockTypeIndices[lTileCoord];
 	}
 
+	public int getItemTypeUid(int pLevelTileCoord) {
+		if (pLevelTileCoord < 0 || pLevelTileCoord > (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1)
+			return LEVEL_TILE_COORD_INVALID;
+
+		return mItemTypeUids[pLevelTileCoord];
+	}
+
+	public int getItemTypeUid(int tileX, int tileY) {
+		final int lTileCoord = getLevelTileCoord(tileX, tileY);
+		if (lTileCoord == LEVEL_TILE_COORD_INVALID)
+			return LEVEL_TILE_COORD_INVALID;
+
+		return mItemTypeUids[lTileCoord];
+	}
+
 	// ---------------------------------------------
 
-	public int getLevelTileCoord(int pTileX, int pTileY) {
-		final int lTileCoord = pTileY * ConstantsGame.LEVEL_TILES_WIDE + pTileX;
+	public int getLevelTileCoord(int tileX, int tileY) {
+		final int lTileCoord = tileY * ConstantsGame.LEVEL_TILES_WIDE + tileX;
 		if (lTileCoord < 0 || lTileCoord >= ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH)
 			return LEVEL_TILE_COORD_INVALID;
 
@@ -136,15 +174,16 @@ public class CellLevel {
 	public LevelSaveDefinition saveLevel() {
 		final var lSaveDef = new LevelSaveDefinition();
 
-		// TODO:
+		// TODO: save def meta data
 		lSaveDef.name = "unnamed";
 		lSaveDef.levelWidth = ConstantsGame.LEVEL_TILES_WIDE;
 		lSaveDef.levelHeight = ConstantsGame.LEVEL_TILES_HIGH;
+		lSaveDef.entranceTilecoord = mEntranceTileCoord;
 
 		final var lNumBlocks = mBlockTypeIndices.length;
 		lSaveDef.blockTypeIndices = Arrays.copyOf(mBlockTypeIndices, lNumBlocks);
 		lSaveDef.levelBlockHealth = Arrays.copyOf(mLevelBlockHealth, lNumBlocks);
-		lSaveDef.itemIndices = Arrays.copyOf(mItemIndices, lNumBlocks);
+		lSaveDef.itemIndices = Arrays.copyOf(mItemTypeUids, lNumBlocks);
 
 		return lSaveDef;
 	}
@@ -153,15 +192,26 @@ public class CellLevel {
 		mLevelName = levelDefinition.name;
 		mTilesWide = levelDefinition.levelWidth;
 		mTilesHigh = levelDefinition.levelHeight;
+		mEntranceTileCoord = levelDefinition.entranceTilecoord;
 
 		mLevelName = levelDefinition.name;
 		mLevelFileName = levelDefinition.fileName;
-		
+
 		final var lNumTiles = mTilesWide * mTilesHigh;
 
 		mBlockTypeIndices = Arrays.copyOf(levelDefinition.blockTypeIndices, lNumTiles);
 		mLevelBlockHealth = Arrays.copyOf(levelDefinition.levelBlockHealth, lNumTiles);
-		mItemIndices = Arrays.copyOf(levelDefinition.itemIndices, lNumTiles);
+		mItemTypeUids = Arrays.copyOf(levelDefinition.itemIndices, lNumTiles);
+
+		for (int i = 0; i < lNumTiles; i++) {
+			if (mItemTypeUids[i] == LEVEL_ITEMS_SPAWNER) {
+
+				mItemTimers[i] = 10.f;
+				mItemHealth[i] = 10;
+
+				spawnerIndices.add(i);
+			}
+		}
 	}
 
 	public void createTestLevel() {
@@ -186,9 +236,7 @@ public class CellLevel {
 					continue;
 				mBlockTypeIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
 				mLevelBlockHealth[lTileCoord] = 0;
-
 			}
-
 		}
 
 		for (int y = 0; y < mTilesHigh; y++) {
@@ -206,32 +254,29 @@ public class CellLevel {
 				mBlockTypeIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
 			}
 		}
-
-		// Random blocks
-
 	}
 
 	private void clearLevel() {
 		Arrays.fill(mLevelBlockHealth, (byte) 0);
 		Arrays.fill(mBlockTypeIndices, LEVEL_TILE_INDEX_NOTHING);
-		Arrays.fill(mItemIndices, LEVEL_ITEMS_NOTHING);
+		Arrays.fill(mItemTypeUids, LEVEL_ITEMS_NOTHING);
 	}
 
-	public boolean hasCollision(int pTileX, int pTileY) {
-		if (pTileX < 0 || pTileY < 0)
+	public boolean hasCollision(int tileX, int tileY) {
+		if (tileX < 0 || tileY < 0)
 			return true;
-		if (pTileX >= ConstantsGame.LEVEL_TILES_WIDE || pTileY >= ConstantsGame.LEVEL_TILES_HIGH)
+		if (tileX >= ConstantsGame.LEVEL_TILES_WIDE || tileY >= ConstantsGame.LEVEL_TILES_HIGH)
 			return true;
 
-		final int lTileIndex = getLevelTileCoord(pTileX, pTileY);
+		final int lTileIndex = getLevelTileCoord(tileX, tileY);
 		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
 			return true;
 
 		return mBlockTypeIndices[lTileIndex] > LEVEL_TILE_INDEX_NOTHING;
 	}
 
-	public boolean digBlock(int pTileX, int pTileY, byte pDamageAmount) {
-		final int lTileIndex = getLevelTileCoord(pTileX, pTileY);
+	public boolean digBlock(int tileX, int tileY, byte pDamageAmount) {
+		final int lTileIndex = getLevelTileCoord(tileX, tileY);
 		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
 			return false;
 
@@ -261,16 +306,16 @@ public class CellLevel {
 		return wasBlockRemoved;
 	}
 
-	public byte getBlockHealth(int pTileX, int pTileY) {
-		final int lTileCoord = getLevelTileCoord(pTileX, pTileY);
+	public byte getBlockHealth(int tileX, int tileY) {
+		final int lTileCoord = getLevelTileCoord(tileX, tileY);
 		if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 			return (byte) 255;
 
 		return mLevelBlockHealth[lTileCoord];
 	}
 
-	public boolean placeBlock(int pTileX, int pTileY, int pBlockTypeIndex, byte pBlockHealth) {
-		final int lTileCoord = getLevelTileCoord(pTileX, pTileY);
+	public boolean placeBlock(int tileX, int tileY, int pBlockTypeIndex, byte pBlockHealth) {
+		final int lTileCoord = getLevelTileCoord(tileX, tileY);
 		if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 			return false;
 
@@ -284,4 +329,125 @@ public class CellLevel {
 		return true;
 	}
 
+	public boolean placeItem(int tileX, int tileY, int itemIndex) {
+		final int lTileIndex = getLevelTileCoord(tileX, tileY);
+		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
+			return false;
+
+		return placeItem(lTileIndex, itemIndex);
+	}
+
+	public boolean placeItem(int tileCoord, int itemTypeUidToPlace) {
+		final int lCurItemTypeUid = getItemTypeUid(tileCoord);
+		if (lCurItemTypeUid != LEVEL_TILE_INDEX_NOTHING)
+			return false;
+
+		switch (itemTypeUidToPlace) {
+		case LEVEL_ITEMS_SPAWNER: {
+			if (spawnerIndices.contains((Integer) tileCoord))
+				return false;
+
+			mItemTypeUids[tileCoord] = itemTypeUidToPlace;
+
+			mItemTimers[tileCoord] = 0.f;
+			mItemHealth[tileCoord] = 0;
+			spawnerIndices.add((Integer) tileCoord);
+			break;
+		}
+
+		case LEVEL_ITEMS_GOLD: {
+			final var lBlockTypeUid = getLevelBlockType(tileCoord);
+			if (lBlockTypeUid != LEVEL_TILE_INDEX_DIRT)
+				return false; // gold need dirt
+
+			mItemTypeUids[tileCoord] = itemTypeUidToPlace;
+
+			break;
+		}
+
+		case LEVEL_ITEMS_GEMS: {
+			final var lBlockTypeUid = getLevelBlockType(tileCoord);
+			if (lBlockTypeUid != LEVEL_TILE_INDEX_DIRT)
+				return false; // gold need dirt
+
+			mItemTypeUids[tileCoord] = itemTypeUidToPlace;
+
+			break;
+		}
+
+		case LEVEL_ITEMS_TREASURE: {
+			final var lBlockTypeUid = getLevelBlockType(tileCoord);
+			if (lBlockTypeUid != LEVEL_TILE_INDEX_NOTHING)
+				return false; // chests only on floor
+
+			mItemTypeUids[tileCoord] = itemTypeUidToPlace;
+
+			break;
+		}
+		}
+
+		return true;
+	}
+
+	public boolean removeItem(int tileX, int tileY) {
+		final int lTileIndex = getLevelTileCoord(tileX, tileY);
+		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
+			return false;
+
+		return removeItem(lTileIndex);
+	}
+
+	public boolean removeItem(int tileCoord) {
+		final int lCurrentItemType = getItemTypeUid(tileCoord);
+		if (lCurrentItemType == LEVEL_TILE_INDEX_NOTHING)
+			return false;
+
+		final var lCurItemType = mItemTypeUids[tileCoord];
+		switch (lCurItemType) {
+		case LEVEL_ITEMS_SPAWNER: {
+			mItemTimers[tileCoord] = 0.f;
+			mItemHealth[tileCoord] = 0;
+			spawnerIndices.remove((Integer) tileCoord);
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + lCurItemType);
+		}
+
+		mItemTypeUids[tileCoord] = LEVEL_ITEMS_NOTHING;
+		return true;
+	}
+
+	public boolean setCaveEntrance(int tileX, int tileY) {
+		final int lTileIndex = getLevelTileCoord(tileX, tileY);
+		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
+			return false;
+
+		final int lCurrentItemIndex = getItemTypeUid(lTileIndex);
+		if (lCurrentItemIndex != LEVEL_ITEMS_NOTHING)
+			return false;
+
+		System.out.println("Setting new cave entrance to " + lTileIndex);
+		mEntranceTileCoord = lTileIndex;
+		placeItem(lTileIndex, LEVEL_ITEMS_ENTRANCE);
+
+		// update depths
+		final var lNumTiles = mTilesWide * mTilesHigh;
+		for (int i = 0; i < lNumTiles; i++) {
+			if (i != lTileIndex) {
+				final int itemIndex = getItemTypeUid(i);
+				if (itemIndex == LEVEL_ITEMS_ENTRANCE)
+					mItemTypeUids[i] = LEVEL_ITEMS_NOTHING;
+			}
+
+			final var xx = i % mTilesWide;
+			final var yy = i / mTilesHigh;
+
+			final var manhattenDist = Math.abs(xx - tileX) + Math.abs(yy - tileY);
+
+			mTileDepth[i] = manhattenDist;
+		}
+
+		return true;
+	}
 }

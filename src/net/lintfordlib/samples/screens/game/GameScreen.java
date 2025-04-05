@@ -98,21 +98,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE, this) || core.input().gamepads().isGamepadButtonDownTimed(GLFW.GLFW_GAMEPAD_BUTTON_START, this)) {
 			final var lGameScreen = new GameScreen(screenManager, mSceneHeader, mGameOptions);
 			screenManager.createLoadingScreen(new LoadingScreen(screenManager, true, true, lGameScreen));
-			// screenManager.addScreen(new PauseScreen(screenManager, mSceneHeader, mGameOptions));
 			return;
-		}
-
-		// For simple games you could add code to handle the player input here.
-		// However usually, components would be updated in dedicated BaseControllers (see the CONTROLLERS Section below).
-
-		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_SPACE, this)) {
-			// Game-specific controller abstracts the animation logic and lets you just play 'explosion'.
-			mAnimationController.playBigExplosionAnimation(0, 0);
-		}
-
-		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_LEFT_CONTROL, this)) {
-			// Game-specific controller abstracts the animation logic and let you play a named animation frame from a spritesheet.
-			mAnimationController.playAnimationByName("explosion", (float) Math.cos(core.gameTime().totalTimeSeconds()) * 100.f, (float) Math.sin(core.gameTime().totalTimeSeconds()) * 100.f);
 		}
 	}
 

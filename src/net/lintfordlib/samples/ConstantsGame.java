@@ -32,6 +32,9 @@ public class ConstantsGame {
 	public static final int LEVEL_TILES_WIDE = 25;
 	public static final int LEVEL_TILES_HIGH = 25;
 
+	// I think this is true because we use manhatten distance for caluclating depth
+	public static final int MAX_TILE_DEPTH = LEVEL_TILES_WIDE + LEVEL_TILES_HIGH;
+
 	public static final int BLOCK_SIZE = 16;
 
 	public static final boolean LOCK_ZOOM_TO_ONE = true;

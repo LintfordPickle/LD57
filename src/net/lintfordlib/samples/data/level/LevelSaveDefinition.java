@@ -22,6 +22,9 @@ public class LevelSaveDefinition implements Serializable {
 	@SerializedName(value = "Height")
 	public int levelHeight;
 
+	@SerializedName(value = "Entrance")
+	public int entranceTilecoord;
+
 	// if this save definition was loaded from a file, then the name of the file is here (this way we can save levels fast)
 	public transient String fileName;
 

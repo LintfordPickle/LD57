@@ -125,7 +125,7 @@ public class MobRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	private void updateMobSpriteInstance(MobInstance mob) {
-		String lCurrentAnimationName = "COMMANDER";
+		String lCurrentAnimationName = "P1_COMMANDER";
 //		if (mob.swingingFlag && mob.swingAttackEnabled) {
 //			lCurrentAnimationName = mob.mobTypeName() + "_SWING";
 //

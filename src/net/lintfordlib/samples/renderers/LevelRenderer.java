@@ -75,17 +75,14 @@ public class LevelRenderer extends BaseRenderer {
 	public void draw(LintfordCore core, RenderPass renderPass) {
 		final float lLevelWidth = ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.BLOCK_SIZE;
 
-//		final var lTextureBatch = rendererManager().sharedResources().uiSpriteBatch();
-//		lTextureBatch.begin(core.gameCamera());
-//		lTextureBatch.setColorWhite();
-//
-//		final var lHorizontalScale = (lLevelWidth / 256.f) * 256.f;
-//		lTextureBatch.draw(mBackgroundTexture, 0, 0, lHorizontalScale, 256, 0, -128, lLevelWidth, 256, -0.9f);
-//		lTextureBatch.end();
-
 //		drawBackground(core);
 		drawForeground(core);
+
+		drawItems(core);
+		drawDebugDepth(core);
 	}
+
+	// --------------------------------------
 
 	private void drawBackground(LintfordCore pCore) {
 		final var lLevel = mLevelController.cellLevel();
@@ -119,9 +116,7 @@ public class LevelRenderer extends BaseRenderer {
 
 	private void drawForeground(LintfordCore pCore) {
 		final var lLevel = mLevelController.cellLevel();
-
-		if (lLevel == null)
-			return;
+		final var lDepthValues = lLevel.tileDepth();
 
 		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
 		lTextureBatch.begin(pCore.gameCamera());
@@ -130,36 +125,110 @@ public class LevelRenderer extends BaseRenderer {
 
 		var lSpriteFrame = (SpriteFrame) null;
 		var lSpriteSheetTexture = mGameSpriteSheet.texture();
-		
-		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
-			final float lModAmt = 1.f - (float) ((float) y / (float) ConstantsGame.LEVEL_TILES_HIGH * 0.5f);
-			final var lDepthColorMod = ColorConstants.getColor(lModAmt, lModAmt, lModAmt, 1.f);
-			lTextureBatch.setColor(lDepthColorMod);
 
+		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
 			for (int x = 0; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
+
+				final var lTileCoord = lLevel.getLevelTileCoord(x, y);
+				final var lTileDepth = lDepthValues[lTileCoord];
+
+				final var lDepthTolerance = 2.f; // so the darkest is only max half way to black
+				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
+				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
+				lTextureBatch.setColor(lDepthColorMod);
+
 				final int lBlockTypeIndex = lLevel.getLevelBlockType(x, y);
 				if (lBlockTypeIndex == CellLevel.LEVEL_TILE_INDEX_NOTHING)
 					continue;
 
-				final int lTileIndex = lLevel.getLevelTileCoord(x, y);
-				
 				switch (lBlockTypeIndex) {
 				case CellLevel.LEVEL_TILE_INDEX_DIRT:
 					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.DIRT);
 					break;
 				}
 
-				// TODO: resovle the source positions from the tilemap/spritesheet/texture
+				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
+			}
+		}
 
-				final var sx = 0;
-				final var sy = 0;
-				final var sw = 0;
-				final var sh = 0;
+		lTextureBatch.end();
+	}
+
+	private void drawItems(LintfordCore pCore) {
+		final var lLevel = mLevelController.cellLevel();
+		final var lDepthValues = lLevel.tileDepth();
+
+		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
+		lTextureBatch.begin(pCore.gameCamera());
+
+		final float lBlockSize = ConstantsGame.BLOCK_SIZE;
+
+		var lSpriteFrame = (SpriteFrame) null;
+		var lSpriteSheetTexture = mGameSpriteSheet.texture();
+
+		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
+			for (int x = 0; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
+				final int lItemIndex = lLevel.getItemTypeUid(x, y);
+				if (lItemIndex == CellLevel.LEVEL_ITEMS_NOTHING)
+					continue;
+				
+				final var lTileCoord = lLevel.getLevelTileCoord(x, y);
+				final var lTileDepth = lDepthValues[lTileCoord];
+				
+				final var lDepthTolerance = 2.f; // so the darkest is only max half way to black
+				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
+				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
+				lTextureBatch.setColor(lDepthColorMod);
+
+				switch (lItemIndex) {
+				case CellLevel.LEVEL_ITEMS_SPAWNER:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.SPAWNER_FLOOR_1);
+					break;
+
+				case CellLevel.LEVEL_ITEMS_GOLD:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.GOLD);
+					break;
+
+				case CellLevel.LEVEL_ITEMS_GEMS:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.GEMS);
+					break;
+
+				case CellLevel.LEVEL_ITEMS_TREASURE:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.CHEST);
+					break;
+
+				case CellLevel.LEVEL_ITEMS_ENTRANCE:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.ENTRANCE);
+					break;
+
+				}
 
 				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
 			}
 		}
 
 		lTextureBatch.end();
+	}
+
+	private void drawDebugDepth(LintfordCore core) {
+		final var lLevel = mLevelController.cellLevel();
+		final var lDepths = lLevel.tileDepth();
+
+		final var lFontUnit = mRendererManager.sharedResources().uiTextFont();
+		lFontUnit.begin(core.gameCamera());
+		lFontUnit.setTextColorWhite();
+
+		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
+			for (int x = 0; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
+				final int lTileIndex = lLevel.getLevelTileCoord(x, y);
+
+				final var xx = x * ConstantsGame.BLOCK_SIZE;
+				final var yy = y * ConstantsGame.BLOCK_SIZE;
+
+				lFontUnit.drawText("" + lDepths[lTileIndex], xx, yy, .01f, .2f);
+			}
+		}
+
+		lFontUnit.end();
 	}
 }

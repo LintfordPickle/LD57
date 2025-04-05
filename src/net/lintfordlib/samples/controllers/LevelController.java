@@ -90,18 +90,38 @@ public class LevelController extends BaseController implements IInputProcessor {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
-
 		if (ConstantsGame.IS_LEVEL_EDIT_MODE) {
+			final int lMouseTileX = (int) (core.gameCamera().getMouseWorldSpaceX() / ConstantsGame.BLOCK_SIZE);
+			final int lMouseTileY = (int) (core.gameCamera().getMouseWorldSpaceY() / ConstantsGame.BLOCK_SIZE);
+
 			if (core.input().mouse().isMouseLeftButtonDownTimed(this)) {
-				final int lMouseTileX = (int) (core.gameCamera().getMouseWorldSpaceX() / ConstantsGame.BLOCK_SIZE);
-				final int lMouseTileY = (int) (core.gameCamera().getMouseWorldSpaceY() / ConstantsGame.BLOCK_SIZE);
-
-				if (core.input().keyboard().isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL))
+				if (core.input().keyboard().isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+					if (!mLevel.removeItem(lMouseTileX, lMouseTileY)) {
+						mLevel.digBlock(lMouseTileX, lMouseTileY, (byte) 50);
+					}
+				} else {
 					mLevel.placeBlock(lMouseTileX, lMouseTileY, CellLevel.LEVEL_TILE_INDEX_DIRT, (byte) 2);
+				}
+			}
 
-				else
-					mLevel.digBlock(lMouseTileX, lMouseTileY, (byte) 50);
+			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_1, this)) {
+				mLevel.setCaveEntrance(lMouseTileX, lMouseTileY);
+			}
 
+			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_2, this)) {
+				mLevel.placeItem(lMouseTileX, lMouseTileY, CellLevel.LEVEL_ITEMS_SPAWNER);
+			}
+
+			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_3, this)) {
+				mLevel.placeItem(lMouseTileX, lMouseTileY, CellLevel.LEVEL_ITEMS_GOLD);
+			}
+
+			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_4, this)) {
+				mLevel.placeItem(lMouseTileX, lMouseTileY, CellLevel.LEVEL_ITEMS_GEMS);
+			}
+
+			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_5, this)) {
+				mLevel.placeItem(lMouseTileX, lMouseTileY, CellLevel.LEVEL_ITEMS_TREASURE);
 			}
 
 			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_F5, this)) {
@@ -122,7 +142,20 @@ public class LevelController extends BaseController implements IInputProcessor {
 
 		if (mMouseCooldownTimer > 0) {
 			mMouseCooldownTimer -= core.gameTime().elapsedTimeMilli();
+		}
 
+		final var lItemTimers = mLevel.itemTimers();
+
+		final var lSpawnerIndices = mLevel.spawnerIndices();
+		final int lNumSpawners = lSpawnerIndices.size();
+		for (int i = 0; i < lNumSpawners; i++) {
+			final var lSpawnerIndex = lSpawnerIndices.get(i);
+
+			lItemTimers[lSpawnerIndex] -= core.gameTime().elapsedTimeMilli();
+			if (lItemTimers[lSpawnerIndex] < 0.f) {
+				lItemTimers[lSpawnerIndex] = 1000.f;
+				System.out.println("goddawm little fish, we got one! " + lSpawnerIndex);
+			}
 		}
 	}
 

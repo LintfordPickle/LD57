@@ -26,10 +26,17 @@ public class GameStateController extends BaseController {
 	private IGameStateListener mGameStateListener;
 
 	private PlayerController mPlayerController;
+	private LevelController mLevelController;
+
+	private boolean mPlayerInLoadoutArea;
 
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public boolean playerInLoadoutArea() {
+		return mPlayerInLoadoutArea;
+	}
 
 	public void setGameStateListener(IGameStateListener listener) {
 		mGameStateListener = listener;
