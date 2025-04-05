@@ -52,7 +52,8 @@ public class ConstantsGame {
 	public static final boolean IS_DEBUG_RENDERING_MODE = true;
 
 	public static boolean DEBUG_DRAW_MOB_COLLIDERS = false;
-	public static boolean DEBUG_ENABLE_ATTACK_KNOCKBACK = false;
+	public static boolean DEBUG_DRAW_MOB_TARGET_LINES = true;
+	public static boolean DEBUG_ENABLE_ATTACK_KNOCKBACK = true;
 
 	public static final boolean IS_AI_ENABLED = true;
 	public static final boolean CAMERA_DEBUG_MODE = true;

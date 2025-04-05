@@ -118,6 +118,19 @@
       "scaleY": 1.0,
       "anchorToPointName": null,
       "anchorPoints": []
+    },
+    {
+      "name": "WHITE",
+      "x": 144,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
     }
   ],
   "animationFramesMap": {}

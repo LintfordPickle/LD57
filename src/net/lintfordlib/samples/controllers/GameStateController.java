@@ -34,6 +34,10 @@ public class GameStateController extends BaseController {
 	// Properties
 	// --------------------------------------
 
+	public GameState gameState() {
+		return mGameState;
+	}
+
 	public boolean playerInLoadoutArea() {
 		return mPlayerInLoadoutArea;
 	}
@@ -62,6 +66,7 @@ public class GameStateController extends BaseController {
 
 		final var lControllerManager = core.controllerManager();
 		mPlayerController = (PlayerController) lControllerManager.getControllerByNameRequired(PlayerController.CONTROLLER_NAME, entityGroupUid());
+		mLevelController = (LevelController) lControllerManager.getControllerByNameRequired(LevelController.CONTROLLER_NAME, entityGroupUid());
 	}
 
 	@Override
@@ -94,5 +99,14 @@ public class GameStateController extends BaseController {
 		if (mGameState.credits > lWinCreditsAmount) {
 			mGameStateListener.onGameWon();
 		}
+
+		final var cmdX = mPlayerController.commanderInstance().cx;
+		final var cmdY = mPlayerController.commanderInstance().cy;
+
+		final var entX = mLevelController.cellLevel().entranceTileX();
+		final var entY = mLevelController.cellLevel().entranceTileY();
+
+		final var lCmdDistFromEntrance = Math.abs(cmdX - entX) + Math.abs(cmdY - entY);
+		mPlayerInLoadoutArea = lCmdDistFromEntrance < 4;
 	}
 }

@@ -1,7 +1,10 @@
 package net.lintfordlib.samples.renderers;
 
+import org.lwjgl.opengl.GL11;
+
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
+import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.core.rendering.RenderPass;
@@ -9,6 +12,7 @@ import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManagerBase;
 import net.lintfordlib.samples.controllers.MobController;
 import net.lintfordlib.samples.data.mobs.MobInstance;
+import net.lintfordlib.samples.data.mobs.MobTypeIndex;
 
 public class MobRenderer extends BaseRenderer {
 
@@ -115,6 +119,9 @@ public class MobRenderer extends BaseRenderer {
 			else
 				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - lHalfWidth, lMobWorldPositionY - lHalfWidth, lMobWidth, 16, .1f);
 
+			GL11.glPointSize(5);
+			Debug.debugManager().drawers().drawPointImmediate(core.gameCamera(), lMobInstance.auxForwardPosX, lMobInstance.auxForwardPosY);
+
 		}
 
 		lSpriteBatch.end();
@@ -125,12 +132,36 @@ public class MobRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	private void updateMobSpriteInstance(MobInstance mob) {
-		String lCurrentAnimationName = "P1_COMMANDER";
+		String lCurrentAnimationName = null; // "P1_COMMANDER";
+
+		switch (mob.def().typeUid) {
+		case MobTypeIndex.MOB_TYPE_PLAYER_COMANDER:
+			lCurrentAnimationName = "P1_COMMANDER";
+			break;
+
+		case MobTypeIndex.MOB_TYPE_PLAYER_DIGGER:
+			lCurrentAnimationName = "P1_DIGGER";
+			break;
+
+		case MobTypeIndex.MOB_TYPE_PLAYER_MELEE:
+			lCurrentAnimationName = "P1_MELEE";
+			break;
+
+		case MobTypeIndex.MOB_TYPE_PLAYER_RANGE:
+			lCurrentAnimationName = "P1_RANGE";
+			break;
+
+		case MobTypeIndex.MOB_TYPE_GOBLIN_MELEE:
+			lCurrentAnimationName = "GOB_MELEE";
+			break;
+
+		case MobTypeIndex.MOB_TYPE_GOBLIN_RANGE:
+			lCurrentAnimationName = "GOB_RANGE";
+			break;
+		}
+
 //		if (mob.swingingFlag && mob.swingAttackEnabled) {
 //			lCurrentAnimationName = mob.mobTypeName() + "_SWING";
-//
-//		} else if (Math.abs(mob.velocityX) > 0.002f) {
-//			lCurrentAnimationName = mob.mobTypeName() + "_WALK";
 //
 //		}
 

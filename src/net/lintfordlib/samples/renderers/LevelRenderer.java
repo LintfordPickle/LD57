@@ -145,6 +145,14 @@ public class LevelRenderer extends BaseRenderer {
 				case CellLevel.LEVEL_TILE_INDEX_DIRT:
 					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.DIRT);
 					break;
+
+				case CellLevel.LEVEL_TILE_INDEX_GOLD:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.GOLD);
+					break;
+
+				case CellLevel.LEVEL_TILE_INDEX_GEMS:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.GEMS);
+					break;
 				}
 
 				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
@@ -171,10 +179,10 @@ public class LevelRenderer extends BaseRenderer {
 				final int lItemIndex = lLevel.getItemTypeUid(x, y);
 				if (lItemIndex == CellLevel.LEVEL_ITEMS_NOTHING)
 					continue;
-				
+
 				final var lTileCoord = lLevel.getLevelTileCoord(x, y);
 				final var lTileDepth = lDepthValues[lTileCoord];
-				
+
 				final var lDepthTolerance = 2.f; // so the darkest is only max half way to black
 				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
 				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
@@ -183,14 +191,6 @@ public class LevelRenderer extends BaseRenderer {
 				switch (lItemIndex) {
 				case CellLevel.LEVEL_ITEMS_SPAWNER:
 					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.SPAWNER_FLOOR_1);
-					break;
-
-				case CellLevel.LEVEL_ITEMS_GOLD:
-					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.GOLD);
-					break;
-
-				case CellLevel.LEVEL_ITEMS_GEMS:
-					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.GEMS);
 					break;
 
 				case CellLevel.LEVEL_ITEMS_TREASURE:
@@ -225,7 +225,7 @@ public class LevelRenderer extends BaseRenderer {
 				final var xx = x * ConstantsGame.BLOCK_SIZE;
 				final var yy = y * ConstantsGame.BLOCK_SIZE;
 
-				lFontUnit.drawText("" + lDepths[lTileIndex], xx, yy, .01f, .2f);
+				lFontUnit.drawText("" + lTileIndex, xx, yy, .01f, .2f);
 			}
 		}
 

@@ -23,6 +23,7 @@ import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameWorld;
 import net.lintfordlib.samples.data.level.CellLevel;
 import net.lintfordlib.samples.data.level.LevelSaveDefinition;
+import net.lintfordlib.samples.data.mobs.MobTypeIndex;
 
 public class LevelController extends BaseController implements IInputProcessor {
 
@@ -38,6 +39,8 @@ public class LevelController extends BaseController implements IInputProcessor {
 
 	private GameStateController mGameStateController;
 	private ParticleFrameworkController mParticleFrameworkController;
+	private MobController mMobController;
+	private LevelController mLevelController;
 
 	private CellLevel mLevel;
 	private float mMouseCooldownTimer;
@@ -85,7 +88,8 @@ public class LevelController extends BaseController implements IInputProcessor {
 	public void initialize(LintfordCore core) {
 		mGameStateController = (GameStateController) core.controllerManager().getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupUid());
 		mParticleFrameworkController = (ParticleFrameworkController) core.controllerManager().getControllerByNameRequired(ParticleFrameworkController.CONTROLLER_NAME, entityGroupUid());
-
+		mMobController = (MobController) core.controllerManager().getControllerByNameRequired(MobController.CONTROLLER_NAME, entityGroupUid());
+		mLevelController = (LevelController) core.controllerManager().getControllerByNameRequired(LevelController.CONTROLLER_NAME, entityGroupUid());
 	}
 
 	@Override
@@ -113,11 +117,11 @@ public class LevelController extends BaseController implements IInputProcessor {
 			}
 
 			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_3, this)) {
-				mLevel.placeItem(lMouseTileX, lMouseTileY, CellLevel.LEVEL_ITEMS_GOLD);
+				mLevel.placeBlock(lMouseTileX, lMouseTileY, CellLevel.LEVEL_TILE_INDEX_GOLD, (byte) 10);
 			}
 
 			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_4, this)) {
-				mLevel.placeItem(lMouseTileX, lMouseTileY, CellLevel.LEVEL_ITEMS_GEMS);
+				mLevel.placeBlock(lMouseTileX, lMouseTileY, CellLevel.LEVEL_TILE_INDEX_GEMS, (byte) 4);
 			}
 
 			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_5, this)) {
@@ -147,6 +151,8 @@ public class LevelController extends BaseController implements IInputProcessor {
 		final var lItemTimers = mLevel.itemTimers();
 
 		final var lSpawnerIndices = mLevel.spawnerIndices();
+		if (maxenemies <= 0)
+			return;
 		final int lNumSpawners = lSpawnerIndices.size();
 		for (int i = 0; i < lNumSpawners; i++) {
 			final var lSpawnerIndex = lSpawnerIndices.get(i);
@@ -154,10 +160,19 @@ public class LevelController extends BaseController implements IInputProcessor {
 			lItemTimers[lSpawnerIndex] -= core.gameTime().elapsedTimeMilli();
 			if (lItemTimers[lSpawnerIndex] < 0.f) {
 				lItemTimers[lSpawnerIndex] = 1000.f;
-				System.out.println("goddawm little fish, we got one! " + lSpawnerIndex);
+
+				final var xx = lSpawnerIndex % mLevelController.cellLevel().tilesWide() * ConstantsGame.BLOCK_SIZE;
+				final var yy = lSpawnerIndex / mLevelController.cellLevel().tilesHigh() * ConstantsGame.BLOCK_SIZE;
+
+				// TODO: spawn a baddy
+				mMobController.addEnemyMob(MobTypeIndex.MOB_TYPE_GOBLIN_MELEE, xx, yy);
+				maxenemies--;
 			}
 		}
 	}
+
+	// TODO: DEBUG:
+	private int maxenemies = 2;
 
 	// ---------------------------------------------
 	// Methods

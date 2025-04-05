@@ -1,6 +1,7 @@
 package net.lintfordlib.samples.data.entities;
 
 import net.lintfordlib.core.entities.instances.OpenPooledBaseData;
+import net.lintfordlib.samples.ConstantsGame;
 
 public class CellEntity extends OpenPooledBaseData {
 
@@ -28,7 +29,7 @@ public class CellEntity extends OpenPooledBaseData {
 	public float vx;
 	public float vy;
 
-	public float radius;
+	public float radiusRatio;
 
 	// --------------------------------------
 	// Constructor
@@ -37,15 +38,7 @@ public class CellEntity extends OpenPooledBaseData {
 	public CellEntity(int uid) {
 		super(uid);
 
-		radius = 16.f;
-	}
-
-	// --------------------------------------
-	// Core-Methods
-	// --------------------------------------
-
-	public void update(float dt) {
-
+		radiusRatio = 8.f;
 	}
 
 	// --------------------------------------
@@ -55,14 +48,10 @@ public class CellEntity extends OpenPooledBaseData {
 	public void setPosition(float x, float y) {
 		xx = x;
 		yy = y;
-		cx = (int) (x / 16.f);
-		cy = (int) (y / 16.f);
-		rx = (xx - cx * 16.f) / 16;
-		ry = (xx - cx * 16.f) / 16;
-	}
-
-	public static boolean hasCollision(int cx, int cy) {
-		return false; // TODO:
+		cx = (int) (x / ConstantsGame.BLOCK_SIZE);
+		cy = (int) (y / ConstantsGame.BLOCK_SIZE);
+		rx = (xx - cx * ConstantsGame.BLOCK_SIZE) / ConstantsGame.BLOCK_SIZE;
+		ry = (xx - cx * ConstantsGame.BLOCK_SIZE) / ConstantsGame.BLOCK_SIZE;
 	}
 
 }

@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
+import net.lintfordlib.core.maths.MathHelper;
 import net.lintfordlib.samples.data.mobs.MobInstance;
 
 public class PlayerController extends BaseController {
@@ -66,20 +67,29 @@ public class PlayerController extends BaseController {
 	public boolean handleInput(LintfordCore core) {
 		final var lKeyboard = core.input().keyboard();
 
+		float origHeading = mCommanderInstance.heading;
+		float effect = 1.f;
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_A)) {
 			mCommanderInstance.vx -= 1.f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(180.f), origHeading, .5f * effect);
+			effect = .5f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_D)) {
 			mCommanderInstance.vx += 1.f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(0.f), origHeading, .5f * effect);
+			effect = .5f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_W)) {
 			mCommanderInstance.vy -= 1.f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(-90.f), origHeading, .5f * effect);
+			effect = .5f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_S)) {
 			mCommanderInstance.vy += 1.f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(90.f), origHeading, .5f * effect);
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_SPACE)) {
@@ -87,6 +97,24 @@ public class PlayerController extends BaseController {
 		}
 
 		return super.handleInput(core);
+	}
+
+	@Override
+	public void update(LintfordCore core) {
+		super.update(core);
+
+		// update the rally positions
+
+		final var wcx = mCommanderInstance.xx;
+		final var wcy = mCommanderInstance.yy;
+		
+		final var lLeadDist = 40.f;
+
+		mCommanderInstance.auxForwardPosX = wcx + (float) Math.cos(mCommanderInstance.heading) * lLeadDist;
+		mCommanderInstance.auxForwardPosY = wcy + (float) Math.sin(mCommanderInstance.heading) * lLeadDist;
+
+		mCommanderInstance.auxRearPosX = wcx - (float) Math.cos(mCommanderInstance.heading) * 20.f;
+		mCommanderInstance.auxRearPosY = wcy - (float) Math.sin(mCommanderInstance.heading) * 20.f;
 	}
 
 }
