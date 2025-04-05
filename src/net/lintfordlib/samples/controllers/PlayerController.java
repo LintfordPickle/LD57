@@ -65,16 +65,23 @@ public class PlayerController extends BaseController {
 		final var lKeyboard = core.input().keyboard();
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_A)) {
-			mPlayerMobInstance.vx -= 1.1f;
+			mPlayerMobInstance.vx -= 1.f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_D)) {
-			mPlayerMobInstance.vx += .1f;
+			mPlayerMobInstance.vx += 1.f;
 		}
 
-		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_SPACE) && mPlayerMobInstance.groundFlag) {
-			mPlayerMobInstance.vy = -.21f;
-			mPlayerMobInstance.groundFlag = false;
+		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_W)) {
+			mPlayerMobInstance.vy -= 1.f;
+		}
+
+		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_S)) {
+			mPlayerMobInstance.vy += 1.f;
+		}
+
+		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_SPACE)) {
+			// change digger command RETURN/GO FORTH!
 		}
 
 		return super.handleInput(core);

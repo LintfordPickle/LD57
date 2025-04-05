@@ -7,11 +7,11 @@ import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.maths.MathHelper;
-import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.core.maths.Vector2f;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameWorld;
 import net.lintfordlib.samples.data.level.CellLevel;
+import net.lintfordlib.samples.data.mobs.MobDefinition;
 import net.lintfordlib.samples.data.mobs.MobInstance;
 import net.lintfordlib.samples.data.mobs.MobManager;
 
@@ -111,64 +111,40 @@ public class MobController extends BaseController {
 
 	private void updateMobPhysics(LintfordCore pCore, CellLevel pLevel, MobInstance pMobInstance) {
 
-		// gravity
-		pMobInstance.vy += 0.0096f;
-		pMobInstance.vy = MathHelper.clamp(pMobInstance.vy, -0.3f, 0.4f);
-		pMobInstance.vx = MathHelper.clamp(pMobInstance.vx, -0.05f, 0.05f);
+		// TODO: should come from mobs
+		final var lMaxVelocity = .05f;
+		final var lMobRadius = .3f;
+
+		pMobInstance.vx = MathHelper.clamp(pMobInstance.vx, -lMaxVelocity, lMaxVelocity);
+		pMobInstance.vy = MathHelper.clamp(pMobInstance.vy, -lMaxVelocity, lMaxVelocity);
 
 		pMobInstance.rx += pMobInstance.vx;
 		pMobInstance.ry += pMobInstance.vy;
 
-		// grid based collision check
-		if (pMobInstance.rx < .3f && pLevel.hasCollision(pMobInstance.cx - 1, pMobInstance.cy)) {
-			pMobInstance.rx = 0.3f;
+		// Grid based collision check.
+		if (pMobInstance.rx < lMobRadius && pLevel.hasCollision(pMobInstance.cx - 1, pMobInstance.cy)) {
+			pMobInstance.rx = lMobRadius;
 
 			if (pMobInstance.vx < 0)
 				pMobInstance.vx = 0;
 		}
 
-		if (pMobInstance.rx > .7f && pLevel.hasCollision(pMobInstance.cx + 1, pMobInstance.cy)) {
-			pMobInstance.rx = 0.7f;
+		if (pMobInstance.rx > 1.f - lMobRadius && pLevel.hasCollision(pMobInstance.cx + 1, pMobInstance.cy)) {
+			pMobInstance.rx = 1.f - lMobRadius;
 
 			if (pMobInstance.vx > 0)
 				pMobInstance.vx = 0;
 		}
 
-		if (pMobInstance.ry < .3f && pLevel.hasCollision(pMobInstance.cx, pMobInstance.cy - 1)) {
-			pMobInstance.ry = 0.3f;
+		if (pMobInstance.ry < lMobRadius && pLevel.hasCollision(pMobInstance.cx, pMobInstance.cy - 1)) {
+			pMobInstance.ry = lMobRadius;
 
 			if (pMobInstance.vy < 0)
-				pMobInstance.vy *= 0.7f;
+				pMobInstance.vy = 0;
 		}
 
-		if (!pMobInstance.groundFlag && pMobInstance.cy < pMobInstance.lastGroundHeight) {
-			pMobInstance.lastGroundHeight = pMobInstance.cy;
-
-		}
-
-		boolean lPrevGroundFlag = pMobInstance.groundFlag;
-		pMobInstance.groundFlag = false;
-		if (pMobInstance.ry > .7f && pLevel.hasCollision(pMobInstance.cx, pMobInstance.cy + 1)) {
-			pMobInstance.ry = 0.7f;
-
-			if (!lPrevGroundFlag) {
-				// TODO: dust particles
-
-				final int lFallHeight = Math.abs(pMobInstance.cy) - Math.abs(pMobInstance.lastGroundHeight);
-				if (lFallHeight > ConstantsGame.MIN_HEIGHT_FALL_DAMAGE && ConstantsGame.MIN_HEIGHT_FALL_DAMAGE != 0) {
-
-					// TOOD: fall damage sound
-
-					pMobInstance.dealDamage(lFallHeight / ConstantsGame.MIN_HEIGHT_FALL_DAMAGE, true);
-				}
-			}
-
-			pMobInstance.groundFlag = true;
-			pMobInstance.lastGroundHeight = pMobInstance.cy;
-
-			if (Math.abs(pMobInstance.vx) > 0.01f && RandomNumbers.getRandomChance(33.f)) {
-				// TODO: dust particles
-			}
+		if (pMobInstance.ry > 1.f - lMobRadius && pLevel.hasCollision(pMobInstance.cx, pMobInstance.cy + 1)) {
+			pMobInstance.ry = 1.f - lMobRadius;
 
 			if (pMobInstance.vy > 0)
 				pMobInstance.vy = 0;
@@ -200,7 +176,7 @@ public class MobController extends BaseController {
 		pMobInstance.xx = (float) (pMobInstance.cx + pMobInstance.rx) * ConstantsGame.BLOCK_SIZE;
 		pMobInstance.yy = (float) (pMobInstance.cy + pMobInstance.ry) * ConstantsGame.BLOCK_SIZE;
 
-		pMobInstance.vx *= .72f;
+		pMobInstance.vx *= .96f;
 		pMobInstance.vy *= .96f;
 	}
 
@@ -238,10 +214,10 @@ public class MobController extends BaseController {
 
 			// assumes the player is always the first mob index (probably correct)
 			if (pMobInstanceA.isPlayerControlled) {
-				if (pMobInstanceB.damagesOnCollide)
+				if (pMobInstanceB.def().damagesOnCollide)
 					pMobInstanceA.dealDamage(1, true);
 
-				if (pMobInstanceA.damagesOnCollide)
+				if (pMobInstanceA.def().damagesOnCollide)
 					pMobInstanceB.dealDamage(1, true);
 			}
 		}
@@ -255,23 +231,18 @@ public class MobController extends BaseController {
 	}
 
 	public void startNewGame(int levelNumber) {
-		addPlayerMob();
+		addPlayerCommander();
 
 	}
 
-	private void addPlayerMob() {
+	private void addPlayerCommander() {
 		final var lPlayerMob = mMobManager.getNewMobInstance();
 
-		lPlayerMob.initialise(MobInstance.MOB_TYPE_PLAYER, 10);
+		lPlayerMob.initialise(MobDefinition.COMMANDER);
 		lPlayerMob.isPlayerControlled = true;
-		lPlayerMob.swingAttackEnabled = true;
-		lPlayerMob.damagesOnCollide = false;
-		lPlayerMob.setPosition(32.f, 0.f);
-		lPlayerMob.swingRange = 32.f;
-		lPlayerMob.lastGroundHeight = lPlayerMob.cy;
+		lPlayerMob.setPosition(32.f, 32.f);
 
 		mPlayerController.playerMobInstance(lPlayerMob);
-
 		mCameraFollowController.setFollowEntity(lPlayerMob);
 	}
 

@@ -14,7 +14,7 @@ import net.lintfordlib.samples.screens.menu.MainMenuBackground;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.toast.ToastManager;
 
-public class LD57Game extends LintfordCore {
+public class Ld57Game extends LintfordCore {
 
 	// ---------------------------------------------
 	// Constants
@@ -31,7 +31,7 @@ public class LD57Game extends LintfordCore {
 	// ---------------------------------------------
 
 	public static void main(String[] args) {
-		new LD57Game(new Ld57GameInfo(), args).createWindow();
+		new Ld57Game(new Ld57GameInfo(), args).createWindow();
 	}
 
 	// ---------------------------------------------
@@ -56,7 +56,7 @@ public class LD57Game extends LintfordCore {
 	// Constructor
 	// ---------------------------------------------
 
-	public LD57Game(GameInfo pGameInfo, String[] pArgs) {
+	public Ld57Game(GameInfo pGameInfo, String[] pArgs) {
 		super(pGameInfo, pArgs, false);
 
 		setGameVersion();

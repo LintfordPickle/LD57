@@ -5,7 +5,8 @@ import org.lwjgl.opengl.GL11;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
-import net.lintfordlib.core.graphics.batching.SubPixelTextureBatch;
+import net.lintfordlib.core.graphics.sprites.SpriteFrame;
+import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.core.rendering.RenderPass;
 import net.lintfordlib.renderers.BaseRenderer;
@@ -13,6 +14,7 @@ import net.lintfordlib.renderers.RendererManagerBase;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.controllers.LevelController;
 import net.lintfordlib.samples.data.level.CellLevel;
+import net.lintfordlib.samples.data.textures.GameTextureNames;
 
 public class LevelRenderer extends BaseRenderer {
 
@@ -28,7 +30,7 @@ public class LevelRenderer extends BaseRenderer {
 
 	private LevelController mLevelController;
 	private Texture mLevelTexture;
-	private Texture mBackgroundTexture;
+	private SpriteSheetDefinition mGameSpriteSheet;
 
 	// --------------------------------------
 	// Constructor
@@ -58,7 +60,7 @@ public class LevelRenderer extends BaseRenderer {
 		super.loadResources(resourceManager);
 
 		mLevelTexture = resourceManager.textureManager().loadTexture("TEXTURE_LEVEL", "res/textures/textureLevel.png", GL11.GL_LINEAR, entityGroupID());
-		mBackgroundTexture = resourceManager.textureManager().loadTexture("TEXTURE_BACKGROUND", "res/textures/textureBackground.png", entityGroupID());
+		mGameSpriteSheet = resourceManager.spriteSheetManager().getSpriteSheet("SPRITESHEET_GAME", entityGroupID());
 	}
 
 	@Override
@@ -66,22 +68,22 @@ public class LevelRenderer extends BaseRenderer {
 		super.unloadResources();
 
 		mLevelTexture = null;
-		mBackgroundTexture = null;
+		mGameSpriteSheet = null;
 	}
 
 	@Override
 	public void draw(LintfordCore core, RenderPass renderPass) {
 		final float lLevelWidth = ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.BLOCK_SIZE;
 
-		final var lTextureBatch = rendererManager().sharedResources().uiSpriteBatch();
-		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.setColorWhite();
+//		final var lTextureBatch = rendererManager().sharedResources().uiSpriteBatch();
+//		lTextureBatch.begin(core.gameCamera());
+//		lTextureBatch.setColorWhite();
+//
+//		final var lHorizontalScale = (lLevelWidth / 256.f) * 256.f;
+//		lTextureBatch.draw(mBackgroundTexture, 0, 0, lHorizontalScale, 256, 0, -128, lLevelWidth, 256, -0.9f);
+//		lTextureBatch.end();
 
-		final var lHorizontalScale = (lLevelWidth / 256.f) * 256.f;
-		lTextureBatch.draw(mBackgroundTexture, 0, 0, lHorizontalScale, 256, 0, -128, lLevelWidth, 256, -0.9f);
-		lTextureBatch.end();
-
-		drawBackground(core);
+//		drawBackground(core);
 		drawForeground(core);
 	}
 
@@ -126,6 +128,9 @@ public class LevelRenderer extends BaseRenderer {
 
 		final float lBlockSize = ConstantsGame.BLOCK_SIZE;
 
+		var lSpriteFrame = (SpriteFrame) null;
+		var lSpriteSheetTexture = mGameSpriteSheet.texture();
+		
 		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
 			final float lModAmt = 1.f - (float) ((float) y / (float) ConstantsGame.LEVEL_TILES_HIGH * 0.5f);
 			final var lDepthColorMod = ColorConstants.getColor(lModAmt, lModAmt, lModAmt, 1.f);
@@ -133,10 +138,16 @@ public class LevelRenderer extends BaseRenderer {
 
 			for (int x = 0; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
 				final int lBlockTypeIndex = lLevel.getLevelBlockType(x, y);
-				if (lBlockTypeIndex == CellLevel.LEVEL_TILE_COORD_INVALID)
+				if (lBlockTypeIndex == CellLevel.LEVEL_TILE_INDEX_NOTHING)
 					continue;
 
 				final int lTileIndex = lLevel.getLevelTileCoord(x, y);
+				
+				switch (lBlockTypeIndex) {
+				case CellLevel.LEVEL_TILE_INDEX_DIRT:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.DIRT);
+					break;
+				}
 
 				// TODO: resovle the source positions from the tilemap/spritesheet/texture
 
@@ -145,7 +156,7 @@ public class LevelRenderer extends BaseRenderer {
 				final var sw = 0;
 				final var sh = 0;
 
-				lTextureBatch.draw(mLevelTexture, sx, sy, sw, sh, (int) (x * lBlockSize), (int) (y * lBlockSize), 32, 32, .01f);
+				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
 			}
 		}
 

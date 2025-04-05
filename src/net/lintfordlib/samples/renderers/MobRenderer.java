@@ -101,18 +101,19 @@ public class MobRenderer extends BaseRenderer {
 			lMobSpriteInstance.setCenterPosition(lMobWorldPositionX, lMobWorldPositionY);
 			lMobSpriteInstance.update(core);
 
+			final float lHalfWidth = 8.f;
 			final float lMobWidth = lMobInstance.currentSprite.width();
 
 			var lTintColor = ColorConstants.WHITE();
-			if (!lMobInstance.isDamageCooldownElapsed() && lMobInstance.damageCooldownTimer % FULL_FLASH_DUR < FULL_FLASH_DUR * .5f)
+			if (!lMobInstance.isDamageCooldownElapsed() && lMobInstance.damageCooldownTimerMs % FULL_FLASH_DUR < FULL_FLASH_DUR * .5f)
 				lTintColor = ColorConstants.getColor(100, 100, 100, 1);
 
 			lSpriteBatch.setColor(lTintColor);
 
 			if (lMobInstance.isLeftFacing)
-				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + 16.f, lMobWorldPositionY - 16.f, -lMobWidth, 32, .1f);
+				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfWidth, -lMobWidth, 16, .1f);
 			else
-				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - 16.f, lMobWorldPositionY - 16.f, lMobWidth, 32, .1f);
+				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - lHalfWidth, lMobWorldPositionY - lHalfWidth, lMobWidth, 16, .1f);
 
 		}
 
@@ -124,7 +125,7 @@ public class MobRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	private void updateMobSpriteInstance(MobInstance mob) {
-		String lCurrentAnimationName = "PLAYER";
+		String lCurrentAnimationName = "COMMANDER";
 //		if (mob.swingingFlag && mob.swingAttackEnabled) {
 //			lCurrentAnimationName = mob.mobTypeName() + "_SWING";
 //

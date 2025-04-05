@@ -72,7 +72,6 @@ public class CameraFollowController extends BaseController {
 		final float lHeight = ConstantsGame.LEVEL_TILES_HIGH * ConstantsGame.BLOCK_SIZE;
 
 		mLevelAreaBounds.set(0, 0, lWidth, lHeight);
-
 	}
 
 	// ---------------------------------------------
@@ -130,23 +129,38 @@ public class CameraFollowController extends BaseController {
 		if (mGameCamera == null)
 			return;
 
+		final float lCameraHalfWidth = mGameCamera.getWidth() * 0.5f;
+		final float lCameraHalfHeight = mGameCamera.getHeight() * 0.5f;
+
+		// If the level is smaller than the size of the camera frame on an axis, then set that axis to the center
+		final var lAxisXLocked = mGameCamera.getWidth() > ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.BLOCK_SIZE;
+		final var lAxisYLocked = mGameCamera.getHeight() > ConstantsGame.LEVEL_TILES_HIGH * ConstantsGame.BLOCK_SIZE;
+
 		mIsTrackingPlayer = mTrackedEntity != null;
 		if (mIsTrackingPlayer) {
-
-			final float lCameraHalfWidth = mGameCamera.getWidth() * 0.5f;
-			final float lCameraHalfHeight = mGameCamera.getHeight() * 0.5f;
 
 			float lCurPositionX = mTrackedEntity.xx;
 			float lCurPositionY = mTrackedEntity.yy;
 
-			if (lCurPositionX - lCameraHalfWidth < mLevelAreaBounds.left())
-				lCurPositionX = mLevelAreaBounds.left() + lCameraHalfWidth;
+			if (lAxisXLocked) {
+				lCurPositionX = ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.BLOCK_SIZE * .5f;
+			} else {
+				if (lCurPositionX - lCameraHalfWidth < mLevelAreaBounds.left())
+					lCurPositionX = mLevelAreaBounds.left() + lCameraHalfWidth;
 
-			if (lCurPositionX + lCameraHalfWidth > mLevelAreaBounds.right())
-				lCurPositionX = mLevelAreaBounds.right() - lCameraHalfWidth;
+				if (lCurPositionX + lCameraHalfWidth > mLevelAreaBounds.right())
+					lCurPositionX = mLevelAreaBounds.right() - lCameraHalfWidth;
+			}
 
-			if (lCurPositionY + lCameraHalfHeight > mLevelAreaBounds.bottom())
-				lCurPositionY = mLevelAreaBounds.bottom() - lCameraHalfHeight;
+			if (lAxisYLocked) {
+				lCurPositionY = ConstantsGame.LEVEL_TILES_HIGH * ConstantsGame.BLOCK_SIZE * .5f;
+			} else {
+				if (lCurPositionY - lCameraHalfHeight < mLevelAreaBounds.top())
+					lCurPositionY = mLevelAreaBounds.top() + lCameraHalfHeight;
+
+				if (lCurPositionY + lCameraHalfHeight > mLevelAreaBounds.bottom())
+					lCurPositionY = mLevelAreaBounds.bottom() - lCameraHalfHeight;
+			}
 
 			mGameCamera.setPosition(lCurPositionX, lCurPositionY);
 
@@ -168,7 +182,6 @@ public class CameraFollowController extends BaseController {
 			float lCurY = mGameCamera.getPosition().y;
 
 			mGameCamera.setPosition(lCurX + mVelocity.x * elapsed, lCurY + mVelocity.y * elapsed);
-
 		}
 
 		// DRAG

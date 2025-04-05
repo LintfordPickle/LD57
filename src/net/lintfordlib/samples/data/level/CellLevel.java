@@ -2,26 +2,22 @@ package net.lintfordlib.samples.data.level;
 
 import java.util.Arrays;
 
-import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.samples.ConstantsGame;
 
 public class CellLevel {
 
 	public static final int LEVEL_TILE_COORD_INVALID = -1;
 
-	public static final int LEVEL_TILE_INDEX_AIR = 0;
+	public static final int LEVEL_TILE_INDEX_NOTHING = 0;
 	public static final int LEVEL_TILE_INDEX_DIRT = 1;
-	public static final int LEVEL_TILE_INDEX_STONE = 2;
 	public static final int LEVEL_TILE_INDEX_ENTRY = 3;
 	public static final int LEVEL_TILE_INDEX_EXIT = 4;
 
 	public static final int LEVEL_TILE_INDEX_GOLD = 6;
-	public static final int LEVEL_TILE_INDEX_HEART = 7;
+	public static final int LEVEL_TILE_INDEX_GEMS = 6;
 
-	public static final byte LEVEL_BLOCK_HEALTH_DIRT = (byte) 2;
 	public static final byte LEVEL_BLOCK_HEALTH_GOLD = (byte) 6;
-	public static final byte LEVEL_BLOCK_HEALTH_STONE = (byte) 10;
-	public static final byte LEVEL_BLOCK_HEALTH_HEART = (byte) 7;
+	public static final byte LEVEL_BLOCK_HEALTH_GEMS = (byte) 10;
 
 	// ---------------------------------------------
 	// Variables
@@ -105,22 +101,19 @@ public class CellLevel {
 
 	public void loadLevel() {
 		createTestLevel();
-
 	}
 
 	private void createTestLevel() {
 		clearLevel();
 
-		final int lFloorHeight = 3;
 		for (int x = 1; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
 			{
-				final int lTileCoord = getLevelTileCoord(x, lFloorHeight);
+				final int lTileCoord = getLevelTileCoord(x, 0);
 				if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 					continue;
 
 				mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
-				mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_DIRT;
-
+				mLevelBlockHealth[lTileCoord] = 0;
 			}
 
 			{
@@ -128,7 +121,7 @@ public class CellLevel {
 				if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 					continue;
 				mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
-				mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_DIRT;
+				mLevelBlockHealth[lTileCoord] = 0;
 
 			}
 
@@ -140,7 +133,6 @@ public class CellLevel {
 				if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 					continue;
 				mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
-				mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_DIRT;
 			}
 
 			{
@@ -148,53 +140,39 @@ public class CellLevel {
 				if (lTileCoord == LEVEL_TILE_COORD_INVALID)
 					continue;
 				mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
-				mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_DIRT;
 			}
-
 		}
 
 		// Random blocks
-		final int lNumRandomBlocks = (int) (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH * 0.4);
-		for (int i = 0; i < lNumRandomBlocks; i++) {
-			final int lTileCoord = RandomNumbers.random(lFloorHeight * ConstantsGame.LEVEL_TILES_WIDE, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
-
-			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
-			mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_DIRT;
-
-		}
-
-		final int lNumRandomStoneBlocks = (int) (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH * 0.2);
-		for (int i = 0; i < lNumRandomStoneBlocks; i++) {
-			final int lTileCoord = RandomNumbers.random(lFloorHeight * ConstantsGame.LEVEL_TILES_WIDE, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
-
-			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_STONE;
-			mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_STONE;
-
-		}
-
-		// gold blocks
-		final int lNumGoldBlocks = 600 / 10;
-		for (int i = 0; i < lNumGoldBlocks; i++) {
-			final int lTileCoord = RandomNumbers.random((lFloorHeight + 1) * ConstantsGame.LEVEL_TILES_WIDE, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
-
-			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_GOLD;
-			mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_GOLD;
-
-		}
-
-		// heart blocks
-		final int lNumHeartBlocks = 20;
-		for (int i = 0; i < lNumHeartBlocks; i++) {
-			final int lTileCoord = RandomNumbers.random((lFloorHeight + 1) * ConstantsGame.LEVEL_TILES_WIDE, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
-
-			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_HEART;
-			mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_HEART;
-		}
+//		final int lNumRandomBlocks = (int) (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH * 0.4);
+//		for (int i = 0; i < lNumRandomBlocks; i++) {
+//			final int lTileCoord = RandomNumbers.random(0, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
+//
+//			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
+//
+//		}
+//
+//		final int lNumRandomStoneBlocks = (int) (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH * 0.2);
+//		for (int i = 0; i < lNumRandomStoneBlocks; i++) {
+//			final int lTileCoord = RandomNumbers.random(0, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
+//
+//			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_DIRT;
+//
+//		}
+//
+//		// gold blocks
+//		final int lNumGoldBlocks = 600 / 10;
+//		for (int i = 0; i < lNumGoldBlocks; i++) {
+//			final int lTileCoord = RandomNumbers.random(0, (ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH) - 1);
+//
+//			mLevelBlockIndices[lTileCoord] = LEVEL_TILE_INDEX_GOLD;
+//			mLevelBlockHealth[lTileCoord] = LEVEL_BLOCK_HEALTH_GOLD;
+//		}
 	}
 
 	private void clearLevel() {
 		Arrays.fill(mLevelBlockHealth, (byte) 0);
-		Arrays.fill(mLevelBlockIndices, LEVEL_TILE_INDEX_AIR);
+		Arrays.fill(mLevelBlockIndices, LEVEL_TILE_INDEX_NOTHING);
 	}
 
 	public boolean hasCollision(int pTileX, int pTileY) {
@@ -207,8 +185,15 @@ public class CellLevel {
 		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
 			return true;
 
-		return mLevelBlockIndices[lTileIndex] > LEVEL_TILE_INDEX_AIR;
+		return mLevelBlockIndices[lTileIndex] > LEVEL_TILE_INDEX_NOTHING;
+	}
 
+	public boolean digBlock(int pTileX, int pTileY, byte pDamageAmount) {
+		final int lTileIndex = getLevelTileCoord(pTileX, pTileY);
+		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
+			return false;
+
+		return digBlock(lTileIndex, pDamageAmount);
 	}
 
 	public boolean digBlock(int pTileCoord, byte pDamageAmount) {
@@ -223,23 +208,13 @@ public class CellLevel {
 		lBlockHealth -= pDamageAmount;
 		if (lBlockHealth < 0) {
 			lBlockHealth = 0;
-			mLevelBlockIndices[pTileCoord] = LEVEL_TILE_INDEX_AIR;
+			mLevelBlockIndices[pTileCoord] = LEVEL_TILE_INDEX_DIRT;
 			wasBlockRemoved = true;
-
 		}
 
 		mLevelBlockHealth[pTileCoord] = lBlockHealth;
 
 		return wasBlockRemoved;
-	}
-
-	public boolean digBlock(int pTileX, int pTileY, byte pDamageAmount) {
-		final int lTileIndex = getLevelTileCoord(pTileX, pTileY);
-		if (lTileIndex == LEVEL_TILE_COORD_INVALID)
-			return false;
-
-		return digBlock(lTileIndex, pDamageAmount);
-
 	}
 
 	public byte getBlockHealth(int pTileX, int pTileY) {
@@ -256,7 +231,7 @@ public class CellLevel {
 			return false;
 
 		final int lCurrentBlockTypeIndex = getLevelBlockType(lTileCoord);
-		if (lCurrentBlockTypeIndex != LEVEL_TILE_INDEX_AIR)
+		if (lCurrentBlockTypeIndex != LEVEL_TILE_INDEX_NOTHING)
 			return false;
 
 		mLevelBlockIndices[lTileCoord] = pBlockTypeIndex;

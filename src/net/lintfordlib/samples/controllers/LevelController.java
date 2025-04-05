@@ -86,10 +86,10 @@ public class LevelController extends BaseController implements IInputProcessor {
 				if (core.input().keyboard().isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
 
 					// place block
-					mLevel.placeBlock(lMouseTileX, lMouseTileX, CellLevel.LEVEL_TILE_INDEX_DIRT, (byte) 2);
+					mLevel.placeBlock(lMouseTileX, lMouseTileY, CellLevel.LEVEL_TILE_INDEX_DIRT, (byte) 2);
 
 				} else {
-					mLevel.digBlock(lMouseTileX, lMouseTileX, (byte) 50);
+					mLevel.digBlock(lMouseTileX, lMouseTileY, (byte) 50);
 				}
 
 			}

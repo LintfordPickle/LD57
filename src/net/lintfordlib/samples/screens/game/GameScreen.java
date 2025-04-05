@@ -7,6 +7,7 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
+import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.data.DataManager;
@@ -30,6 +31,7 @@ import net.lintfordlib.samples.renderers.LevelRenderer;
 import net.lintfordlib.samples.renderers.MobRenderer;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.BaseGameScreen;
+import net.lintfordlib.screenmanager.screens.LoadingScreen;
 
 public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
@@ -100,7 +102,9 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		super.handleInput(core);
 
 		if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_ESCAPE, this) || core.input().gamepads().isGamepadButtonDownTimed(GLFW.GLFW_GAMEPAD_BUTTON_START, this)) {
-			screenManager.addScreen(new PauseScreen(screenManager, mSceneHeader, mGameOptions));
+			final var lGameScreen = new GameScreen(screenManager, mSceneHeader, mGameOptions);
+			screenManager.createLoadingScreen(new LoadingScreen(screenManager, true, true, lGameScreen));
+			// screenManager.addScreen(new PauseScreen(screenManager, mSceneHeader, mGameOptions));
 			return;
 		}
 
@@ -133,34 +137,18 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	@Override
 	public void draw(LintfordCore core) {
-
 		GL11.glClearColor(0.08f, .02f, 0.03f, 1.f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-		final var lTextureBatch = rendererManager().sharedResources().uiSpriteBatch();
-		lTextureBatch.setColorWhite();
-
-		final var sx = 0.f;
-		final var sy = 0.f;
-		final var sw = 960.f;
-		final var sh = 540.f;
-
-		final var dstx = -960.f / 2.f;
-		final var dsty = -540.f / 2.f;
-		final var dstw = 960.f;
-		final var dsth = 540.f;
-
-		final var zDepth = 1.f;
-
-		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.draw(mGameBackgroundTexture, sx, sy, sw, sh, dstx, dsty, dstw, dsth, zDepth);
-		lTextureBatch.end();
+		mGameCamera.setZoomFactor(2.f);
 
 		super.draw(core);
 
-		// For simple games you could add code to render a basic scene directly here.
-		// However usually, the rendering would be performed by a specific BaseRenderer (see the RENDERERS section below).
-
+		final var lLineBatch = mRendererManager.sharedResources().uiLineBatch();
+		lLineBatch.lineType(GL11.GL_LINE_STRIP);
+		lLineBatch.begin(mGameCamera);
+		lLineBatch.drawCircle(0.f, 0.f, 16.f, 32, 1.f, 1.f, 1.f);
+		lLineBatch.end();
 	}
 
 	// --------------------------------------

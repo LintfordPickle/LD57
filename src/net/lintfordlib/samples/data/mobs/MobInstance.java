@@ -1,6 +1,5 @@
 package net.lintfordlib.samples.data.mobs;
 
-import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.sprites.SpriteInstance;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.entities.CellEntity;
@@ -13,47 +12,44 @@ public class MobInstance extends CellEntity {
 
 	private static final long serialVersionUID = -5778125755953549324L;
 
-	public static final int MOB_TYPE_UNASSIGNED = -1;
-	public static final int MOB_TYPE_PLAYER = 0;
-
 	// --------------------------------------
 	// Variables
 	// --------------------------------------
 
-	public float inputCooldownTimer;
-	private int mMobTypeIndex;
+	private MobDefinition mMobDefinition;
 	public String mCurrentAnimationName;
 	public transient SpriteInstance currentSprite;
 	public boolean isPlayerControlled;
-	public boolean groundFlag;
-	public int lastGroundHeight;
 	public boolean isLeftFacing;
-	public int health;
-	public int maxHealth;
-	public float damageCooldownTimer;
-	public float jumpVelocity;
-	public boolean damagesOnCollide;
-	public boolean swingAttackEnabled;
-	public float swingRange;
+	public float health;
+
+	// timers
+	public float inputCooldownTimerMs;
+	public float damageCooldownTimerMs;
+	public float attackCooldownTimerMs;
 
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
 
-	public boolean isAssigned() {
-		return mMobTypeIndex != MOB_TYPE_UNASSIGNED;
+	public MobDefinition def() {
+		return mMobDefinition;
 	}
-
-	public int mobTypeNameIndex() {
-		return mMobTypeIndex;
+	
+	public boolean isAssigned() {
+		return mMobDefinition != null;
 	}
 
 	public boolean isInputCooldownElapsed() {
-		return inputCooldownTimer <= 0.f;
+		return inputCooldownTimerMs <= 0.f;
+	}
+
+	public boolean isAttackTimerElapsed() {
+		return attackCooldownTimerMs <= 0.f;
 	}
 
 	public boolean isDamageCooldownElapsed() {
-		return damageCooldownTimer <= 0;
+		return damageCooldownTimerMs <= 0;
 	}
 
 	// --------------------------------------
@@ -62,8 +58,6 @@ public class MobInstance extends CellEntity {
 
 	public MobInstance(int uid) {
 		super(uid);
-
-		mMobTypeIndex = MOB_TYPE_UNASSIGNED;
 	}
 
 	// --------------------------------------
@@ -74,49 +68,50 @@ public class MobInstance extends CellEntity {
 	public void update(float dt) {
 		super.update(dt);
 
-		// physics etc is handled in MobController. Here we just update individual mob timers
+		// 'physics' etc is handled in MobController.
+		// here we just update individual mob timers.
+
+		if (inputCooldownTimerMs > 0)
+			inputCooldownTimerMs -= dt;
+		if (damageCooldownTimerMs > 0)
+			damageCooldownTimerMs -= dt;
+		if (attackCooldownTimerMs > 0)
+			attackCooldownTimerMs -= dt;
+
+		isLeftFacing = vx < 0;
 	}
 
 	// --------------------------------------
 	// Methods
 	// --------------------------------------
 
-	public void initialise(int mobTypeName, int pHealth) {
-		mMobTypeIndex = mobTypeName;
-		health = pHealth;
-		maxHealth = pHealth;
-
-	}
-
-	public void update(LintfordCore pCore) {
-		if (damageCooldownTimer > 0.0f) {
-			damageCooldownTimer -= pCore.gameTime().elapsedTimeMilli();
-
-		}
-
-		if (inputCooldownTimer > 0.0f)
-			inputCooldownTimer -= pCore.gameTime().elapsedTimeMilli();
+	public void initialise(MobDefinition definition) {
+		mMobDefinition = definition;
+		health = definition.maxHealth;
 
 	}
 
 	@SuppressWarnings("unused")
-	public void dealDamage(int pAmt, boolean respectCooldown) {
+	public void dealDamage(int amt, boolean respectCooldown) {
 		if (respectCooldown && !isDamageCooldownElapsed())
 			return;
 
 		if (!(ConstantsGame.DEBUG_GOD_MODE && isPlayerControlled))
-			health -= pAmt;
+			health -= amt;
 
 		if (isPlayerControlled)
-			damageCooldownTimer = 1000.f;
+			damageCooldownTimerMs = 1000.f;
 		else
-			damageCooldownTimer = 200.f;
+			damageCooldownTimerMs = 200.f;
 
 	}
 
-	public void tryAddHealth() {
-		if (health < maxHealth)
-			health++;
+	public void tryAddHealth(float amt) {
+		if (health < mMobDefinition.maxHealth)
+			health += amt;
+
+		if (health > mMobDefinition.maxHealth)
+			health = mMobDefinition.maxHealth;
 
 	}
 }

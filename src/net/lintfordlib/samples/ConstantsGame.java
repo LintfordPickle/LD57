@@ -10,7 +10,7 @@ public class ConstantsGame {
 
 	public static final String FOOTER_TEXT = "(c) 2025 LintfordPickle";
 
-	public static final String APPLICATION_NAME = "LD57";
+	public static final String APPLICATION_NAME = "LD57 - Depth";
 	public static final String WINDOW_TITLE = "Ludum Dare 57";
 
 	public static final float ASPECT_RATIO = 16.f / 9.f;
@@ -24,8 +24,8 @@ public class ConstantsGame {
 	// Game
 	// ---------------------------------------------
 
-	public static final int LEVEL_TILES_WIDE = 40;
-	public static final int LEVEL_TILES_HIGH = 50;
+	public static final int LEVEL_TILES_WIDE = 25;
+	public static final int LEVEL_TILES_HIGH = 25;
 
 	public static final int BLOCK_SIZE = 16;
 
