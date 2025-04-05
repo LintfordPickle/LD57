@@ -7,6 +7,8 @@ import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.rendering.RenderPass;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManagerBase;
+import net.lintfordlib.samples.controllers.GameStateController;
+import net.lintfordlib.samples.controllers.LevelController;
 
 public class HudRenderer extends BaseRenderer {
 
@@ -15,6 +17,13 @@ public class HudRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	public static final String RENDERER_NAME = "Hud Renderer";
+
+	// --------------------------------------
+	// Variables
+	// --------------------------------------
+
+	private LevelController mLevelController;
+	private GameStateController mGameStateController;
 
 	// --------------------------------------
 	// Properties
@@ -41,7 +50,10 @@ public class HudRenderer extends BaseRenderer {
 	public void initialize(LintfordCore core) {
 		super.initialize(core);
 
-		// Get any controllers or renderers created with the game screen.
+		final var lControllerManager = core.controllerManager();
+
+		mLevelController = (LevelController) lControllerManager.getControllerByNameRequired(LevelController.CONTROLLER_NAME, mEntityGroupUid);
+		mGameStateController = (GameStateController) lControllerManager.getControllerByNameRequired(GameStateController.CONTROLLER_NAME, mEntityGroupUid);
 	}
 
 	@Override
@@ -81,7 +93,10 @@ public class HudRenderer extends BaseRenderer {
 		final var lFontBatch = mRendererManager.sharedResources().uiTitleFont();
 
 		lFontBatch.begin(core.HUD());
-		lFontBatch.drawShadowedText("Hud Renderer", lHudBounds.left() + 10.f, lHudBounds.top() + 10.f, .1f, 1.f, 1.f, 1.f);
+		lFontBatch.drawShadowedText("Level Name: " + mLevelController.cellLevel().name() + " - '" + mLevelController.cellLevel().filename() + "'", lHudBounds.left() + 10.f, lHudBounds.top() + 10.f, .1f, 1.f, 1.f, 1.f);
+		lFontBatch.drawShadowedText("Commander Health", lHudBounds.left() + 10.f, lHudBounds.top() + 30.f, .1f, 1.f, 1.f, 1.f);
+
+		lFontBatch.drawShadowedText("Credits", lHudBounds.left() + 10.f, lHudBounds.top() + 50.f, .1f, 1.f, 1.f, 1.f);
 		lFontBatch.end();
 	}
 }

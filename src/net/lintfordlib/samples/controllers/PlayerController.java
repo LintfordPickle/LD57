@@ -20,7 +20,7 @@ public class PlayerController extends BaseController {
 	// --------------------------------------
 
 	private LevelController mLevelController;
-	private MobInstance mPlayerMobInstance;
+	private MobInstance mCommanderInstance;
 
 	// --------------------------------------
 	// Properties
@@ -28,16 +28,19 @@ public class PlayerController extends BaseController {
 
 	@Override
 	public boolean isInitialized() {
-		return mPlayerMobInstance != null;
-
+		return mCommanderInstance != null;
 	}
 
-	public MobInstance playerMobInstance() {
-		return mPlayerMobInstance;
+	public MobInstance commanderInstance() {
+		return mCommanderInstance;
 	}
 
-	public void playerMobInstance(MobInstance playerMobInstance) {
-		mPlayerMobInstance = playerMobInstance;
+	public void commanderInstance(MobInstance commanderInst) {
+		mCommanderInstance = commanderInst;
+	}
+
+	public float commanderHealth() {
+		return mCommanderInstance.health;
 	}
 
 	// --------------------------------------
@@ -61,23 +64,22 @@ public class PlayerController extends BaseController {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
-
 		final var lKeyboard = core.input().keyboard();
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_A)) {
-			mPlayerMobInstance.vx -= 1.f;
+			mCommanderInstance.vx -= 1.f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_D)) {
-			mPlayerMobInstance.vx += 1.f;
+			mCommanderInstance.vx += 1.f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_W)) {
-			mPlayerMobInstance.vy -= 1.f;
+			mCommanderInstance.vy -= 1.f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_S)) {
-			mPlayerMobInstance.vy += 1.f;
+			mCommanderInstance.vy += 1.f;
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_SPACE)) {

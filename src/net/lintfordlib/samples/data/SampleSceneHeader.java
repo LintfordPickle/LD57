@@ -21,10 +21,7 @@ public class SampleSceneHeader extends SceneHeader {
 	// Variables
 	// --------------------------------------
 
-	public int numberOfThings;
-
-	public boolean winningEnabled;
-	public boolean losingEnabled;
+	public int levelNumber;
 
 	// --------------------------------------
 	// Constructor

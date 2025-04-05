@@ -1,10 +1,9 @@
 package net.lintfordlib.samples.screens.game;
 
 import net.lintfordlib.core.graphics.ColorConstants;
-import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.samples.data.GameOptions;
+import net.lintfordlib.samples.data.SampleSceneHeader;
 import net.lintfordlib.samples.screens.MainMenu;
-import net.lintfordlib.samples.screens.menu.CreditsScreen;
 import net.lintfordlib.samples.screens.menu.MainMenuBackground;
 import net.lintfordlib.samples.screens.menu.OptionsScreen;
 import net.lintfordlib.screenmanager.MenuEntry;
@@ -29,14 +28,14 @@ public class PauseScreen extends MenuScreen {
 	// Variables
 	// --------------------------------------
 
-	private SceneHeader mSceneHeader;
+	private SampleSceneHeader mSceneHeader;
 	private GameOptions mGameOptions;
 
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
 
-	public PauseScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions gameOptions) {
+	public PauseScreen(ScreenManager screenManager, SampleSceneHeader sceneHeader, GameOptions gameOptions) {
 		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;

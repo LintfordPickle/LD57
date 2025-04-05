@@ -4,11 +4,11 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
-import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameOptions;
+import net.lintfordlib.samples.data.SampleSceneHeader;
 import net.lintfordlib.samples.screens.MainMenu;
-import net.lintfordlib.samples.screens.menu.CreditsScreen;
+import net.lintfordlib.samples.screens.menu.MainMenuBackground;
 import net.lintfordlib.screenmanager.MenuEntry;
 import net.lintfordlib.screenmanager.MenuScreen;
 import net.lintfordlib.screenmanager.ScreenManager;
@@ -30,7 +30,7 @@ public class WonScreen extends MenuScreen {
 	// Variables
 	// --------------------------------------
 
-	private SceneHeader mSceneHeader;
+	private SampleSceneHeader mSceneHeader;
 	private GameOptions mGameOptions;
 	private SpriteSheetDefinition mGameSpritesheetDef;
 
@@ -38,7 +38,7 @@ public class WonScreen extends MenuScreen {
 	// Constructor
 	// --------------------------------------
 
-	public WonScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions gameOptions) {
+	public WonScreen(ScreenManager screenManager, SampleSceneHeader sceneHeader, GameOptions gameOptions) {
 		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;
@@ -48,19 +48,31 @@ public class WonScreen extends MenuScreen {
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
 		lLayout.setDrawBackground(true, ColorConstants.WHITE());
 		lLayout.showTitle(true);
-		lLayout.title("You love to see it!");
 
-		final var lContinueEntry = new MenuEntry(screenManager, this, "Continue");
-		lContinueEntry.registerClickListener(this, SCREEN_BUTTON_CONTINUE);
+		sceneHeader.levelNumber++;
+		if (sceneHeader.levelNumber > ConstantsGame.NUM_LEVELS) {
+			lLayout.title("You've won the game!");
 
-		final var lRestartEntry = new MenuEntry(screenManager, this, "Restart");
-		lRestartEntry.registerClickListener(this, SCREEN_BUTTON_RESTART);
+			final var lExitToMenuEntry = new MenuEntry(screenManager, this, "Exit");
+			lExitToMenuEntry.registerClickListener(this, SCREEN_BUTTON_EXIT);
+
+			lLayout.addMenuEntry(lExitToMenuEntry);
+		} else {
+			lLayout.title("You've won the level");
+
+			final var lContinueEntry = new MenuEntry(screenManager, this, "Next");
+			lContinueEntry.registerClickListener(this, SCREEN_BUTTON_CONTINUE);
+
+			final var lRestartEntry = new MenuEntry(screenManager, this, "Restart");
+			lRestartEntry.registerClickListener(this, SCREEN_BUTTON_RESTART);
+
+			lLayout.addMenuEntry(lContinueEntry);
+			lLayout.addMenuEntry(lRestartEntry);
+		}
 
 		final var lExitToMenuEntry = new MenuEntry(screenManager, this, "Exit");
 		lExitToMenuEntry.registerClickListener(this, SCREEN_BUTTON_EXIT);
 
-		lLayout.addMenuEntry(lContinueEntry);
-		lLayout.addMenuEntry(lRestartEntry);
 		lLayout.addMenuEntry(MenuEntry.menuSeparator());
 		lLayout.addMenuEntry(lExitToMenuEntry);
 
@@ -123,16 +135,20 @@ public class WonScreen extends MenuScreen {
 	protected void handleOnClick() {
 		switch (mClickAction.consume()) {
 		case SCREEN_BUTTON_CONTINUE:
-			exitScreen();
+			final var lNewGameScreen = new GameScreen(screenManager, mSceneHeader, mGameOptions);
+			screenManager.createLoadingScreen(new LoadingScreen(screenManager, true, true, lNewGameScreen));
 			return;
 
 		case SCREEN_BUTTON_RESTART:
+			// TODO: the restart won't work like this because we already incremented the level index
 			final var lLoadingScreen = new GameScreen(screenManager, mSceneHeader, mGameOptions);
 			screenManager.createLoadingScreen(new LoadingScreen(screenManager, true, true, lLoadingScreen));
 			break;
 
 		case SCREEN_BUTTON_EXIT:
-			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, new CreditsScreen(screenManager), new MainMenu(screenManager)));
+			final var lMenuBackgroundScreen = new MainMenuBackground(screenManager);
+			final var lMainMenuScreen = new MainMenu(screenManager);
+			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, lMenuBackgroundScreen, lMainMenuScreen));
 			break;
 
 		}

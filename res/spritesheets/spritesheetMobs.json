@@ -3,7 +3,7 @@
   "textureName": "TEXTURE_MOBS",
   "spriteFrames": [
     {
-      "name": "COMMANDER",
+      "name": "GOB_MELEE",
       "x": 0,
       "y": 0,
       "w": 16,
@@ -16,7 +16,7 @@
       "anchorPoints": []
     },
     {
-      "name": "GOB_MELEE",
+      "name": "GOB_RANGE",
       "x": 18,
       "y": 0,
       "w": 16,
@@ -29,7 +29,7 @@
       "anchorPoints": []
     },
     {
-      "name": "GOB_RANGE",
+      "name": "P1_COMMANDER",
       "x": 36,
       "y": 0,
       "w": 16,

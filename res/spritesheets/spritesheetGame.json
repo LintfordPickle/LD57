@@ -3,6 +3,19 @@
   "textureName": "TEXTURE_GAME",
   "spriteFrames": [
     {
+      "name": "LOSTTEXT",
+      "x": 0,
+      "y": 18,
+      "w": 256,
+      "h": 48,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
       "name": "DIRT",
       "x": 0,
       "y": 0,

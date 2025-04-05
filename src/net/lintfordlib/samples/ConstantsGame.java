@@ -24,6 +24,11 @@ public class ConstantsGame {
 	// Game
 	// ---------------------------------------------
 
+	public static final int NUM_LEVELS = 3;
+
+	public static final String LEVEL_EXTENSION = ".lvl";
+	public static final String LEVEL_DIRECTORY = "res//def//levels";
+
 	public static final int LEVEL_TILES_WIDE = 25;
 	public static final int LEVEL_TILES_HIGH = 25;
 
@@ -38,6 +43,7 @@ public class ConstantsGame {
 	// Debug
 	// ---------------------------------------------
 
+	public static final boolean IS_LEVEL_EDIT_MODE = true;
 	public static final boolean IS_DEBUG_MODE = true;
 	public static final boolean DEBUG_GOD_MODE = false;
 	public static final boolean IS_DEBUG_RENDERING_MODE = true;

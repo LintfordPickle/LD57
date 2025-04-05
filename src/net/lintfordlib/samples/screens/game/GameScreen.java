@@ -3,15 +3,11 @@ package net.lintfordlib.samples.screens.game;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.controllers.ControllerManager;
 import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.debug.Debug;
-import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.data.DataManager;
-import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.renderers.SimpleRendererManager;
 import net.lintfordlib.renderers.particles.ParticleFrameworkRenderer;
 import net.lintfordlib.samples.ConstantsGame;
@@ -23,8 +19,10 @@ import net.lintfordlib.samples.controllers.LevelController;
 import net.lintfordlib.samples.controllers.MobController;
 import net.lintfordlib.samples.controllers.PlayerController;
 import net.lintfordlib.samples.data.GameOptions;
+import net.lintfordlib.samples.data.GameState;
 import net.lintfordlib.samples.data.GameWorld;
 import net.lintfordlib.samples.data.IGameStateListener;
+import net.lintfordlib.samples.data.SampleSceneHeader;
 import net.lintfordlib.samples.renderers.AnimationRenderer;
 import net.lintfordlib.samples.renderers.HudRenderer;
 import net.lintfordlib.samples.renderers.LevelRenderer;
@@ -39,14 +37,13 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	// Variables
 	// --------------------------------------
 
-	private SceneHeader mSceneHeader;
+	private SampleSceneHeader mSceneHeader;
 	private GameOptions mGameOptions;
 
 	// Data
+	private GameState mGameState;
 	private GameWorld mGameWorld; // reference to data related to the scene
 	private ParticleFrameworkData mParticleData;
-
-	private Texture mGameBackgroundTexture;
 
 	// Controllers
 	private GameStateController mGameStateController;
@@ -68,7 +65,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	// Constructor
 	// --------------------------------------
 
-	public GameScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions options) {
+	public GameScreen(ScreenManager screenManager, SampleSceneHeader sceneHeader, GameOptions options) {
 		super(screenManager, new SimpleRendererManager(screenManager.core(), ConstantsGame.GAME_RESOURCE_GROUP_ID));
 
 		mSceneHeader = sceneHeader;
@@ -84,16 +81,13 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 		super.initialize();
 
 		// by this stage, all the controller should be fully initialized themselves ..
+		if (mSceneHeader.levelNumber == -1) {
+			mLevelController.startEmptyLevel();
+		} else {
+			mLevelController.loadLevelFromFile(mSceneHeader.levelNumber);
+		}
 
-		mMobController.startNewGame(0);
-		mLevelController.startNewGame(0);
-	}
-
-	@Override
-	public void loadResources(ResourceManager resourceManager) {
-		super.loadResources(resourceManager);
-
-		mGameBackgroundTexture = resourceManager.textureManager().getTexture("TEXTURE_GAME_BACKGROUND", ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mMobController.startNewGame();
 
 	}
 
@@ -126,9 +120,6 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	public void update(LintfordCore core, boolean otherScreenHasFocus, boolean coveredByOtherScreen) {
 		super.update(core, otherScreenHasFocus, coveredByOtherScreen);
 
-		// For simple games you could add code to perform the game update logic here.
-		// However usually, components would be updated in dedicated BaseControllers (see the CONTROLLERS Section below).
-
 		if (core.input().eventActionManager().getCurrentControlActionStateTimed(NewGameKeyActions.KEY_BINDING_PRIMARY_FIRE)) {
 			screenManager.toastManager().addMessage(getClass().getSimpleName(), "PRIMARY FIRE", 1500);
 		}
@@ -159,6 +150,7 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	@Override
 	protected void createData(DataManager dataManager) {
+		mGameState = new GameState();
 		mGameWorld = new GameWorld();
 		mParticleData = new ParticleFrameworkData(dataManager, entityGroupUid());
 	}
@@ -167,13 +159,14 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	@Override
 	protected void createControllers(ControllerManager controllerManager) {
-		mGameStateController = new GameStateController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mGameStateController = new GameStateController(controllerManager, mGameState, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mAnimationController = new AnimationController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mLevelController = new LevelController(controllerManager, mGameWorld, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mParticleFrameworkController = new ParticleFrameworkController(controllerManager, mParticleData, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mMobController = new MobController(controllerManager, mGameWorld, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mPlayerController = new PlayerController(controllerManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mCameraFollowController = new CameraFollowController(controllerManager, mGameCamera, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+
 		mGameStateController.setGameStateListener(this);
 	}
 

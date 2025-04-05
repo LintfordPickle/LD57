@@ -4,9 +4,9 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
-import net.lintfordlib.data.scene.SceneHeader;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameOptions;
+import net.lintfordlib.samples.data.SampleSceneHeader;
 import net.lintfordlib.samples.screens.MainMenu;
 import net.lintfordlib.samples.screens.menu.CreditsScreen;
 import net.lintfordlib.screenmanager.MenuEntry;
@@ -29,7 +29,7 @@ public class LostScreen extends MenuScreen {
 	// Variables
 	// --------------------------------------
 
-	private SceneHeader mSceneHeader;
+	private SampleSceneHeader mSceneHeader;
 	private GameOptions mGameOptions;
 	private SpriteSheetDefinition mGameSpritesheetDef;
 
@@ -37,7 +37,7 @@ public class LostScreen extends MenuScreen {
 	// Constructor
 	// --------------------------------------
 
-	public LostScreen(ScreenManager screenManager, SceneHeader sceneHeader, GameOptions gameOptions) {
+	public LostScreen(ScreenManager screenManager, SampleSceneHeader sceneHeader, GameOptions gameOptions) {
 		super(screenManager, null);
 
 		mSceneHeader = sceneHeader;
@@ -100,10 +100,13 @@ public class LostScreen extends MenuScreen {
 
 		lTextureBatch.setColorWhite();
 
-		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.draw(mGameSpritesheetDef, lSpriteFramef, -lSpriteFramef.width() * .5f, core.gameCamera().boundingRectangle().top() + 32, lSpriteFramef.width(), lSpriteFramef.height(), .1f);
-		lTextureBatch.end();
+		final var lScale = 2.f;
+		final var lDstWidth = lSpriteFramef.width() * lScale;
+		final var lDstHeight = lSpriteFramef.height() * lScale;
 
+		lTextureBatch.begin(core.HUD());
+		lTextureBatch.draw(mGameSpritesheetDef, lSpriteFramef, -lDstWidth * .5f, core.HUD().boundingRectangle().top(), lDstWidth, lDstHeight, .1f);
+		lTextureBatch.end();
 	}
 
 	// --------------------------------------
@@ -122,7 +125,6 @@ public class LostScreen extends MenuScreen {
 		case SCREEN_BUTTON_EXIT:
 			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, new CreditsScreen(screenManager), new MainMenu(screenManager)));
 			break;
-
 		}
 	}
 }

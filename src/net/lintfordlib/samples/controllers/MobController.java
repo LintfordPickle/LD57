@@ -224,15 +224,16 @@ public class MobController extends BaseController {
 	}
 
 	private void updateEnemyAi(LintfordCore core, CellLevel level, MobInstance mobInstance) {
-		final var lPlayerMobInstance = mPlayerController.playerMobInstance();
+		final var lPlayerMobInstance = mPlayerController.commanderInstance();
 
 		// TODO: enemy ai
 
 	}
 
-	public void startNewGame(int levelNumber) {
+	public void startNewGame() {
 		addPlayerCommander();
 
+		// do other stuff
 	}
 
 	private void addPlayerCommander() {
@@ -242,7 +243,7 @@ public class MobController extends BaseController {
 		lPlayerMob.isPlayerControlled = true;
 		lPlayerMob.setPosition(32.f, 32.f);
 
-		mPlayerController.playerMobInstance(lPlayerMob);
+		mPlayerController.commanderInstance(lPlayerMob);
 		mCameraFollowController.setFollowEntity(lPlayerMob);
 	}
 
