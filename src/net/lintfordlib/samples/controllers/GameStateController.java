@@ -29,10 +29,15 @@ public class GameStateController extends BaseController {
 	private LevelController mLevelController;
 
 	private boolean mPlayerInLoadoutArea;
+	private int mGoalCreditAmount;
 
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
+
+	public int goalCreditsAmt() {
+		return mGoalCreditAmount;
+	}
 
 	public GameState gameState() {
 		return mGameState;
@@ -54,6 +59,7 @@ public class GameStateController extends BaseController {
 		super(controllerManager, CONTROLLER_NAME, entityGroupUId);
 
 		mGameState = gameState;
+		mGoalCreditAmount = 250;
 	}
 
 	// --------------------------------------
@@ -91,13 +97,19 @@ public class GameStateController extends BaseController {
 		super.update(core);
 
 		// Check for win/lose conditions
-		if (mPlayerController.commanderHealth() < 0) {
+
+		if (mPlayerController.commanderHealth() <= 0) {
 			mGameStateListener.onGameLost();
+
+			mPlayerInLoadoutArea = false;
+			return;
 		}
 
-		final var lWinCreditsAmount = 2500;
-		if (mGameState.credits > lWinCreditsAmount) {
+		if (mGameState.credits > goalCreditsAmt()) {
 			mGameStateListener.onGameWon();
+
+			mPlayerInLoadoutArea = false;
+			return;
 		}
 
 		final var cmdX = mPlayerController.commanderInstance().cx;
@@ -108,5 +120,27 @@ public class GameStateController extends BaseController {
 
 		final var lCmdDistFromEntrance = Math.abs(cmdX - entX) + Math.abs(cmdY - entY);
 		mPlayerInLoadoutArea = lCmdDistFromEntrance < 4;
+	}
+
+	// --------------------------------------
+	// Methods
+	// --------------------------------------
+
+	public boolean deduct(int amt) {
+		if (amt < 0) {
+			mGameState.credits -= amt; // adds
+			return true;
+		}
+
+		if (mGameState.credits >= amt) {
+			mGameState.credits -= amt;
+			return true;
+		}
+
+		return false;
+	}
+
+	public void startNewGame(int startCredits) {
+		mGameState.credits = startCredits;
 	}
 }

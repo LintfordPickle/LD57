@@ -1,6 +1,7 @@
 package net.lintfordlib.samples.data.entities;
 
 import net.lintfordlib.core.entities.instances.OpenPooledBaseData;
+import net.lintfordlib.core.maths.Vector2f;
 import net.lintfordlib.samples.ConstantsGame;
 
 public class CellEntity extends OpenPooledBaseData {
@@ -52,6 +53,17 @@ public class CellEntity extends OpenPooledBaseData {
 		cy = (int) (y / ConstantsGame.BLOCK_SIZE);
 		rx = (xx - cx * ConstantsGame.BLOCK_SIZE) / ConstantsGame.BLOCK_SIZE;
 		ry = (xx - cx * ConstantsGame.BLOCK_SIZE) / ConstantsGame.BLOCK_SIZE;
+	}
+
+	public static float getDistSq(CellEntity entityA, CellEntity entityB) {
+		final float lMobAX = entityA.xx;
+		final float lMobAY = entityA.yy;
+
+		final float lMobBX = entityB.xx;
+		final float lMobBY = entityB.yy;
+
+		final float lDistSq = Vector2f.dst2(lMobAX, lMobAY, lMobBX, lMobBY);
+		return lDistSq;
 	}
 
 }

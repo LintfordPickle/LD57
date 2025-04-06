@@ -73,41 +73,62 @@ public class LevelRenderer extends BaseRenderer {
 
 	@Override
 	public void draw(LintfordCore core, RenderPass renderPass) {
-		final float lLevelWidth = ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.BLOCK_SIZE;
 
-//		drawBackground(core);
+		drawBackground(core);
 		drawForeground(core);
 
 		drawItems(core);
-		drawDebugDepth(core);
+		// drawDebugDepth(core);
 	}
 
 	// --------------------------------------
 
 	private void drawBackground(LintfordCore pCore) {
 		final var lLevel = mLevelController.cellLevel();
-
-		if (lLevel == null)
-			return;
+		final var lDepthValues = lLevel.tileDepth();
+		final var lTileVariationOffsets = lLevel.tileVariations();
 
 		final var lTextureBatch = rendererManager().sharedResources().uiSpriteBatch();
 
 		lTextureBatch.begin(pCore.gameCamera());
 
 		final float lBlockSize = ConstantsGame.BLOCK_SIZE;
-		final int floorHeight = 3;
 
-		for (int y = floorHeight; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
+		var lSpriteSheetTexture = mGameSpriteSheet.texture();
+		var lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.FLOOR00);
 
-			final float lModAmt = 1.f - (float) ((float) (y + 5.f) / (float) ConstantsGame.LEVEL_TILES_HIGH);
-			lTextureBatch.setColor(ColorConstants.getColor(lModAmt, lModAmt, lModAmt, 1.f));
-
+		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
 			for (int x = 0; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
-//				if (y == floorHeight) {
-//					lTextureBatch.draw(mLevelTexture, BACKGROUND_TOP_FILL_SRC_RECT, x * lBlockSize, y * lBlockSize, lBlockSize, lBlockSize, .01f);
-//				} else {
-//					lTextureBatch.draw(mLevelTexture, BACKGROUND_FILL_SRC_RECT, x * lBlockSize, y * lBlockSize, lBlockSize, lBlockSize, .01f);
-//				}
+
+				final var lTileCoord = lLevel.getLevelTileCoord(x, y);
+				final var lTileDepth = lDepthValues[lTileCoord];
+				final var lTileVariation = lTileVariationOffsets[lTileCoord];
+
+				final var lDepthTolerance = 1.25f;
+				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
+				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
+				lTextureBatch.setColor(lDepthColorMod);
+
+				switch (lTileVariation) {
+				default:
+				case 0:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.FLOOR00);
+					break;
+
+				case 1:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.FLOOR01);
+					break;
+
+				case 2:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.FLOOR02);
+					break;
+
+				case 3:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.FLOOR03);
+					break;
+				}
+
+				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
 			}
 		}
 
@@ -118,7 +139,9 @@ public class LevelRenderer extends BaseRenderer {
 		final var lLevel = mLevelController.cellLevel();
 		final var lDepthValues = lLevel.tileDepth();
 
+		
 		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
+		lTextureBatch.useHalfPixelCorrection(true);
 		lTextureBatch.begin(pCore.gameCamera());
 
 		final float lBlockSize = ConstantsGame.BLOCK_SIZE;
@@ -132,7 +155,7 @@ public class LevelRenderer extends BaseRenderer {
 				final var lTileCoord = lLevel.getLevelTileCoord(x, y);
 				final var lTileDepth = lDepthValues[lTileCoord];
 
-				final var lDepthTolerance = 2.f; // so the darkest is only max half way to black
+				final var lDepthTolerance = 1.5f;
 				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
 				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
 				lTextureBatch.setColor(lDepthColorMod);
@@ -225,7 +248,7 @@ public class LevelRenderer extends BaseRenderer {
 				final var xx = x * ConstantsGame.BLOCK_SIZE;
 				final var yy = y * ConstantsGame.BLOCK_SIZE;
 
-				lFontUnit.drawText("" + lTileIndex, xx, yy, .01f, .2f);
+				lFontUnit.drawText("" + lDepths[lTileIndex], xx, yy, .01f, .2f);
 			}
 		}
 

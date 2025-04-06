@@ -16,7 +16,33 @@
       "anchorPoints": []
     },
     {
-      "name": "CHEST",
+      "name": "WONGAMETEXT",
+      "x": 0,
+      "y": 68,
+      "w": 256,
+      "h": 48,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "WONLEVELTEXT",
+      "x": 0,
+      "y": 118,
+      "w": 256,
+      "h": 48,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "ARROW",
       "x": 0,
       "y": 0,
       "w": 16,
@@ -29,7 +55,7 @@
       "anchorPoints": []
     },
     {
-      "name": "DIRT",
+      "name": "CHEST",
       "x": 18,
       "y": 0,
       "w": 16,
@@ -42,7 +68,7 @@
       "anchorPoints": []
     },
     {
-      "name": "ENTRANCE",
+      "name": "DIRT",
       "x": 36,
       "y": 0,
       "w": 16,
@@ -55,7 +81,7 @@
       "anchorPoints": []
     },
     {
-      "name": "GEMS",
+      "name": "ENTRANCE",
       "x": 54,
       "y": 0,
       "w": 16,
@@ -68,7 +94,7 @@
       "anchorPoints": []
     },
     {
-      "name": "GOLD",
+      "name": "FLOOR00",
       "x": 72,
       "y": 0,
       "w": 16,
@@ -81,7 +107,7 @@
       "anchorPoints": []
     },
     {
-      "name": "SPAWNER_FLOOR_1",
+      "name": "FLOOR01",
       "x": 90,
       "y": 0,
       "w": 16,
@@ -94,7 +120,7 @@
       "anchorPoints": []
     },
     {
-      "name": "SPAWNER_FLOOR_2",
+      "name": "FLOOR02",
       "x": 108,
       "y": 0,
       "w": 16,
@@ -107,7 +133,7 @@
       "anchorPoints": []
     },
     {
-      "name": "SPAWNER_W",
+      "name": "FLOOR03",
       "x": 126,
       "y": 0,
       "w": 16,
@@ -120,8 +146,73 @@
       "anchorPoints": []
     },
     {
-      "name": "WHITE",
+      "name": "GEMS",
       "x": 144,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "GOLD",
+      "x": 162,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "SPAWNER_FLOOR_1",
+      "x": 180,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "SPAWNER_FLOOR_2",
+      "x": 198,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "SPAWNER_W",
+      "x": 216,
+      "y": 0,
+      "w": 16,
+      "h": 16,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "WHITE",
+      "x": 234,
       "y": 0,
       "w": 16,
       "h": 16,

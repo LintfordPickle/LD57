@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.samples.ConstantsGame;
 
 public class CellLevel {
@@ -27,6 +28,8 @@ public class CellLevel {
 	public static final int LEVEL_ITEMS_SPAWNER = 4;
 	public static final int LEVEL_ITEMS_TREASURE = 5;
 
+	public static final byte LEVEL_MAX_VARIATION_OFFSET = 4;
+
 	// ---------------------------------------------
 	// Variables
 	// ---------------------------------------------
@@ -42,6 +45,7 @@ public class CellLevel {
 
 	// distance away from opening
 	private transient int[] mTileDepth = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
+	private transient byte[] mBlockVariationOffsets = new byte[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 
 	private int[] mItemTypeUids = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 	private transient float[] mItemTimers = new float[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
@@ -106,6 +110,10 @@ public class CellLevel {
 
 	public int tilesHigh() {
 		return mTilesHigh;
+	}
+
+	public byte[] tileVariations() {
+		return mBlockVariationOffsets;
 	}
 
 	public int[] levelBlocks() {
@@ -235,6 +243,7 @@ public class CellLevel {
 			}
 		}
 
+		setTileVariations();
 		recalculateTileDepths(mEntranceTileCoord);
 		resetTimers();
 	}
@@ -446,6 +455,31 @@ public class CellLevel {
 		return true;
 	}
 
+	private void setTileVariations() {
+		Arrays.fill(mBlockVariationOffsets, (byte) 0);
+		final var lNumTiles = mTilesWide * mTilesHigh;
+		for (int i = 0; i < lNumTiles; i++) {
+			if (RandomNumbers.random(0, 100) < 20) {
+				mBlockVariationOffsets[i] = (byte) 1;
+				continue;
+			}
+
+			if (RandomNumbers.random(0, 100) < 20) {
+				mBlockVariationOffsets[i] = (byte) 2;
+				continue;
+			}
+
+			if (RandomNumbers.random(0, 100) < 20) {
+				mBlockVariationOffsets[i] = (byte) 3;
+				continue;
+			}
+
+			if (RandomNumbers.random(0, 100) < 5) {
+				mBlockVariationOffsets[i] = (byte) 4;
+			}
+		}
+	}
+
 	private void recalculateTileDepths(int entranceTileCoord) {
 		final var lEntranceX = entranceTileCoord % mTilesWide;
 		final var lEntranceY = entranceTileCoord / mTilesHigh;
@@ -464,7 +498,7 @@ public class CellLevel {
 	private void resetTimers() {
 		final var lNumTiles = mTilesWide * mTilesHigh;
 		for (int i = 0; i < lNumTiles; i++) {
-			mItemTimers[i] = 1000.f;
+			mItemTimers[i] = 5000.f + RandomNumbers.random(1000.f, 10000.f);
 		}
 	}
 }

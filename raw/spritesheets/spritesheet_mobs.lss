@@ -2,7 +2,7 @@
   "outputDataFilename": "..\\..\\res\\spritesheets\\spritesheetMobs.json",
   "outputNameDataFilename": null,
   "outputImageFilename": "..\\..\\res\\textures\\textureMobs.png",
-  "workingDirectory": "mobs\\",
+  "workingDirectory": "mobs",
   "spriteSheetName": "SPRITESHEET_MOBS",
   "textureName": "TEXTURE_MOBS",
   "dataPackageName": "enter.package.name",
@@ -23,7 +23,68 @@
   "forcePoTTextures": true,
   "autoSizeTexture": false,
   "itemFilenames": [
-    "mobs\\*.*"
+    "D:\\dev\\java\\ludumdare\\57 - Depths\\projects\\57\\raw\\spritesheets\\mobs\\*.*"
   ],
-  "animationItems": { }
+  "animationItems": {
+    "commander_idle": {
+      "loopAnimation": true,
+      "frameDuration": 150,
+      "animationSprites": [
+        "P1_COMMANDER_IDLE_1",
+        "P1_COMMANDER_IDLE_2",
+        "P1_COMMANDER_IDLE_3",
+        "P1_COMMANDER_IDLE_4"
+      ]
+    },
+    "melee_idle": {
+      "loopAnimation": true,
+      "frameDuration": 150,
+      "animationSprites": [
+        "MELEE_IDLE1",
+        "MELEE_IDLE2",
+        "MELEE_IDLE3",
+        "MELEE_IDLE4"
+      ]
+    },
+    "range_idle": {
+      "loopAnimation": true,
+      "frameDuration": 150,
+      "animationSprites": [
+        "RANGE_IDLE1",
+        "RANGE_IDLE2",
+        "RANGE_IDLE3",
+        "RANGE_IDLE4"
+      ]
+    },
+    "digger_idle": {
+      "loopAnimation": true,
+      "frameDuration": 150,
+      "animationSprites": [
+        "DIGGER_IDLE1",
+        "DIGGER_IDLE2",
+        "DIGGER_IDLE3",
+        "DIGGER_IDLE4"
+      ]
+    },
+    "gob_melee_idle": {
+      "loopAnimation": true,
+      "frameDuration": 150,
+      "animationSprites": [
+        "GOB_MELEE_IDLE1",
+        "GOB_MELEE_IDLE2",
+        "GOB_MELEE_IDLE3",
+        "GOB_MELEE_IDLE4"
+      ]
+    },
+    "gob_range_idle": {
+      "loopAnimation": true,
+      "frameDuration": 150,
+      "animationSprites": [
+        "GOB_RANGE_IDLE1",
+        "GOB_RANGE_IDLE2",
+        "GOB_RANGE_IDLE3",
+        "GOB_RANGE_IDLE4"
+      ]
+    }
+  }
 }

@@ -54,7 +54,7 @@ public class PlayerController extends BaseController {
 	}
 
 	// --------------------------------------
-	// Methods
+	// Core-Methods
 	// --------------------------------------
 
 	@Override
@@ -68,28 +68,24 @@ public class PlayerController extends BaseController {
 		final var lKeyboard = core.input().keyboard();
 
 		float origHeading = mCommanderInstance.heading;
-		float effect = 1.f;
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_A)) {
 			mCommanderInstance.vx -= 1.f;
-			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(180.f), origHeading, .5f * effect);
-			effect = .5f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(180.f), origHeading, .5f);
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_D)) {
 			mCommanderInstance.vx += 1.f;
-			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(0.f), origHeading, .5f * effect);
-			effect = .5f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(0.f), origHeading, .5f);
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_W)) {
 			mCommanderInstance.vy -= 1.f;
-			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(-90.f), origHeading, .5f * effect);
-			effect = .5f;
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(-90.f), origHeading, .5f);
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_S)) {
 			mCommanderInstance.vy += 1.f;
-			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(90.f), origHeading, .5f * effect);
+			mCommanderInstance.heading += MathHelper.turnToFace((float) Math.toRadians(90.f), origHeading, .5f);
 		}
 
 		if (lKeyboard.isKeyDown(GLFW.GLFW_KEY_SPACE)) {
@@ -107,7 +103,7 @@ public class PlayerController extends BaseController {
 
 		final var wcx = mCommanderInstance.xx;
 		final var wcy = mCommanderInstance.yy;
-		
+
 		final var lLeadDist = 40.f;
 
 		mCommanderInstance.auxForwardPosX = wcx + (float) Math.cos(mCommanderInstance.heading) * lLeadDist;
@@ -116,5 +112,4 @@ public class PlayerController extends BaseController {
 		mCommanderInstance.auxRearPosX = wcx - (float) Math.cos(mCommanderInstance.heading) * 20.f;
 		mCommanderInstance.auxRearPosY = wcy - (float) Math.sin(mCommanderInstance.heading) * 20.f;
 	}
-
 }

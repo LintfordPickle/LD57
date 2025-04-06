@@ -6,10 +6,14 @@ import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.graphics.ColorConstants;
+import net.lintfordlib.core.graphics.batching.SpriteBatch;
+import net.lintfordlib.core.graphics.sprites.SpriteFrame;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.core.rendering.RenderPass;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManagerBase;
+import net.lintfordlib.samples.ConstantsGame;
+import net.lintfordlib.samples.controllers.LevelController;
 import net.lintfordlib.samples.controllers.MobController;
 import net.lintfordlib.samples.data.mobs.MobInstance;
 import net.lintfordlib.samples.data.mobs.MobTypeIndex;
@@ -29,8 +33,12 @@ public class MobRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	private MobController mMobController;
+	private LevelController mLevelController;
 
 	private SpriteSheetDefinition mMobSpriteSheet;
+	private SpriteFrame mCoinFrame;
+	private SpriteFrame mHeartFrame;
+	private SpriteFrame mShadowFrame;
 
 	// --------------------------------------
 	// Property
@@ -60,6 +68,7 @@ public class MobRenderer extends BaseRenderer {
 
 		final var lControllerManager = core.controllerManager();
 		mMobController = (MobController) lControllerManager.getControllerByNameRequired(MobController.CONTROLLER_NAME, mEntityGroupUid);
+		mLevelController = (LevelController) lControllerManager.getControllerByNameRequired(LevelController.CONTROLLER_NAME, mEntityGroupUid);
 
 	}
 
@@ -68,6 +77,10 @@ public class MobRenderer extends BaseRenderer {
 		super.loadResources(resourceManager);
 
 		mMobSpriteSheet = resourceManager.spriteSheetManager().loadSpriteSheet("res/spritesheets/spritesheetMobs.json", entityGroupID());
+
+		mCoinFrame = mMobSpriteSheet.getSpriteFrame("COIN");
+		mHeartFrame = mMobSpriteSheet.getSpriteFrame("HEART");
+		mShadowFrame = mMobSpriteSheet.getSpriteFrame("SHADOW");
 	}
 
 	@Override
@@ -80,6 +93,7 @@ public class MobRenderer extends BaseRenderer {
 	@Override
 	public void draw(LintfordCore core, RenderPass renderPass) {
 		final var lMobManager = mMobController.mobManager();
+		final var lDepthValues = mLevelController.cellLevel().tileDepth();
 
 		final var lMobList = lMobManager.mobs();
 		if (lMobList == null || lMobList.size() == 0)
@@ -93,8 +107,9 @@ public class MobRenderer extends BaseRenderer {
 		for (int i = 0; i < lMobCount; i++) {
 			final var lMobInstance = (MobInstance) lMobList.get(i);
 
+			final var step = (lMobInstance.highStep ? 2.f : 0.f);
 			final float lMobWorldPositionX = lMobInstance.xx;
-			final float lMobWorldPositionY = lMobInstance.yy;
+			final float lMobWorldPositionY = lMobInstance.yy - step;
 
 			updateMobSpriteInstance(lMobInstance);
 			final var lMobSpriteInstance = lMobInstance.currentSprite;
@@ -106,18 +121,36 @@ public class MobRenderer extends BaseRenderer {
 			lMobSpriteInstance.update(core);
 
 			final float lHalfWidth = 8.f;
+			final float lHalfHeight = 8.f;
 			final float lMobWidth = lMobInstance.currentSprite.width();
 
-			var lTintColor = ColorConstants.WHITE();
+			final var lTileCoord = lMobInstance.cy * ConstantsGame.LEVEL_TILES_WIDE + lMobInstance.cx; 
+			final var lTileDepth = lDepthValues[lTileCoord];
+			
+			final var lDepthTolerance = 1.5f;
+			final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
+			final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
+			
+			lSpriteBatch.setColorA(.5f);
+			lSpriteBatch.draw(mMobSpriteSheet, mShadowFrame, lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .2f);
+			
+			var lTintColor = lDepthColorMod;
 			if (!lMobInstance.isDamageCooldownElapsed() && lMobInstance.damageCooldownTimerMs % FULL_FLASH_DUR < FULL_FLASH_DUR * .5f)
 				lTintColor = ColorConstants.getColor(100, 100, 100, 1);
-
+			
 			lSpriteBatch.setColor(lTintColor);
 
+			
 			if (lMobInstance.isLeftFacing)
-				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfWidth, -lMobWidth, 16, .1f);
+				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .1f);
 			else
-				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - lHalfWidth, lMobWorldPositionY - lHalfWidth, lMobWidth, 16, .1f);
+				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - lHalfWidth, lMobWorldPositionY - lHalfHeight, lMobWidth, 16, .1f);
+
+			if (lMobInstance.def().typeUid != MobTypeIndex.MOB_TYPE_PLAYER_COMANDER)
+				drawMobHealthBar(lSpriteBatch, lMobInstance, lMobWorldPositionX, lMobWorldPositionY);
+
+			if (lMobInstance.def().typeUid == MobTypeIndex.MOB_TYPE_PLAYER_DIGGER)
+				drawMobCarryBar(lSpriteBatch, lMobInstance, lMobWorldPositionX, lMobWorldPositionY);
 
 			GL11.glPointSize(5);
 			Debug.debugManager().drawers().drawPointImmediate(core.gameCamera(), lMobInstance.auxForwardPosX, lMobInstance.auxForwardPosY);
@@ -127,36 +160,75 @@ public class MobRenderer extends BaseRenderer {
 		lSpriteBatch.end();
 	}
 
+	private void drawMobHealthBar(SpriteBatch lSpriteBatch, MobInstance lMobInstance, float lMobWorldPositionX, float lMobWorldPositionY) {
+		final var lHalfWidth = 8.f;
+		final var lHalfHeight = 8.f;
+
+		var xx = lMobWorldPositionX - lHalfWidth;
+		var yy = lMobWorldPositionY + lHalfHeight - 3;
+
+		final var lHeartSize = 2;
+
+		for (int j = 0; j < lMobInstance.health; j++) {
+			lSpriteBatch.setColorA(.5f);
+			lSpriteBatch.draw(mMobSpriteSheet, mHeartFrame, xx, yy, lHeartSize, lHeartSize, .1f);
+			yy -= (lHeartSize + 1);
+		}
+	}
+
+	private void drawMobCarryBar(SpriteBatch lSpriteBatch, MobInstance lMobInstance, float lMobWorldPositionX, float lMobWorldPositionY) {
+		final var lHalfWidth = 8.f;
+		final var lHalfHeight = 8.f;
+
+		final var xx = lMobWorldPositionX - lHalfWidth;
+		final var yy = lMobWorldPositionY + lHalfHeight;
+
+		final var lHeartSize = 2;
+
+		final var lCarryingNum = lMobInstance.holdingGoldAmt;
+		for (int j = 0; j < lCarryingNum; j++) {
+
+			var xxx = xx + (j % 5) * (lHeartSize + 1);
+			var yyy = yy + (j / 5) * (lHeartSize + 1);
+
+			lSpriteBatch.setColorA(.5f);
+			lSpriteBatch.draw(mMobSpriteSheet, mCoinFrame, xxx, yyy, lHeartSize, lHeartSize, .1f);
+		}
+	}
+
 	// --------------------------------------
 	// Methods
 	// --------------------------------------
 
 	private void updateMobSpriteInstance(MobInstance mob) {
-		String lCurrentAnimationName = null; // "P1_COMMANDER";
+		if (mob == null)
+			return;
+
+		String lNextSpriteName = null; // "P1_COMMANDER";
 
 		switch (mob.def().typeUid) {
 		case MobTypeIndex.MOB_TYPE_PLAYER_COMANDER:
-			lCurrentAnimationName = "P1_COMMANDER";
+			lNextSpriteName = "commander_idle";
 			break;
 
 		case MobTypeIndex.MOB_TYPE_PLAYER_DIGGER:
-			lCurrentAnimationName = "P1_DIGGER";
+			lNextSpriteName = "digger_idle";
 			break;
 
 		case MobTypeIndex.MOB_TYPE_PLAYER_MELEE:
-			lCurrentAnimationName = "P1_MELEE";
+			lNextSpriteName = "melee_idle";
 			break;
 
 		case MobTypeIndex.MOB_TYPE_PLAYER_RANGE:
-			lCurrentAnimationName = "P1_RANGE";
+			lNextSpriteName = "range_idle";
 			break;
 
 		case MobTypeIndex.MOB_TYPE_GOBLIN_MELEE:
-			lCurrentAnimationName = "GOB_MELEE";
+			lNextSpriteName = "gob_melee_idle";
 			break;
 
 		case MobTypeIndex.MOB_TYPE_GOBLIN_RANGE:
-			lCurrentAnimationName = "GOB_RANGE";
+			lNextSpriteName = "gob_range_idle";
 			break;
 		}
 
@@ -165,10 +237,10 @@ public class MobRenderer extends BaseRenderer {
 //
 //		}
 
-		if (mob == null || mob.mCurrentAnimationName == null || !mob.mCurrentAnimationName.equals(lCurrentAnimationName)) {
-			mob.currentSprite = mMobSpriteSheet.getSpriteInstance(lCurrentAnimationName);
+		if (mob.mCurrentAnimationName == null || !mob.mCurrentAnimationName.equals(lNextSpriteName)) {
+			mob.currentSprite = mMobSpriteSheet.getSpriteInstance(lNextSpriteName);
 			if (mob.currentSprite != null) {
-				mob.mCurrentAnimationName = lCurrentAnimationName;
+				mob.mCurrentAnimationName = lNextSpriteName;
 			}
 		}
 	}

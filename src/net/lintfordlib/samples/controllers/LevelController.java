@@ -18,6 +18,7 @@ import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.debug.Debug;
 import net.lintfordlib.core.input.mouse.IInputProcessor;
+import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.core.storage.FileUtils;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameWorld;
@@ -33,6 +34,9 @@ public class LevelController extends BaseController implements IInputProcessor {
 
 	public static final String CONTROLLER_NAME = "Level Controller";
 
+	// this should be a per level basis - and an army strength, not a count of units
+	public static final int MAX_ENEMY_MOBS = 80;
+
 	// ---------------------------------------------
 	// Variables
 	// ---------------------------------------------
@@ -44,6 +48,7 @@ public class LevelController extends BaseController implements IInputProcessor {
 
 	private CellLevel mLevel;
 	private float mMouseCooldownTimer;
+	private float mSpawnTimerModifier;
 
 	// ---------------------------------------------
 	// Properties
@@ -68,6 +73,14 @@ public class LevelController extends BaseController implements IInputProcessor {
 	public boolean isInitialized() {
 		return mGameStateController != null;
 
+	}
+
+	public float startWorldX() {
+		return mLevel.entranceTileX() * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
+	}
+
+	public float startWorldY() {
+		return mLevel.entranceTileY() * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
 	}
 
 	// ---------------------------------------------
@@ -98,7 +111,7 @@ public class LevelController extends BaseController implements IInputProcessor {
 			final int lMouseTileX = (int) (core.gameCamera().getMouseWorldSpaceX() / ConstantsGame.BLOCK_SIZE);
 			final int lMouseTileY = (int) (core.gameCamera().getMouseWorldSpaceY() / ConstantsGame.BLOCK_SIZE);
 
-			if (core.input().mouse().isMouseLeftButtonDownTimed(this)) {
+			if (core.input().mouse().isMouseLeftButtonDownTimed(this, 50)) {
 				if (core.input().keyboard().isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
 					if (!mLevel.removeItem(lMouseTileX, lMouseTileY)) {
 						mLevel.digBlock(lMouseTileX, lMouseTileY, (byte) 50);
@@ -148,31 +161,45 @@ public class LevelController extends BaseController implements IInputProcessor {
 			mMouseCooldownTimer -= core.gameTime().elapsedTimeMilli();
 		}
 
-		final var lItemTimers = mLevel.itemTimers();
+		updateSpawners(core);
+	}
 
+	private void updateSpawners(LintfordCore core) {
+		final var lItemTimers = mLevel.itemTimers();
 		final var lSpawnerIndices = mLevel.spawnerIndices();
-		if (maxenemies <= 0)
-			return;
+
+		var lNumEnemyMobs = mMobController.numEnemyMobs();
+
+		if (lNumEnemyMobs >= LevelController.MAX_ENEMY_MOBS)
+			return; // max reached
+
+		final var lFullModifierAmt = 10;
+		mSpawnTimerModifier = 1.f + (lNumEnemyMobs / LevelController.MAX_ENEMY_MOBS) * lFullModifierAmt;
+
 		final int lNumSpawners = lSpawnerIndices.size();
 		for (int i = 0; i < lNumSpawners; i++) {
 			final var lSpawnerIndex = lSpawnerIndices.get(i);
 
 			lItemTimers[lSpawnerIndex] -= core.gameTime().elapsedTimeMilli();
+
 			if (lItemTimers[lSpawnerIndex] < 0.f) {
-				lItemTimers[lSpawnerIndex] = 1000.f;
+				lItemTimers[lSpawnerIndex] = (10000.f + RandomNumbers.random(0, 10000)) * mSpawnTimerModifier;
 
 				final var xx = lSpawnerIndex % mLevelController.cellLevel().tilesWide() * ConstantsGame.BLOCK_SIZE;
 				final var yy = lSpawnerIndex / mLevelController.cellLevel().tilesHigh() * ConstantsGame.BLOCK_SIZE;
 
-				// TODO: spawn a baddy
-				mMobController.addEnemyMob(MobTypeIndex.MOB_TYPE_GOBLIN_MELEE, xx, yy);
-				maxenemies--;
+				if (RandomNumbers.getRandomChance(30.f))
+					mMobController.addEnemyMob(MobTypeIndex.MOB_TYPE_GOBLIN_RANGE, xx, yy, lSpawnerIndex);
+				else
+					mMobController.addEnemyMob(MobTypeIndex.MOB_TYPE_GOBLIN_MELEE, xx, yy, lSpawnerIndex);
+
+				lNumEnemyMobs++;
+
+				if (lNumEnemyMobs >= LevelController.MAX_ENEMY_MOBS)
+					return; // max reached
 			}
 		}
 	}
-
-	// TODO: DEBUG:
-	private int maxenemies = 2;
 
 	// ---------------------------------------------
 	// Methods

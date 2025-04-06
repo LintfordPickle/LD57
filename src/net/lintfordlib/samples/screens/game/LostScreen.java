@@ -69,6 +69,7 @@ public class LostScreen extends MenuScreen {
 		mBlockMouseInputInBackground = true;
 
 		mShowContextualKeyHints = false;
+		mESCBackEnabled = false;
 
 		mScreenPaddingTop = 120;
 	}

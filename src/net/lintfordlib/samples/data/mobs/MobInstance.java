@@ -1,6 +1,7 @@
 package net.lintfordlib.samples.data.mobs;
 
 import net.lintfordlib.core.graphics.sprites.SpriteInstance;
+import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.entities.CellEntity;
 
@@ -16,11 +17,7 @@ public class MobInstance extends CellEntity {
 	public static final int TEAM_ID_ENEMY = 1;
 
 	public enum MobOrder {
-		normal, back, attack
-	}
-
-	public enum MobState {
-		normal, attacking
+		normal, retreat, attack
 	}
 
 	// --------------------------------------
@@ -32,9 +29,9 @@ public class MobInstance extends CellEntity {
 	public int targetTileCoord;
 	public float dist2Px;
 	public float distManhatten;
+	public int homeTileCoord;
 	// end temp
 
-	public MobState state = MobState.normal;
 	public MobOrder order = MobOrder.normal;
 
 	private MobDefinition mMobDefinition;
@@ -46,11 +43,13 @@ public class MobInstance extends CellEntity {
 
 	public float heading;
 	public float holdingGoldAmt;
-	public float holdingGoldAmtMax = 10;
 
 	public int teamUid;
 	public float targetX;
 	public float targetY;
+
+	public float hstimer; // step
+	public boolean highStep;
 
 	// used by commanders - defines points in front and behind where melee and archers can rally to.
 	public float targetPosX;
@@ -97,10 +96,11 @@ public class MobInstance extends CellEntity {
 	// TODO: timer resets are mob and player specific (belong in def)
 
 	public void resetAttackTimer() {
-		attackCooldownTimerMs = 700.f;
+		attackCooldownTimerMs = def().attackSpeedMs;
+		;
 	}
 
-	public void resetDamageCooldownr() {
+	public void resetDamageCooldown() {
 		attackCooldownTimerMs = 2000.f;
 	}
 
@@ -130,6 +130,20 @@ public class MobInstance extends CellEntity {
 			damageCooldownTimerMs -= dt;
 		if (attackCooldownTimerMs > 0)
 			attackCooldownTimerMs -= dt;
+		if (hstimer > 0)
+			hstimer -= dt;
+
+		if (hstimer > 0.f)
+			hstimer -= dt;
+		else
+			highStep = false;
+
+		if (Math.abs(vx * vx + vy * vy) > .001f) {
+			if (hstimer <= 0) {
+				highStep = !highStep;
+				hstimer = (float) RandomNumbers.random(200, 230);
+			}
+		}
 
 		isLeftFacing = vx < 0;
 	}
@@ -152,14 +166,13 @@ public class MobInstance extends CellEntity {
 		if (respectCooldown && !isDamageCooldownElapsed())
 			return;
 
-		if (!(ConstantsGame.DEBUG_GOD_MODE && isPlayerControlled))
+		if (!(ConstantsGame.DEBUG_GOD_MODE))
 			health -= amt;
 
 		if (isPlayerControlled)
 			damageCooldownTimerMs = 1000.f;
 		else
 			damageCooldownTimerMs = 200.f;
-
 	}
 
 	public void tryAddHealth(float amt) {

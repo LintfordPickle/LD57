@@ -2,7 +2,6 @@ package net.lintfordlib.samples.screens.game;
 
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
-import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameOptions;
@@ -33,6 +32,7 @@ public class WonScreen extends MenuScreen {
 	private SampleSceneHeader mSceneHeader;
 	private GameOptions mGameOptions;
 	private SpriteSheetDefinition mGameSpritesheetDef;
+	private boolean mWonGame;
 
 	// --------------------------------------
 	// Constructor
@@ -46,19 +46,21 @@ public class WonScreen extends MenuScreen {
 
 		final var lLayout = new ListLayout(this);
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
-		lLayout.setDrawBackground(true, ColorConstants.WHITE());
-		lLayout.showTitle(true);
+//		lLayout.setDrawBackground(true, ColorConstants.WHITE());
+//		lLayout.showTitle(false);
 
 		sceneHeader.levelNumber++;
 		if (sceneHeader.levelNumber > ConstantsGame.NUM_LEVELS) {
 			lLayout.title("You've won the game!");
+			mWonGame = true;
 
 			final var lExitToMenuEntry = new MenuEntry(screenManager, this, "Exit");
 			lExitToMenuEntry.registerClickListener(this, SCREEN_BUTTON_EXIT);
 
 			lLayout.addMenuEntry(lExitToMenuEntry);
 		} else {
-			lLayout.title("You've won the level");
+			lLayout.title("You've won the level, and got enough funds to buy more rum and ale! Uragh!.");
+			mWonGame = false;
 
 			final var lContinueEntry = new MenuEntry(screenManager, this, "Next");
 			lContinueEntry.registerClickListener(this, SCREEN_BUTTON_CONTINUE);
@@ -86,6 +88,7 @@ public class WonScreen extends MenuScreen {
 		mBlockMouseInputInBackground = true;
 
 		mShowContextualKeyHints = false;
+		mESCBackEnabled = false;
 
 		mScreenPaddingTop = 120;
 	}
@@ -112,19 +115,27 @@ public class WonScreen extends MenuScreen {
 	public void draw(LintfordCore core) {
 		super.draw(core);
 
-		if (mGameSpritesheetDef == null)
-			return;
+		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
+		lTextureBatch.setColorWhite();
+		lTextureBatch.begin(core.HUD());
 
-		final var lSpriteFrame = mGameSpritesheetDef.getSpriteFrame("WONTEXT");
+		if (mWonGame) {
+			final var lSpriteFramef = mGameSpritesheetDef.getSpriteFrame("WONGAMETEXT");
 
-		if (lSpriteFrame != null) {
-			final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
-			lTextureBatch.setColorWhite();
+			final var lScale = 2.f;
+			final var lDstWidth = lSpriteFramef.width() * lScale;
+			final var lDstHeight = lSpriteFramef.height() * lScale;
+			lTextureBatch.draw(mGameSpritesheetDef, lSpriteFramef, -lDstWidth * .5f, core.HUD().boundingRectangle().top(), lDstWidth, lDstHeight, .1f);
+		} else {
+			final var lSpriteFramef = mGameSpritesheetDef.getSpriteFrame("WONLEVELTEXT");
 
-			lTextureBatch.begin(core.gameCamera());
-			lTextureBatch.draw(mGameSpritesheetDef, lSpriteFrame, -lSpriteFrame.width() * .5f, core.gameCamera().boundingRectangle().top() + 32, lSpriteFrame.width(), lSpriteFrame.height(), .1f);
-			lTextureBatch.end();
+			final var lScale = 2.f;
+			final var lDstWidth = lSpriteFramef.width() * lScale;
+			final var lDstHeight = lSpriteFramef.height() * lScale;
+			lTextureBatch.draw(mGameSpritesheetDef, lSpriteFramef, -lDstWidth * .5f, core.HUD().boundingRectangle().top(), lDstWidth, lDstHeight, .1f);
 		}
+		;
+		lTextureBatch.end();
 	}
 
 	// --------------------------------------
