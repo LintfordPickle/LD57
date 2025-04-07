@@ -1,0 +1,66 @@
+{
+	"AudioMetaDefinitions" : [
+	
+		{
+			"soundname":"SOUND_ARROW0",
+			"filepath":"res/audio/arrow.ogg"
+		},
+		{
+			"soundname":"SOUND_ARROW1",
+			"filepath":"res/audio/arrow1.ogg"
+		},			
+		{
+			"soundname":"SOUND_ARROW2",
+			"filepath":"res/audio/arrow2.ogg"
+		},
+		
+		{
+			"soundname":"SOUND_STEP",
+			"filepath":"res/audio/step.ogg"
+		},
+		
+		{
+			"soundname":"SOUND_ATTACK0",
+			"filepath":"res/audio/attack0.ogg"
+		},
+		
+		{
+			"soundname":"SOUND_BLOCK0",
+			"filepath":"res/audio/block_hit.ogg"
+		},
+		
+		{
+			"soundname":"SOUND_HURT0",
+			"filepath":"res/audio/hurt0.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT1",
+			"filepath":"res/audio/hurt1.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT2",
+			"filepath":"res/audio/hurt2.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT3",
+			"filepath":"res/audio/hurt3.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT4",
+			"filepath":"res/audio/hurt4.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT5",
+			"filepath":"res/audio/hurt5.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT6",
+			"filepath":"res/audio/hurt6.ogg"
+		},
+		{
+			"soundname":"SOUND_HURT7",
+			"filepath":"res/audio/hurt7.ogg"
+		}
+		
+	]
+}

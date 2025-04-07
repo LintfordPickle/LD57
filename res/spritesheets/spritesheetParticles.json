@@ -3,9 +3,9 @@
   "textureName": "TEXTURE_PARTICLES",
   "spriteFrames": [
     {
-      "name": "PARTICLE_LEAF",
+      "name": "SMOKE",
       "x": 0,
-      "y": 3,
+      "y": 6,
       "w": 16,
       "h": 16,
       "pivotX": 0,
@@ -16,11 +16,11 @@
       "anchorPoints": []
     },
     {
-      "name": "PARTICLE_00",
+      "name": "BLOCK",
       "x": 0,
       "y": 0,
-      "w": 2,
-      "h": 1,
+      "w": 4,
+      "h": 4,
       "pivotX": 0,
       "pivotY": 0,
       "scaleX": 1.0,
@@ -29,11 +29,24 @@
       "anchorPoints": []
     },
     {
-      "name": "PARTICLE_TEST",
-      "x": 4,
+      "name": "BLOOD",
+      "x": 6,
       "y": 0,
-      "w": 2,
-      "h": 1,
+      "w": 4,
+      "h": 4,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "FOOTSTEPS",
+      "x": 12,
+      "y": 0,
+      "w": 4,
+      "h": 4,
       "pivotX": 0,
       "pivotY": 0,
       "scaleX": 1.0,

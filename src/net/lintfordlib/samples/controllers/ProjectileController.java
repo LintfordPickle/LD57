@@ -202,7 +202,7 @@ public class ProjectileController extends BaseController {
 				final float lAngle = (float) Math.atan2(lMob.yy - projInst.yy, lMob.xx - projInst.xx);
 				final float lRepelPower = 0.03f;
 
-				if (ConstantsGame.DEBUG_ENABLE_ATTACK_KNOCKBACK && !lMob.isPlayerControlled) {
+				if (!lMob.isPlayerControlled) {
 					lMob.vx += Math.cos(lAngle) * lRepelPower;
 					lMob.vy += Math.sin(lAngle) * lRepelPower * 0.025f;
 				}

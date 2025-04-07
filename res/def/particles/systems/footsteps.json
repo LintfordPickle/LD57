@@ -10,41 +10,36 @@
       "className": "ParticleSetScaleInitializer"
     },
     {
-      "minValue0": 0.0,
+      "minValue0": 0.7,
       "maxValue0": 1.0,
-      "minValue1": 0.0,
+      "minValue1": 0.7,
       "maxValue1": 1.0,
       "minValue2": 0.0,
       "maxValue2": 1.0,
-      "minValue3": 0.0,
+      "minValue3": 1.0,
       "maxValue3": 1.0,
       "className": "ParticleRandomColorInitializer"
     }
   ],
   "modifiers": [
     {
-      "gravityX": 0.0,
-      "gravityY": 0.978,
-      "className": "ParticleGravityModifier"
+      "minAlphaAmount": 0.5,
+      "maxAlphaAmount": 0.0,
+      "className": "ParticleAlphaModifier"
     },
     {
-      "dragCoefficient": 0.97,
-      "className": "ParticleDragModifier"
-    },
-    {
-      "enableMovement": true,
-      "enableRotation": true,
-      "className": "ParticlePhysicsModifier"
+      "className": "ParticleTurnToFaceModifier"
     }
   ],
-  "maxParticleCount": 100,
-  "particleLifeMin": 1200.0,
-  "particleLifeMax": 1200.0,
+  "maxParticleCount": 200,
+  "particleLifeMin": 2000.0,
+  "particleLifeMax": 6000.0,
   "spritesheetName": "SPRITESHEET_PARTICLES",
-  "spriteName": "TEXTUREPARTICLEFIRE",
+  "spriteName": "FOOTSTEPS",
   "textureFilterMode": 0,
   "glSrcBlendFactor": 770,
   "glDestBlendFactor": 771,
-  "name": "PS_STEPFIRE",
-  "displayName": "PS_STEPFIRE"
+  "renderPassId": 1,
+  "name": "PS_FOOTSTEPS",
+  "displayName": "FOOTSTEPS"
 }

@@ -1,0 +1,53 @@
+{
+  "initializers": [
+    {
+      "value0": 5.0,
+      "value1": 5.0,
+      "className": "ParticleSetSizeInitializer"
+    },
+    {
+      "value": 1.0,
+      "className": "ParticleSetScaleInitializer"
+    },
+    {
+      "minValue0": 0.0,
+      "maxValue0": 0.0,
+      "minValue1": 0.0,
+      "maxValue1": 0.0,
+      "className": "ParticleRandomRotationInitializer"
+    }
+  ],
+  "modifiers": [
+    {
+      "enableMovement": true,
+      "enableRotation": false,
+      "className": "ParticlePhysicsModifier"
+    },
+    {
+      "speed": 0.05,
+      "wanderAmtRad": 0.2,
+      "className": "ParticleWanderMovementModifier"
+    },
+    {
+      "minAlpha": 0.0,
+      "maxAlpha": 0.3,
+      "className": "ParticleAlphaInOutModifier"
+    },
+    {
+      "minScaleAmount": 1.0,
+      "maxScaleAmount": 4.0,
+      "className": "ParticleScaleInOutModifier"
+    }
+  ],
+  "maxParticleCount": 64,
+  "particleLifeMin": 5000.0,
+  "particleLifeMax": 10000.0,
+  "spritesheetName": "SPRITESHEET_PARTICLES",
+  "spriteName": "SMOKE",
+  "textureFilterMode": 0,
+  "glSrcBlendFactor": 770,
+  "glDestBlendFactor": 1,
+  "renderPassId": 1,
+  "name": "PS_SMOKE",
+  "displayName": "PS_SMOKE"
+}

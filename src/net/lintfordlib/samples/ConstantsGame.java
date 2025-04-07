@@ -24,7 +24,7 @@ public class ConstantsGame {
 	// Game
 	// ---------------------------------------------
 
-	public static final int NUM_LEVELS = 3;
+	public static final int NUM_LEVELS = 1;
 
 	public static final String LEVEL_EXTENSION = ".lvl";
 	public static final String LEVEL_DIRECTORY = "res//def//levels";
@@ -49,11 +49,10 @@ public class ConstantsGame {
 	public static final boolean IS_LEVEL_EDIT_MODE = true;
 	public static final boolean IS_DEBUG_MODE = true;
 	public static final boolean DEBUG_GOD_MODE = false;
-	public static final boolean IS_DEBUG_RENDERING_MODE = true;
+	public static final boolean IS_DEBUG_RENDERING_MODE = false;
 
 	public static boolean DEBUG_DRAW_MOB_COLLIDERS = false;
-	public static boolean DEBUG_DRAW_MOB_TARGET_LINES = true;
-	public static boolean DEBUG_ENABLE_ATTACK_KNOCKBACK = true;
+	public static boolean DEBUG_DRAW_MOB_TARGET_LINES = false;
 
 	public static final boolean IS_AI_ENABLED = true;
 	public static final boolean CAMERA_DEBUG_MODE = true;

@@ -79,6 +79,18 @@ public class LevelRenderer extends BaseRenderer {
 
 		drawItems(core);
 		// drawDebugDepth(core);
+
+		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
+		final var lEntranceFrame = mGameSpriteSheet.getSpriteFrame("ENTRANCE");
+
+		final var lWorldX = mLevelController.startWorldX();
+		final var lWorldY = mLevelController.startWorldY();
+
+		lTextureBatch.setColorWhite();
+		lTextureBatch.begin(core.gameCamera());
+		lTextureBatch.draw(mGameSpriteSheet, lEntranceFrame, lWorldX - 24, lWorldY - 24, 48, 48, .001f);
+		lTextureBatch.end();
+
 	}
 
 	// --------------------------------------
@@ -104,7 +116,7 @@ public class LevelRenderer extends BaseRenderer {
 				final var lTileDepth = lDepthValues[lTileCoord];
 				final var lTileVariation = lTileVariationOffsets[lTileCoord];
 
-				final var lDepthTolerance = 1.25f;
+				final var lDepthTolerance = 1.3f;
 				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
 				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
 				lTextureBatch.setColor(lDepthColorMod);
@@ -139,7 +151,6 @@ public class LevelRenderer extends BaseRenderer {
 		final var lLevel = mLevelController.cellLevel();
 		final var lDepthValues = lLevel.tileDepth();
 
-		
 		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
 		lTextureBatch.useHalfPixelCorrection(true);
 		lTextureBatch.begin(pCore.gameCamera());

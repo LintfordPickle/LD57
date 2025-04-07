@@ -62,13 +62,13 @@ public class PauseScreen extends MenuScreen {
 		lLayout.addMenuEntry(lContinueEntry);
 		lLayout.addMenuEntry(lRestartEntry);
 		lLayout.addMenuEntry(MenuEntry.menuSeparator());
-		lLayout.addMenuEntry(lOptionsEntry);
-		lLayout.addMenuEntry(MenuEntry.menuSeparator());
+//		lLayout.addMenuEntry(lOptionsEntry);
+//		lLayout.addMenuEntry(MenuEntry.menuSeparator());
 		lLayout.addMenuEntry(lExitToMenuEntry);
 
 		mLayouts.add(lLayout);
 
-		mIsPopup = true;
+		mIsPopup = false;
 		mShowBackgroundScreens = true;
 
 		mBlockGamepadInputInBackground = true;

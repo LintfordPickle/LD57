@@ -46,8 +46,6 @@ public class WonScreen extends MenuScreen {
 
 		final var lLayout = new ListLayout(this);
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
-//		lLayout.setDrawBackground(true, ColorConstants.WHITE());
-//		lLayout.showTitle(false);
 
 		sceneHeader.levelNumber++;
 		if (sceneHeader.levelNumber > ConstantsGame.NUM_LEVELS) {

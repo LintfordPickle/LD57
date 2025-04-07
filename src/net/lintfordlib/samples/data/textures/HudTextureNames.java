@@ -3,8 +3,8 @@ package net.lintfordlib.samples.data.textures;
 public class HudTextureNames {
 
 	public static final int HUDPANELHOME = 0;
-	public static final int HUDPANELTOP = 1;
-	public static final int HUDPANELHOMEHEADER = 2;
+	public static final int HUDPANELHOMEHEADER = 1;
+	public static final int HUDPANELTOP = 2;
 	public static final int KEY_SPACE = 3;
 	public static final int COIN1 = 4;
 	public static final int COIN2 = 5;

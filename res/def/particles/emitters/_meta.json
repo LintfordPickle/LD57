@@ -1,7 +1,8 @@
 {
   "AssetRootDirectory": "res\\def\\particles\\emitters\\",
   "ItemFilepaths": [
-    "em_test.json",
-    "env_leaves.json"
+    "smoke.json",
+    "footsteps.json",
+    "block.json"
   ]
 }

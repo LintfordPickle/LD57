@@ -5,10 +5,10 @@ public class GameTextureNames {
 	public static final int LOSTTEXT = 0;
 	public static final int WONGAMETEXT = 1;
 	public static final int WONLEVELTEXT = 2;
-	public static final int ARROW = 3;
-	public static final int CHEST = 4;
-	public static final int DIRT = 5;
-	public static final int ENTRANCE = 6;
+	public static final int ENTRANCE = 3;
+	public static final int ARROW = 4;
+	public static final int CHEST = 5;
+	public static final int DIRT = 6;
 	public static final int FLOOR00 = 7;
 	public static final int FLOOR01 = 8;
 	public static final int FLOOR02 = 9;

@@ -8,8 +8,8 @@ import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.fonts.BitmapFontManager;
 import net.lintfordlib.core.input.KeyEventActionManager;
 import net.lintfordlib.core.rendering.SharedResources;
+import net.lintfordlib.samples.controllers.SoundfxController;
 import net.lintfordlib.samples.screens.MainMenu;
-import net.lintfordlib.samples.screens.menu.CreditsScreen;
 import net.lintfordlib.samples.screens.menu.MainMenuBackground;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.toast.ToastManager;
@@ -114,6 +114,12 @@ public class Ld57Game extends LintfordCore {
 		mGameResourceLoader.setMinimumTimeToShowLogosMs(ConstantsGame.IS_DEBUG_MODE ? 0 : 2000);
 		mGameResourceLoader.loadResourcesInBackground(this);
 
+		final var lAudioManager = mResourceManager.audioManager();
+		lAudioManager.loadAudioFilesFromMetafile("res//audio//meta.json");
+
+		var lSoundFxController = new SoundfxController(mControllerManager, mResourceManager.audioManager(), LintfordCore.CORE_ENTITY_GROUP_ID);
+		lSoundFxController.initialize(this);
+
 		mResourceManager.audioManager().loadAudioFilesFromMetafile("res/audio/_meta.json");
 		mResourceManager.musicManager().loadMusicFromMetaFile("res/music/meta.json");
 
@@ -126,7 +132,6 @@ public class Ld57Game extends LintfordCore {
 	@Override
 	protected void finializeAppSetup() {
 		mScreenManager.addScreen(new MainMenuBackground(mScreenManager));
-		mScreenManager.addScreen(new CreditsScreen(mScreenManager));
 		mScreenManager.addScreen(new MainMenu(mScreenManager));
 
 //		mScreenManager.addScreen(new GameScreen(mScreenManager, null));

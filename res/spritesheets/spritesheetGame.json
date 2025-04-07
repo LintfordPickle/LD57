@@ -5,7 +5,7 @@
     {
       "name": "LOSTTEXT",
       "x": 0,
-      "y": 18,
+      "y": 68,
       "w": 256,
       "h": 48,
       "pivotX": 0,
@@ -18,7 +18,7 @@
     {
       "name": "WONGAMETEXT",
       "x": 0,
-      "y": 68,
+      "y": 118,
       "w": 256,
       "h": 48,
       "pivotX": 0,
@@ -31,8 +31,21 @@
     {
       "name": "WONLEVELTEXT",
       "x": 0,
-      "y": 118,
+      "y": 168,
       "w": 256,
+      "h": 48,
+      "pivotX": 0,
+      "pivotY": 0,
+      "scaleX": 1.0,
+      "scaleY": 1.0,
+      "anchorToPointName": null,
+      "anchorPoints": []
+    },
+    {
+      "name": "ENTRANCE",
+      "x": 0,
+      "y": 18,
+      "w": 48,
       "h": 48,
       "pivotX": 0,
       "pivotY": 0,
@@ -81,7 +94,7 @@
       "anchorPoints": []
     },
     {
-      "name": "ENTRANCE",
+      "name": "FLOOR00",
       "x": 54,
       "y": 0,
       "w": 16,
@@ -94,7 +107,7 @@
       "anchorPoints": []
     },
     {
-      "name": "FLOOR00",
+      "name": "FLOOR01",
       "x": 72,
       "y": 0,
       "w": 16,
@@ -107,7 +120,7 @@
       "anchorPoints": []
     },
     {
-      "name": "FLOOR01",
+      "name": "FLOOR02",
       "x": 90,
       "y": 0,
       "w": 16,
@@ -120,7 +133,7 @@
       "anchorPoints": []
     },
     {
-      "name": "FLOOR02",
+      "name": "FLOOR03",
       "x": 108,
       "y": 0,
       "w": 16,
@@ -133,7 +146,7 @@
       "anchorPoints": []
     },
     {
-      "name": "FLOOR03",
+      "name": "GEMS",
       "x": 126,
       "y": 0,
       "w": 16,
@@ -146,7 +159,7 @@
       "anchorPoints": []
     },
     {
-      "name": "GEMS",
+      "name": "GOLD",
       "x": 144,
       "y": 0,
       "w": 16,
@@ -159,7 +172,7 @@
       "anchorPoints": []
     },
     {
-      "name": "GOLD",
+      "name": "SPAWNER_FLOOR_1",
       "x": 162,
       "y": 0,
       "w": 16,
@@ -172,7 +185,7 @@
       "anchorPoints": []
     },
     {
-      "name": "SPAWNER_FLOOR_1",
+      "name": "SPAWNER_FLOOR_2",
       "x": 180,
       "y": 0,
       "w": 16,
@@ -185,7 +198,7 @@
       "anchorPoints": []
     },
     {
-      "name": "SPAWNER_FLOOR_2",
+      "name": "SPAWNER_W",
       "x": 198,
       "y": 0,
       "w": 16,
@@ -198,21 +211,8 @@
       "anchorPoints": []
     },
     {
-      "name": "SPAWNER_W",
-      "x": 216,
-      "y": 0,
-      "w": 16,
-      "h": 16,
-      "pivotX": 0,
-      "pivotY": 0,
-      "scaleX": 1.0,
-      "scaleY": 1.0,
-      "anchorToPointName": null,
-      "anchorPoints": []
-    },
-    {
       "name": "WHITE",
-      "x": 234,
+      "x": 216,
       "y": 0,
       "w": 16,
       "h": 16,

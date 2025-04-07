@@ -1,0 +1,22 @@
+{
+  "triggerType": 1,
+  "triggeredEmissionLengthMs": 1.0,
+  "emitterShape": {
+    "className": "ParticleEmitterPoint"
+  },
+  "emitTimeMin": 20.0,
+  "emitTimeMax": 300.0,
+  "triggerCooldown": 0.25,
+  "emitAmountMin": 1,
+  "emitAmountMax": 4,
+  "emitForceMin": 0.0,
+  "emitForceMax": 100.0,
+  "positionRelOffsetX": 0.0,
+  "positionRelOffsetY": 0.0,
+  "positionRelOffsetRot": 0.0,
+  "particleSystemName": "PS_BLOCK",
+  "useSharedParticleSystem": false,
+  "childEmitters": [],
+  "name": "BLOCK",
+  "displayName": "BLOCK"
+}

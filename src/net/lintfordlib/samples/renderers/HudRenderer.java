@@ -193,6 +193,9 @@ public class HudRenderer extends BaseRenderer {
 		lSpriteBatch.setColorWhite();
 		lSpriteBatch.setColorA(.8f);
 		lSpriteBatch.draw(mHudSpriteSheet.texture(), mHomePanelFrame, lHudLeft, lHudTop, lBuyPanelWidth, lBuyPanelHeight, .1f);
+		final var lHeaderLogo = mHudSpriteSheet.getSpriteFrame("HUDPANELHOMEHEADER");
+
+		lSpriteBatch.draw(mHudSpriteSheet.texture(), lHeaderLogo, lHudLeft, lHudTop, lHeaderLogo.width(), lHeaderLogo.height(), .1f);
 
 		lFontBatch.begin(core.HUD());
 		//  @formatter:off

@@ -5,10 +5,13 @@ import java.util.List;
 
 import net.lintfordlib.controllers.BaseController;
 import net.lintfordlib.controllers.ControllerManager;
+import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.maths.MathHelper;
 import net.lintfordlib.core.maths.RandomNumbers;
 import net.lintfordlib.core.maths.Vector2f;
+import net.lintfordlib.core.particles.particleemitters.ParticleEmitterInstance;
+import net.lintfordlib.core.particles.particlesystems.ParticleSystemInstance;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameWorld;
 import net.lintfordlib.samples.data.entities.CellEntity;
@@ -39,6 +42,11 @@ public class MobController extends BaseController {
 	private GameStateController mGameStateController;
 	private ProjectileController mProjectileController;
 	private CameraFollowController mCameraFollowController;
+	private ParticleFrameworkController mParticleFrameworkController;
+	private SoundfxController mSoundfxController;
+
+	private ParticleSystemInstance mFootstepParticles;
+	private ParticleEmitterInstance mBlockEmitter;
 
 	// --------------------------------------
 	// Properties
@@ -79,6 +87,15 @@ public class MobController extends BaseController {
 		mCameraFollowController = (CameraFollowController) core.controllerManager().getControllerByNameRequired(CameraFollowController.CONTROLLER_NAME, entityGroupUid());
 		mGameStateController = (GameStateController) core.controllerManager().getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupUid());
 		mProjectileController = (ProjectileController) core.controllerManager().getControllerByNameRequired(ProjectileController.CONTROLLER_NAME, entityGroupUid());
+		mParticleFrameworkController = (ParticleFrameworkController) core.controllerManager().getControllerByNameRequired(ParticleFrameworkController.CONTROLLER_NAME, entityGroupUid());
+		mSoundfxController = (SoundfxController) core.controllerManager().getControllerByNameRequired(SoundfxController.CONTROLLER_NAME, LintfordCore.CORE_ENTITY_GROUP_ID);
+
+		final var lParticleSystemManager = mParticleFrameworkController.particleFrameworkData().particleSystemManager();
+		final var lParticleEmitterManager = mParticleFrameworkController.particleFrameworkData().particleEmitterManager();
+
+		mFootstepParticles = lParticleSystemManager.getParticleSystemByName("PS_FOOTSTEPS");
+		mBlockEmitter = lParticleEmitterManager.createNewParticleEmitterFromDefinitionName("BLOCK");
+
 	}
 
 	// --------------------------------------
@@ -111,6 +128,19 @@ public class MobController extends BaseController {
 			}
 
 			lMobInstance.update(dt);
+
+			if (lMobInstance.teamUid == 0 && lMobInstance.pstimer <= 0.f) {
+
+				if (lMobInstance.def().typeUid == MobDefinition.COMMANDER.typeUid) {
+					final var lIsMoving = (lMobInstance.vx * lMobInstance.vx + lMobInstance.vy * lMobInstance.vy) > 0.02f;
+					if (lIsMoving)
+						mSoundfxController.playSound(SoundfxController.SOUND_DIG_STEP);
+				}
+
+				lMobInstance.pstimer = RandomNumbers.random(150, 250);
+
+				mFootstepParticles.spawnParticle(lMobInstance.xx, lMobInstance.yy, .2f, lMobInstance.vx, lMobInstance.vy);
+			}
 
 			updateMobHoldingGold(lMobInstance);
 
@@ -271,6 +301,63 @@ public class MobController extends BaseController {
 		}
 	}
 
+	private void updateMobTargetGetClosestSpawnerTile(MobInstance ourMob) {
+		if (ourMob.order == MobOrder.retreat)
+			return; // don't change retreat order
+
+		if (ourMob.def().typeUid != MobTypeIndex.MOB_TYPE_PLAYER_MELEE)
+			return; // only search for melee
+
+		final var lLevel = mLevelController.cellLevel();
+		final var lGridWide = lLevel.tilesWide();
+		final var lGridHigh = lLevel.tilesHigh();
+
+		float closestDist = Integer.MAX_VALUE;
+		int maxCellDist = 6;
+
+		ourMob.targetTileCoord = -1;
+
+		final var cx = ourMob.cx;
+		final var cy = ourMob.cy;
+		for (int tx = cx - maxCellDist; tx < cx + maxCellDist; tx++) {
+			for (int ty = cy - maxCellDist; ty < cy + maxCellDist; ty++) {
+				final var tileCoord = ty * lLevel.tilesWide() + tx;
+				final var lItemTypeUid = lLevel.getItemTypeUid(tileCoord);
+
+				// only interested in spawners
+				if (lItemTypeUid != CellLevel.LEVEL_ITEMS_SPAWNER)
+					continue;
+
+				final var tileX = tileCoord % lGridWide;
+				final var tileY = tileCoord / lGridHigh;
+
+				// fast manhatten check
+				final int manhattenDist = Math.abs(tileX - ourMob.cx) + Math.abs(tileY - ourMob.cy);
+				if (manhattenDist > maxCellDist)
+					continue;
+
+				if (!gridCheckLineOfSightForDiggers(ourMob.cx, ourMob.cy, tileX, tileY))
+					continue;
+
+				if (manhattenDist < closestDist) {
+					closestDist = manhattenDist;
+
+					ourMob.targetTileCoord = tileCoord;
+					ourMob.targetPosX = tx * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
+					ourMob.targetPosY = ty * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
+
+					ourMob.distManhatten = manhattenDist;
+				}
+			}
+		}
+
+		if (ourMob.targetTileCoord != -1) {
+			ourMob.order = MobOrder.attack;
+		} else {
+			ourMob.order = MobOrder.normal;
+		}
+	}
+
 	// diggers looking for highest value block in range
 	private void updateMobGetHighestTileTarget(MobInstance ourMob) {
 
@@ -287,9 +374,12 @@ public class MobController extends BaseController {
 		float maxCellDist = 10;
 
 		ourMob.targetMob = null;
+		ourMob.targetTileCoord = -1;
 
 		final var xx = ourMob.xx;
 		final var yy = ourMob.yy;
+
+		boolean mobFound = false;
 
 		for (int j = 0; j < lNumMobs; j++) {
 			final var lOtherMobInstance = mMobInstancesToUpdate.get(j);
@@ -317,7 +407,14 @@ public class MobController extends BaseController {
 				ourMob.targetPosX = lOtherMobInstance.xx;
 				ourMob.targetPosY = lOtherMobInstance.yy;
 				ourMob.dist2Px = dst2;
+
+				mobFound = true;
 			}
+		}
+
+		if (ourMob.teamUid == 0 && mobFound == false) {
+			// nothing found, see if we can target a spawn point (item)
+			updateMobTargetGetClosestSpawnerTile(ourMob);
 		}
 
 		if (ourMob.def().swingAttackEnabled) {
@@ -541,33 +638,69 @@ public class MobController extends BaseController {
 	private void updateMobDig(LintfordCore core, CellLevel level, MobInstance mobInstance, int tilecoord) {
 		// check dist to target block, and dig if we're there
 
-		if (mobInstance.holdingGoldAmt >= mobInstance.def().maxCarryAmt)
-			return;
+		if (mobInstance.def().typeUid == MobTypeIndex.MOB_TYPE_PLAYER_DIGGER) {
+			if (mobInstance.holdingGoldAmt >= mobInstance.def().maxCarryAmt)
+				return;
 
-		if (mobInstance.def().digAttackEnabled && mobInstance.isAttackTimerElapsed()) {
-			final var lSwingRange = mobInstance.def().swingRangePx;
-			final var dst2 = Vector2f.dst2(mobInstance.xx, mobInstance.yy, mobInstance.targetPosX, mobInstance.targetPosY);
-			if (dst2 < lSwingRange * lSwingRange) {
+			if (mobInstance.isAttackTimerElapsed()) {
+				final var lSwingRange = mobInstance.def().swingRangePx;
+				final var dst2 = Vector2f.dst2(mobInstance.xx, mobInstance.yy, mobInstance.targetPosX, mobInstance.targetPosY);
+				if (dst2 < lSwingRange * lSwingRange) {
 
-				final float lAngle = (float) Math.atan2(mobInstance.targetPosY - mobInstance.yy, mobInstance.targetPosX - mobInstance.xx);
-				final float lRepelPower = .75f;
+					final float lAngle = (float) Math.atan2(mobInstance.targetPosY - mobInstance.yy, mobInstance.targetPosX - mobInstance.xx);
+					final float lRepelPower = .75f;
 
-				mobInstance.vx -= Math.cos(lAngle) * lRepelPower;
-				mobInstance.vy -= Math.sin(lAngle) * lRepelPower;
+					mobInstance.vx -= Math.cos(lAngle) * lRepelPower;
+					mobInstance.vy -= Math.sin(lAngle) * lRepelPower;
 
-				mobInstance.rx -= Math.cos(lAngle) * .05f;
-				mobInstance.ry -= Math.sin(lAngle) * .05f;
+					mobInstance.rx -= Math.cos(lAngle) * .05f;
+					mobInstance.ry -= Math.sin(lAngle) * .05f;
 
-				// pick up gold
-				level.digBlock(tilecoord, (byte) 1);
-				mobInstance.holdingGoldAmt++;
+					// pick up gold
+					level.digBlock(tilecoord, (byte) 1);
+					mobInstance.holdingGoldAmt++;
 
-				mobInstance.resetAttackTimer();
+					mSoundfxController.playSound(SoundfxController.SOUND_DIG_BLOCK0);
+
+					mBlockEmitter.globalRotRads = (float) Math.toRadians(180);
+					mBlockEmitter.aabb.set(mobInstance.xx, mobInstance.yy, 2, 2);
+					mBlockEmitter.triggerEmission();
+
+					mobInstance.resetAttackTimer();
+				}
 			}
 		}
+
+		if (mobInstance.def().typeUid == MobTypeIndex.MOB_TYPE_PLAYER_MELEE) {
+			if (mobInstance.isAttackTimerElapsed()) {
+				final var lSwingRange = mobInstance.def().swingRangePx;
+				final var dst2 = Vector2f.dst2(mobInstance.xx, mobInstance.yy, mobInstance.targetPosX, mobInstance.targetPosY);
+				if (dst2 < lSwingRange * lSwingRange) {
+
+					final float lAngle = (float) Math.atan2(mobInstance.targetPosY - mobInstance.yy, mobInstance.targetPosX - mobInstance.xx);
+					final float lRepelPower = .75f;
+
+					mobInstance.vx -= Math.cos(lAngle) * lRepelPower;
+					mobInstance.vy -= Math.sin(lAngle) * lRepelPower;
+
+					mobInstance.rx -= Math.cos(lAngle) * .05f;
+					mobInstance.ry -= Math.sin(lAngle) * .05f;
+
+					// remove spawner
+					level.removeItem(tilecoord);
+					mobInstance.targetTileCoord = -1;
+
+					mobInstance.resetAttackTimer();
+				}
+			}
+		}
+
 	}
 
 	private void updateMobAttack(LintfordCore core, CellLevel level, MobInstance mobInstanceA, MobInstance mobInstanceB) {
+
+		// TODO: use actual mob ranges
+
 		// swing attacks
 		if (mobInstanceA.def().swingAttackEnabled) {
 			if (Math.abs(mobInstanceB.cx - mobInstanceA.cx) >= 2 || Math.abs(mobInstanceB.cy - mobInstanceA.cy) >= 2)
@@ -582,10 +715,44 @@ public class MobController extends BaseController {
 					// chance to block
 					if (!RandomNumbers.getRandomChance((1.f - mobInstanceB.def().blockChance) * 100.f)) {
 						// block
-						System.out.println(mobInstanceB.mCurrentAnimationName + " blocked attacked from " + mobInstanceA.mCurrentAnimationName);
+
 					} else {
+
+						mSoundfxController.playSound(SoundfxController.SOUND_DIG_ATTACK0);
+
 						mobInstanceB.dealDamage(1, true);
-						System.out.println(mobInstanceA.mCurrentAnimationName + " mob swing attacks " + mobInstanceB.mCurrentAnimationName);
+
+						final var lHurtSample = RandomNumbers.random(0, 6);
+						switch (lHurtSample) {
+						case 0:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT0);
+							break;
+
+						case 1:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT1);
+							break;
+
+						case 2:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT2);
+							break;
+
+						case 3:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT3);
+							break;
+
+						case 4:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT4);
+							break;
+
+						case 5:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT5);
+							break;
+
+						case 6:
+							mSoundfxController.playSound(SoundfxController.SOUND_DIG_HURT6);
+							break;
+						}
+
 					}
 
 					mobInstanceA.resetAttackTimer();
@@ -595,16 +762,10 @@ public class MobController extends BaseController {
 
 		// range attacks
 		if (mobInstanceA.def().rangeAttackEnabled) {
-			// TODO: use actual mob ranges
 			if (Math.abs(mobInstanceB.cx - mobInstanceA.cx) >= 6 || Math.abs(mobInstanceB.cy - mobInstanceA.cy) >= 6)
 				return;
 
-			final var lDistBetweenMobs = CellEntity.getDistSq(mobInstanceA, mobInstanceB);
-
 			if (mobInstanceA.isAttackTimerElapsed()) {
-				final var lRange = mobInstanceA.def().rangeRangePx;
-//				if (lDistBetweenMobs < lRange * lRange) {
-
 				var xx = mobInstanceB.xx - mobInstanceA.xx;
 				var yy = mobInstanceB.yy - mobInstanceA.yy;
 
@@ -614,8 +775,22 @@ public class MobController extends BaseController {
 
 				mProjectileController.shootArrow(mobInstanceA.xx, mobInstanceA.yy, lHeading, mobInstanceA.teamUid);
 
+				final var lArrowSample = RandomNumbers.random(0, 2);
+				switch (lArrowSample) {
+				case 0:
+					mSoundfxController.playSound(SoundfxController.SOUND_DIG_ARROW0);
+					break;
+
+				case 1:
+					mSoundfxController.playSound(SoundfxController.SOUND_DIG_ARROW1);
+					break;
+
+				case 2:
+					mSoundfxController.playSound(SoundfxController.SOUND_DIG_ARROW2);
+					break;
+				}
+
 				mobInstanceA.resetAttackTimer();
-//				}
 			}
 		}
 	}
@@ -632,12 +807,12 @@ public class MobController extends BaseController {
 			final float lAngle = (float) Math.atan2(mobInstanceB.yy - mobInstanceA.yy, mobInstanceB.xx - mobInstanceA.xx);
 			final float lRepelPower = 0.03f;
 
-			if (ConstantsGame.DEBUG_ENABLE_ATTACK_KNOCKBACK && !mobInstanceB.isPlayerControlled) {
+			if (!mobInstanceB.isPlayerControlled) {
 				mobInstanceB.vx += Math.cos(lAngle) * lRepelPower;
 				mobInstanceB.vy += Math.sin(lAngle) * lRepelPower * 0.025f;
 			}
 
-			if (ConstantsGame.DEBUG_ENABLE_ATTACK_KNOCKBACK && !mobInstanceA.isPlayerControlled) {
+			if (!mobInstanceA.isPlayerControlled) {
 				mobInstanceA.vx -= Math.cos(lAngle) * lRepelPower;
 				mobInstanceA.vy -= Math.sin(lAngle) * lRepelPower;
 			}

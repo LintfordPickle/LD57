@@ -16,11 +16,11 @@
       "anchorPoints": []
     },
     {
-      "name": "HUDPANELTOP",
-      "x": 182,
+      "name": "HUDPANELHOMEHEADER",
+      "x": 0,
       "y": 276,
-      "w": 256,
-      "h": 32,
+      "w": 255,
+      "h": 43,
       "pivotX": 0,
       "pivotY": 0,
       "scaleX": 1.0,
@@ -29,10 +29,10 @@
       "anchorPoints": []
     },
     {
-      "name": "HUDPANELHOMEHEADER",
+      "name": "HUDPANELTOP",
       "x": 0,
-      "y": 276,
-      "w": 180,
+      "y": 321,
+      "w": 256,
       "h": 32,
       "pivotX": 0,
       "pivotY": 0,

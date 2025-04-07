@@ -95,6 +95,9 @@ public class MobRenderer extends BaseRenderer {
 		final var lMobManager = mMobController.mobManager();
 		final var lDepthValues = mLevelController.cellLevel().tileDepth();
 
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(false);
+
 		final var lMobList = lMobManager.mobs();
 		if (lMobList == null || lMobList.size() == 0)
 			return;
@@ -124,23 +127,22 @@ public class MobRenderer extends BaseRenderer {
 			final float lHalfHeight = 8.f;
 			final float lMobWidth = lMobInstance.currentSprite.width();
 
-			final var lTileCoord = lMobInstance.cy * ConstantsGame.LEVEL_TILES_WIDE + lMobInstance.cx; 
+			final var lTileCoord = lMobInstance.cy * ConstantsGame.LEVEL_TILES_WIDE + lMobInstance.cx;
 			final var lTileDepth = lDepthValues[lTileCoord];
-			
+
 			final var lDepthTolerance = 1.5f;
 			final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
 			final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
-			
+
 			lSpriteBatch.setColorA(.5f);
-			lSpriteBatch.draw(mMobSpriteSheet, mShadowFrame, lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .2f);
-			
+			// lSpriteBatch.draw(mMobSpriteSheet, mShadowFrame, lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .7f);
+
 			var lTintColor = lDepthColorMod;
 			if (!lMobInstance.isDamageCooldownElapsed() && lMobInstance.damageCooldownTimerMs % FULL_FLASH_DUR < FULL_FLASH_DUR * .5f)
 				lTintColor = ColorConstants.getColor(100, 100, 100, 1);
-			
+
 			lSpriteBatch.setColor(lTintColor);
 
-			
 			if (lMobInstance.isLeftFacing)
 				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .1f);
 			else
@@ -158,6 +160,7 @@ public class MobRenderer extends BaseRenderer {
 		}
 
 		lSpriteBatch.end();
+		GL11.glDepthMask(true);
 	}
 
 	private void drawMobHealthBar(SpriteBatch lSpriteBatch, MobInstance lMobInstance, float lMobWorldPositionX, float lMobWorldPositionY) {

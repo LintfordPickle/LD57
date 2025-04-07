@@ -8,7 +8,7 @@ import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameOptions;
 import net.lintfordlib.samples.data.SampleSceneHeader;
 import net.lintfordlib.samples.screens.MainMenu;
-import net.lintfordlib.samples.screens.menu.CreditsScreen;
+import net.lintfordlib.samples.screens.menu.MainMenuBackground;
 import net.lintfordlib.screenmanager.MenuEntry;
 import net.lintfordlib.screenmanager.MenuScreen;
 import net.lintfordlib.screenmanager.ScreenManager;
@@ -124,7 +124,7 @@ public class LostScreen extends MenuScreen {
 			break;
 
 		case SCREEN_BUTTON_EXIT:
-			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, new CreditsScreen(screenManager), new MainMenu(screenManager)));
+			screenManager.createLoadingScreen(new LoadingScreen(screenManager, false, false, new MainMenuBackground(screenManager), new MainMenu(screenManager)));
 			break;
 		}
 	}

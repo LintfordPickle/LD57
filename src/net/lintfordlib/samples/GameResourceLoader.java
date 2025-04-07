@@ -29,7 +29,7 @@ public class GameResourceLoader extends ResourceMapLoader {
 	// ---------------------------------------------
 
 	public GameResourceLoader(ResourceManager resourceManager, DisplayManager displayManager) {
-		this(resourceManager, displayManager, 1500);
+		this(resourceManager, displayManager, 0);
 	}
 
 	public GameResourceLoader(ResourceManager resourceManager, DisplayManager displayManager, long minimumDisplayTimeMs) {
@@ -73,7 +73,7 @@ public class GameResourceLoader extends ResourceMapLoader {
 
 		mTextureBatch.begin(core.HUD());
 		mTextureBatch.setColorWhite();
-		mTextureBatch.draw(mLoadingBackgroundTexture, 0.f, 0.f, 960.f, 576.f, core.HUD().boundingRectangle(), .01f);
+		mTextureBatch.draw(mLoadingBackgroundTexture, 0.f, 0.f, 960.f, 540.f, core.HUD().boundingRectangle(), .01f);
 
 		final var lDstX = lHudBounds.right() - 6.f - 32.f;
 		final var lDstY = lHudBounds.bottom() - 6.f - 32.f;

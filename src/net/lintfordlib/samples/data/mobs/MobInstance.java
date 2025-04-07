@@ -48,6 +48,7 @@ public class MobInstance extends CellEntity {
 	public float targetX;
 	public float targetY;
 
+	public float pstimer; // particle footstep
 	public float hstimer; // step
 	public boolean highStep;
 
@@ -130,6 +131,10 @@ public class MobInstance extends CellEntity {
 			damageCooldownTimerMs -= dt;
 		if (attackCooldownTimerMs > 0)
 			attackCooldownTimerMs -= dt;
+
+		if (pstimer > 0)
+			pstimer -= dt;
+
 		if (hstimer > 0)
 			hstimer -= dt;
 

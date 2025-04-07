@@ -57,7 +57,7 @@ public class MainMenuBackground extends Screen {
 
 		lTextureBatch.setColorWhite();
 		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.draw(mBackgroundTexture, 0, 0, 960, 576, lCanvasBox.left(), lCanvasBox.top(), lCanvasBox.width(), lCanvasBox.height(), .85f);
+		lTextureBatch.draw(mBackgroundTexture, 0, 0, 960, 540, lCanvasBox.left(), lCanvasBox.top(), lCanvasBox.width(), lCanvasBox.height(), .85f);
 		lTextureBatch.end();
 	}
 }

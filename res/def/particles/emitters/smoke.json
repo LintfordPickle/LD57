@@ -1,0 +1,23 @@
+{
+  "triggerType": 0,
+  "triggeredEmissionLengthMs": 10.0,
+  "emitterShape": {
+    "width": 1000.0,
+    "height": 1000.0,
+    "className": "ParticleEmitterBox"
+  },
+  "emitTimeMin": 0.0,
+  "emitTimeMax": 1500.0,
+  "triggerCooldown": 0.0,
+  "emitAmountMin": 0,
+  "emitAmountMax": 10,
+  "emitForceMin": 0.0,
+  "emitForceMax": 0.0,
+  "positionRelOffsetX": 0.0,
+  "positionRelOffsetY": 0.0,
+  "positionRelOffsetRot": 0.0,
+  "particleSystemName": "PS_SMOKE",
+  "useSharedParticleSystem": false,
+  "childEmitters": [],
+  "name": "PS_WISP"
+}

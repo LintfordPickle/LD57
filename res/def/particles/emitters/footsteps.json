@@ -1,0 +1,21 @@
+{
+  "triggerType": 1,
+  "triggeredEmissionLengthMs": 0.0,
+  "emitterShape": {
+    "className": "ParticleEmitterPoint"
+  },
+  "emitTimeMin": 30.0,
+  "emitTimeMax": 80.0,
+  "triggerCooldown": 0.0,
+  "emitAmountMin": 2,
+  "emitAmountMax": 5,
+  "emitForceMin": 0.0,
+  "emitForceMax": 0.0,
+  "positionRelOffsetX": 0.0,
+  "positionRelOffsetY": 0.0,
+  "positionRelOffsetRot": 0.0,
+  "particleSystemName": "PS_FOOTSTEPS",
+  "useSharedParticleSystem": false,
+  "childEmitters": [],
+  "name": "PS_FOOTSTEPS"
+}

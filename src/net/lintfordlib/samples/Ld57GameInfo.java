@@ -54,6 +54,10 @@ public class Ld57GameInfo implements GameInfo {
 	public boolean stretchGameResolution() {
 		return true;
 	}
+	@Override
+	public boolean stretchUiResolution() {
+		return true;
+	}
 
 	@Override
 	public boolean windowResizeable() {
