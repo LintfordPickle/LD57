@@ -38,6 +38,8 @@ public abstract class MobDefinition {
 	public float blockChance;
 	public float swingRangePx;
 	public float rangeRangePx;
+	public int targetSightRangeTiles;
+	public int distanceToDropOffGold;
 	
 	public float attackSpeedMs;
 
@@ -56,6 +58,7 @@ public abstract class MobDefinition {
 		cost = 1;
 		maxCarryAmt = 0;
 		blockChance = 0;
+		targetSightRangeTiles = 0;
 		
 		maxAloneTravelDistInTiles = 5;
 	}

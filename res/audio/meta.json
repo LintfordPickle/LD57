@@ -2,6 +2,14 @@
 	"AudioMetaDefinitions" : [
 	
 		{
+			"soundname":"SOUND_CASHOUT",
+			"filepath":"res/audio/cashout.ogg"
+		},
+		{
+			"soundname":"SOUND_COLLAPSE",
+			"filepath":"res/audio/collapse.ogg"
+		},
+		{
 			"soundname":"SOUND_ARROW0",
 			"filepath":"res/audio/arrow.ogg"
 		},

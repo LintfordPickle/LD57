@@ -1,17 +1,15 @@
 package net.lintfordlib.samples.renderers;
 
-import org.lwjgl.opengl.GL11;
-
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.ColorConstants;
 import net.lintfordlib.core.graphics.sprites.SpriteFrame;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
-import net.lintfordlib.core.graphics.textures.Texture;
 import net.lintfordlib.core.rendering.RenderPass;
 import net.lintfordlib.renderers.BaseRenderer;
 import net.lintfordlib.renderers.RendererManagerBase;
 import net.lintfordlib.samples.ConstantsGame;
+import net.lintfordlib.samples.controllers.GameStateController;
 import net.lintfordlib.samples.controllers.LevelController;
 import net.lintfordlib.samples.data.level.CellLevel;
 import net.lintfordlib.samples.data.textures.GameTextureNames;
@@ -29,7 +27,7 @@ public class LevelRenderer extends BaseRenderer {
 	// --------------------------------------
 
 	private LevelController mLevelController;
-	private Texture mLevelTexture;
+	private GameStateController mGameStateController;
 	private SpriteSheetDefinition mGameSpriteSheet;
 
 	// --------------------------------------
@@ -52,14 +50,13 @@ public class LevelRenderer extends BaseRenderer {
 	@Override
 	public void initialize(LintfordCore pCore) {
 		mLevelController = (LevelController) pCore.controllerManager().getControllerByNameRequired(LevelController.CONTROLLER_NAME, entityGroupID());
-
+		mGameStateController = (GameStateController) pCore.controllerManager().getControllerByNameRequired(GameStateController.CONTROLLER_NAME, entityGroupID());
 	}
 
 	@Override
 	public void loadResources(ResourceManager resourceManager) {
 		super.loadResources(resourceManager);
 
-		mLevelTexture = resourceManager.textureManager().loadTexture("TEXTURE_LEVEL", "res/textures/textureLevel.png", GL11.GL_LINEAR, entityGroupID());
 		mGameSpriteSheet = resourceManager.spriteSheetManager().getSpriteSheet("SPRITESHEET_GAME", entityGroupID());
 	}
 
@@ -67,7 +64,6 @@ public class LevelRenderer extends BaseRenderer {
 	public void unloadResources() {
 		super.unloadResources();
 
-		mLevelTexture = null;
 		mGameSpriteSheet = null;
 	}
 
@@ -78,19 +74,14 @@ public class LevelRenderer extends BaseRenderer {
 		drawForeground(core);
 
 		drawItems(core);
-		// drawDebugDepth(core);
 
-		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
-		final var lEntranceFrame = mGameSpriteSheet.getSpriteFrame("ENTRANCE");
+		if (ConstantsGame.DEBUG_ENABLE_DRAW_DEPTHVALUES)
+			drawDebugDepth(core);
 
-		final var lWorldX = mLevelController.startWorldX();
-		final var lWorldY = mLevelController.startWorldY();
+		if (ConstantsGame.DEBUG_ENABLE_DRAW_TILECOORDS)
+			drawDebugTileIndices(core);
 
-		lTextureBatch.setColorWhite();
-		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.draw(mGameSpriteSheet, lEntranceFrame, lWorldX - 24, lWorldY - 24, 48, 48, .001f);
-		lTextureBatch.end();
-
+		drawEntranceZone(core);
 	}
 
 	// --------------------------------------
@@ -227,6 +218,10 @@ public class LevelRenderer extends BaseRenderer {
 					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.SPAWNER_FLOOR_1);
 					break;
 
+				case CellLevel.LEVEL_ITEMS_SPAWNER_DESTROYED:
+					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.SPAWNER_FLOOR_2);
+					break;
+
 				case CellLevel.LEVEL_ITEMS_TREASURE:
 					lSpriteFrame = mGameSpriteSheet.getSpriteFrame(GameTextureNames.CHEST);
 					break;
@@ -264,5 +259,64 @@ public class LevelRenderer extends BaseRenderer {
 		}
 
 		lFontUnit.end();
+	}
+
+	private void drawDebugTileIndices(LintfordCore core) {
+		final var lLevel = mLevelController.cellLevel();
+		final var lFontUnit = mRendererManager.sharedResources().uiTextFont();
+
+		lFontUnit.begin(core.gameCamera());
+		lFontUnit.setTextColorWhite();
+
+		for (int y = 0; y < ConstantsGame.LEVEL_TILES_HIGH; y++) {
+			for (int x = 0; x < ConstantsGame.LEVEL_TILES_WIDE; x++) {
+				final int lTileIndex = lLevel.getLevelTileCoord(x, y);
+
+				final var xx = x * ConstantsGame.BLOCK_SIZE;
+				final var yy = y * ConstantsGame.BLOCK_SIZE;
+
+				lFontUnit.drawText("(" + x + "," + y + ")", xx, yy, .01f, .2f);
+				lFontUnit.drawText("" + lTileIndex, xx, yy + 20, .01f, .2f);
+			}
+		}
+
+		lFontUnit.end();
+	}
+
+	private void drawEntranceZone(LintfordCore core) {
+		final var lEntranceWidth = 48.f;
+		final var lEntranceHeight = 48.f;
+
+		final var lTextureBatch = mRendererManager.sharedResources().uiSpriteBatch();
+		final var lEntranceFrame = mGameSpriteSheet.getSpriteFrame("ENTRANCE");
+		final var lGoldFrame = mGameSpriteSheet.getSpriteFrame("COIN");
+
+		final var lWorldX = mLevelController.startWorldX();
+		final var lWorldY = mLevelController.startWorldY();
+
+		lTextureBatch.setColorWhite();
+		lTextureBatch.begin(core.gameCamera());
+		lTextureBatch.draw(mGameSpriteSheet, lEntranceFrame, lWorldX - lEntranceWidth * .5f, lWorldY - lEntranceHeight * .5f, lEntranceWidth, lEntranceHeight, .001f);
+
+		final var xx = mLevelController.startWorldX() - lEntranceWidth * .5f;
+		final var yy = mLevelController.startWorldY() + lEntranceHeight * .5f;
+
+		final var lCoinSize = 3;
+
+		final var lNumCoins = mGameStateController.gameState().credits;
+		if (lNumCoins <= 0)
+			return;
+
+		final var lCoinsInEntranceAmt = lNumCoins / 3;
+		final var lWrapAmount = 8;
+		for (int j = 0; j < lCoinsInEntranceAmt; j++) {
+			var xxx = xx + (j % lWrapAmount) * (lCoinSize + 1);
+			var yyy = yy - (j / lWrapAmount) * (lCoinSize + 1) - lCoinSize - 2;
+
+			lTextureBatch.setColorA(.5f);
+			lTextureBatch.draw(mGameSpriteSheet, lGoldFrame, xxx, yyy, lCoinSize, lCoinSize, .1f);
+		}
+
+		lTextureBatch.end();
 	}
 }

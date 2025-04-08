@@ -27,5 +27,9 @@ public class PlayerDigger extends MobDefinition {
 		cost = 12;
 		maxCarryAmt = 8;
 		attackSpeedMs = 900;
+
+		maxAloneTravelDistInTiles = 3;
+		targetSightRangeTiles = 3; // GOLD / GEMS
+		distanceToDropOffGold = 5; // Drop off gold / Gems at home point
 	}
 }

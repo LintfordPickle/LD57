@@ -14,6 +14,10 @@ public class SoundfxController extends BaseController {
 
 	public static final String CONTROLLER_NAME = "Sound Fx Controller";
 
+	public static final String SOUND_CASHOUT = "SOUND_CASHOUT";
+	
+	public static final String SOUND_COLLAPSE = "SOUND_COLLAPSE";
+	
 	public static final String SOUND_DIG_ARROW0 = "SOUND_ARROW0";
 	public static final String SOUND_DIG_ARROW1 = "SOUND_ARROW1";
 	public static final String SOUND_DIG_ARROW2 = "SOUND_ARROW2";
@@ -21,7 +25,7 @@ public class SoundfxController extends BaseController {
 	public static final String SOUND_DIG_ATTACK0 = "SOUND_ATTACK0";
 
 	public static final String SOUND_DIG_BLOCK0 = "SOUND_BLOCK0";
-	public static final String SOUND_DIG_STEP = "SOUND_STEP";
+	public static final String SOUND_FOOTSTEP = "SOUND_STEP";
 
 	public static final String SOUND_DIG_HURT0 = "SOUND_HURT0";
 	public static final String SOUND_DIG_HURT1 = "SOUND_HURT1";

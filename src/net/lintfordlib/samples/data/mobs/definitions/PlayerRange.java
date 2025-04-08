@@ -21,7 +21,7 @@ public class PlayerRange extends MobDefinition {
 		rangeAttackEnabled = true;
 
 		swingRangePx = 0.f;
-		rangeRangePx = 64.f;
+		rangeRangePx = 80.f;
 
 		maxHealth = 2;
 		cost = 15;

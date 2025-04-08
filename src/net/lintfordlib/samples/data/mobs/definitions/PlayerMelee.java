@@ -24,10 +24,11 @@ public class PlayerMelee extends MobDefinition {
 		rangeRangePx = 0;
 		blockChance = 0.4f;
 
-		maxHealth = 4;
+		maxHealth = 6;
 		cost = 10;
 		attackSpeedMs = 500;
 
-		maxAloneTravelDistInTiles = 8;
+		maxAloneTravelDistInTiles = 7;
+		targetSightRangeTiles = 5; // SPAWNERS
 	}
 }

@@ -165,6 +165,9 @@ public class LevelController extends BaseController implements IInputProcessor {
 	}
 
 	private void updateSpawners(LintfordCore core) {
+		if (ConstantsGame.DEBUG_ENABLE_ENEMY_MOBS)
+			return;
+
 		final var lItemTimers = mLevel.itemTimers();
 		final var lSpawnerIndices = mLevel.spawnerIndices();
 

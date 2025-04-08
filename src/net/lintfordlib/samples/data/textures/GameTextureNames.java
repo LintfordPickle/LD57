@@ -19,5 +19,6 @@ public class GameTextureNames {
 	public static final int SPAWNER_FLOOR_2 = 14;
 	public static final int SPAWNER_W = 15;
 	public static final int WHITE = 16;
+	public static final int COIN = 17;
 
 }

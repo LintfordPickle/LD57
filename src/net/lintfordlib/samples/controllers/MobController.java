@@ -48,6 +48,8 @@ public class MobController extends BaseController {
 	private ParticleSystemInstance mFootstepParticles;
 	private ParticleEmitterInstance mBlockEmitter;
 
+	private float mCashoutSoundCooldownTimer;
+
 	// --------------------------------------
 	// Properties
 	// --------------------------------------
@@ -108,6 +110,9 @@ public class MobController extends BaseController {
 
 		final var dt = (float) core.gameTime().elapsedTimeMilli();
 
+		if (mCashoutSoundCooldownTimer > 0.f)
+			mCashoutSoundCooldownTimer -= dt;
+
 		final var lLevel = mLevelController.cellLevel();
 
 		final var lMobList = mMobManager.mobs();
@@ -129,17 +134,24 @@ public class MobController extends BaseController {
 
 			lMobInstance.update(dt);
 
+			// footsteps on player mobs
 			if (lMobInstance.teamUid == 0 && lMobInstance.pstimer <= 0.f) {
-
 				if (lMobInstance.def().typeUid == MobDefinition.COMMANDER.typeUid) {
 					final var lIsMoving = (lMobInstance.vx * lMobInstance.vx + lMobInstance.vy * lMobInstance.vy) > 0.02f;
 					if (lIsMoving)
-						mSoundfxController.playSound(SoundfxController.SOUND_DIG_STEP);
+						mSoundfxController.playSound(SoundfxController.SOUND_FOOTSTEP);
 				}
 
-				lMobInstance.pstimer = RandomNumbers.random(150, 250);
+				final var lHeadingX = (float) Math.cos(lMobInstance.heading);
+				final var lHeadingY = (float) Math.sin(lMobInstance.heading);
 
-				mFootstepParticles.spawnParticle(lMobInstance.xx, lMobInstance.yy, .2f, lMobInstance.vx, lMobInstance.vy);
+				lMobInstance.pstimer = RandomNumbers.random(150, 180);
+
+				final var stepOffsetX = lMobInstance.lstep ? lHeadingY * 2.f : -lHeadingY * 2.f;
+				final var stepOffsetY = lMobInstance.lstep ? lHeadingX * 2.f : -lHeadingX * 2.f;
+
+				mFootstepParticles.spawnParticle(lMobInstance.xx + stepOffsetX, lMobInstance.yy + stepOffsetY, .2f, lMobInstance.vx, lMobInstance.vy);
+				lMobInstance.lstep = !lMobInstance.lstep;
 			}
 
 			updateMobHoldingGold(lMobInstance);
@@ -152,7 +164,6 @@ public class MobController extends BaseController {
 					updateMobTargetGetClosestValueTile(lMobInstance);
 
 			} else {
-
 				if (lMobInstance.order != MobOrder.retreat)
 					updateMobGetClosestTarget(lMobInstance);
 
@@ -161,7 +172,7 @@ public class MobController extends BaseController {
 			if (lMobInstance.targetMob != null)
 				updateMobAttack(core, lLevel, lMobInstance, lMobInstance.targetMob);
 
-			if (lMobInstance.targetTileCoord != -1)
+			if (lMobInstance.targetTileCoord != -1 && lMobInstance.order == MobOrder.attack)
 				updateMobDig(core, lLevel, lMobInstance, lMobInstance.targetTileCoord);
 
 			for (int j = i + 1; j < lNumMobs; j++) {
@@ -206,9 +217,10 @@ public class MobController extends BaseController {
 
 		} else {
 			// enemies
+			final var lLevelTilesWide = mLevelController.cellLevel().tilesWide();
 
-			final var hx = mobInstance.homeTileCoord % ConstantsGame.LEVEL_TILES_WIDE;
-			final var hy = mobInstance.homeTileCoord / ConstantsGame.LEVEL_TILES_WIDE;
+			final var hx = mobInstance.homeTileCoord % lLevelTilesWide;
+			final var hy = mobInstance.homeTileCoord / lLevelTilesWide;
 
 			final var lDstFromHome = Math.abs(hx - mobInstance.cx) + Math.abs(hy - mobInstance.cy);
 
@@ -233,20 +245,29 @@ public class MobController extends BaseController {
 	}
 
 	private void updateMobHoldingGold(MobInstance mobInstance) {
-		if (mobInstance.holdingGoldAmt > 0) {
-			final var lEntryTileX = mLevelController.cellLevel().entranceTileX();
-			final var lEntryTileY = mLevelController.cellLevel().entranceTileY();
+		if (mobInstance.holdingGoldAmt <= 0)
+			return;
 
-			final var lCmdDistFromEntrance = Math.abs(mobInstance.cx - lEntryTileX) + Math.abs(mobInstance.cy - lEntryTileY);
-			if (lCmdDistFromEntrance < 4) {
-				// TODO: Cashtill sound
+		final var lEntryTileX = mLevelController.cellLevel().entranceTileX();
+		final var lEntryTileY = mLevelController.cellLevel().entranceTileY();
 
-				// TODO: pass over time
-				mGameStateController.gameState().credits += mobInstance.holdingGoldAmt;
-				mobInstance.holdingGoldAmt = 0;
+		final var lCmdDistFromEntrance = Math.max(Math.abs(mobInstance.cx - lEntryTileX), Math.abs(mobInstance.cy - lEntryTileY));
+		if (lCmdDistFromEntrance > 2)
+			return;
 
-			}
+		if (mobInstance.goldDropTimer > 0)
+			return;
+
+		if (mCashoutSoundCooldownTimer <= 0) {
+			mSoundfxController.playSound(SoundfxController.SOUND_CASHOUT);
+			mCashoutSoundCooldownTimer = 1000;
 		}
+
+		// TODO: pass over time
+		mGameStateController.gameState().credits++;
+		mobInstance.holdingGoldAmt--;
+
+		mobInstance.goldDropTimer = 500;
 	}
 
 	private void updateMobTargetGetClosestValueTile(MobInstance ourMob) {
@@ -258,14 +279,20 @@ public class MobController extends BaseController {
 		final var lGridHigh = lLevel.tilesHigh();
 
 		float closestDist = Integer.MAX_VALUE;
-		int maxCellDist = 6;
+		final var lMaxCellDist = ourMob.def().targetSightRangeTiles;
 
 		ourMob.targetTileCoord = -1;
 
 		final var cx = ourMob.cx;
 		final var cy = ourMob.cy;
-		for (int tx = cx - maxCellDist; tx < cx + maxCellDist; tx++) {
-			for (int ty = cy - maxCellDist; ty < cy + maxCellDist; ty++) {
+
+		final var localxMin = MathHelper.clampi(cx - lMaxCellDist, 0, lGridWide);
+		final var localxMax = MathHelper.clampi(cx + lMaxCellDist, localxMin, lGridWide);
+		final var localyMin = MathHelper.clampi(cy - lMaxCellDist, 0, lGridWide);
+		final var localyMax = MathHelper.clampi(cy + lMaxCellDist, localxMin, lGridHigh);
+
+		for (int tx = localxMin; tx < localxMax; tx++) {
+			for (int ty = localyMin; ty < localyMax; ty++) {
 				final var tileCoord = ty * lLevel.tilesWide() + tx;
 				final var lBlockType = lLevel.getLevelBlockType(tileCoord);
 
@@ -274,28 +301,65 @@ public class MobController extends BaseController {
 					continue;
 
 				final var tileX = tileCoord % lGridWide;
-				final var tileY = tileCoord / lGridHigh;
-
-				// fast manhatten check
-				final int manhattenDist = Math.abs(tileX - ourMob.cx) + Math.abs(tileY - ourMob.cy);
-				if (manhattenDist > maxCellDist)
-					continue;
+				final var tileY = tileCoord / lGridWide;
 
 				if (!gridCheckLineOfSightForDiggers(ourMob.cx, ourMob.cy, tileX, tileY))
 					continue;
 
-				if (manhattenDist < closestDist) {
-					closestDist = manhattenDist;
+				final int chebyshevDistTiles = Math.max(Math.abs(tileX - ourMob.cx), Math.abs(tileY - ourMob.cy));
+				if (chebyshevDistTiles < closestDist) {
+					closestDist = chebyshevDistTiles;
 					ourMob.targetTileCoord = tileCoord;
 					ourMob.targetPosX = tx * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
 					ourMob.targetPosY = ty * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
-					ourMob.distManhatten = manhattenDist;
+					ourMob.chebyshevDistTiles = chebyshevDistTiles;
 				}
 			}
 		}
 
 		if (ourMob.targetTileCoord != -1) {
 			ourMob.order = MobOrder.attack;
+		} else {
+			if (ourMob.def().typeUid == MobTypeIndex.MOB_TYPE_PLAYER_DIGGER && ourMob.holdingGoldAmt > 0) {
+				// for diggers, see if they can drop off gold at home
+				updateMobTargetWhenEntranceWithinRange(ourMob);
+				return;
+			}
+
+			ourMob.order = MobOrder.normal;
+		}
+	}
+
+	private void updateMobTargetWhenEntranceWithinRange(MobInstance ourMob) {
+		if (ourMob.order == MobOrder.retreat)
+			return; // don't change retreat order
+
+		final var lLevel = mLevelController.cellLevel();
+		final var lGridWide = lLevel.tilesWide();
+
+		ourMob.targetTileCoord = -1;
+
+		final var lEntranceTileCoord = mLevelController.cellLevel().entranceTileCoord();
+		if (lEntranceTileCoord == -1)
+			return;
+
+		final var tileX = lEntranceTileCoord % lGridWide;
+		final var tileY = lEntranceTileCoord / lGridWide;
+
+		if (!gridCheckLineOfSightForDiggers(ourMob.cx, ourMob.cy, tileX, tileY))
+			return;
+
+		// chebyshev distance (diag allowed)
+		final int chebyshevDistTiles = Math.max(Math.abs(tileX - ourMob.cx), Math.abs(tileY - ourMob.cy));
+		if (chebyshevDistTiles <= ourMob.def().distanceToDropOffGold) {
+			ourMob.targetTileCoord = lEntranceTileCoord;
+			ourMob.targetPosX = mLevelController.startWorldX();
+			ourMob.targetPosY = mLevelController.startWorldY();
+			ourMob.chebyshevDistTiles = chebyshevDistTiles;
+		}
+
+		if (ourMob.targetTileCoord != -1) {
+			ourMob.order = MobOrder.home;
 		} else {
 			ourMob.order = MobOrder.normal;
 		}
@@ -312,15 +376,23 @@ public class MobController extends BaseController {
 		final var lGridWide = lLevel.tilesWide();
 		final var lGridHigh = lLevel.tilesHigh();
 
-		float closestDist = Integer.MAX_VALUE;
-		int maxCellDist = 6;
+		float lClosestDist = Integer.MAX_VALUE;
+		final var lMaxCellDist = ourMob.def().targetSightRangeTiles;
 
 		ourMob.targetTileCoord = -1;
 
 		final var cx = ourMob.cx;
 		final var cy = ourMob.cy;
-		for (int tx = cx - maxCellDist; tx < cx + maxCellDist; tx++) {
-			for (int ty = cy - maxCellDist; ty < cy + maxCellDist; ty++) {
+
+		final var localxMin = MathHelper.clampi(cx - lMaxCellDist, 0, lGridWide);
+		final var localxMax = MathHelper.clampi(cx + lMaxCellDist, localxMin, lGridWide);
+		final var localyMin = MathHelper.clampi(cy - lMaxCellDist, 0, lGridWide);
+		final var localyMax = MathHelper.clampi(cy + lMaxCellDist, localxMin, lGridHigh);
+
+		for (int tx = localxMin; tx < localxMax; tx++) {
+			for (int ty = localyMin; ty < localyMax; ty++) {
+
+				// This is incorrect
 				final var tileCoord = ty * lLevel.tilesWide() + tx;
 				final var lItemTypeUid = lLevel.getItemTypeUid(tileCoord);
 
@@ -329,24 +401,20 @@ public class MobController extends BaseController {
 					continue;
 
 				final var tileX = tileCoord % lGridWide;
-				final var tileY = tileCoord / lGridHigh;
-
-				// fast manhatten check
-				final int manhattenDist = Math.abs(tileX - ourMob.cx) + Math.abs(tileY - ourMob.cy);
-				if (manhattenDist > maxCellDist)
-					continue;
+				final var tileY = tileCoord / lGridWide;
 
 				if (!gridCheckLineOfSightForDiggers(ourMob.cx, ourMob.cy, tileX, tileY))
 					continue;
 
-				if (manhattenDist < closestDist) {
-					closestDist = manhattenDist;
+				final int chebyshevDistTiles = Math.max(Math.abs(tileX - ourMob.cx), Math.abs(tileY - ourMob.cy));
+				if (chebyshevDistTiles < lClosestDist) {
+					lClosestDist = chebyshevDistTiles;
 
 					ourMob.targetTileCoord = tileCoord;
 					ourMob.targetPosX = tx * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
 					ourMob.targetPosY = ty * ConstantsGame.BLOCK_SIZE + ConstantsGame.BLOCK_SIZE * .5f;
 
-					ourMob.distManhatten = manhattenDist;
+					ourMob.chebyshevDistTiles = chebyshevDistTiles;
 				}
 			}
 		}
@@ -356,11 +424,6 @@ public class MobController extends BaseController {
 		} else {
 			ourMob.order = MobOrder.normal;
 		}
-	}
-
-	// diggers looking for highest value block in range
-	private void updateMobGetHighestTileTarget(MobInstance ourMob) {
-
 	}
 
 	private void updateMobGetClosestTarget(MobInstance ourMob) {
@@ -420,7 +483,7 @@ public class MobController extends BaseController {
 		if (ourMob.def().swingAttackEnabled) {
 			// TODO: this would be sight range - because the units need to run towards each other
 			// final var lSwingRange = ourMob.def().swingRangePx;
-			if (ourMob.targetMob != null /* && closestDist < lSwingRange * lSwingRange */) {
+			if ((ourMob.targetMob != null || ourMob.targetTileCoord != -1) /* && closestDist < lSwingRange * lSwingRange */) {
 				ourMob.order = MobOrder.attack;
 			} else {
 				ourMob.order = MobOrder.normal;
@@ -560,7 +623,6 @@ public class MobController extends BaseController {
 	}
 
 	private void updateMobPhysics(LintfordCore core, CellLevel pLevel, MobInstance pMobInstance) {
-
 		// TODO: should come from mobs
 		final var lMaxVelocity = .05f;
 		final var lMobRadius = .3f;
@@ -627,7 +689,6 @@ public class MobController extends BaseController {
 		}
 
 		// update mob instance
-
 		pMobInstance.xx = (float) (pMobInstance.cx + pMobInstance.rx) * ConstantsGame.BLOCK_SIZE;
 		pMobInstance.yy = (float) (pMobInstance.cy + pMobInstance.ry) * ConstantsGame.BLOCK_SIZE;
 
@@ -686,15 +747,18 @@ public class MobController extends BaseController {
 					mobInstance.rx -= Math.cos(lAngle) * .05f;
 					mobInstance.ry -= Math.sin(lAngle) * .05f;
 
-					// remove spawner
+					mSoundfxController.playSound(SoundfxController.SOUND_COLLAPSE);
+
+					// remove spawner and place destroyed one
 					level.removeItem(tilecoord);
+					level.placeItem(tilecoord, CellLevel.LEVEL_ITEMS_SPAWNER_DESTROYED);
+
 					mobInstance.targetTileCoord = -1;
 
 					mobInstance.resetAttackTimer();
 				}
 			}
 		}
-
 	}
 
 	private void updateMobAttack(LintfordCore core, CellLevel level, MobInstance mobInstanceA, MobInstance mobInstanceB) {
@@ -842,10 +906,11 @@ public class MobController extends BaseController {
 				toBeMoved = false; // ranged
 			}
 
-		} else if (mobInstance.order == MobOrder.attack && mobInstance.targetTileCoord != CellLevel.LEVEL_TILE_COORD_INVALID) {
+		} else if (mobInstance.targetTileCoord != CellLevel.LEVEL_TILE_COORD_INVALID) {
 			// we have a block to dig/attack
 			mobInstance.targetX = mobInstance.targetPosX;
 			mobInstance.targetY = mobInstance.targetPosY;
+
 		} else {
 
 			// order normal (formation)
@@ -876,7 +941,7 @@ public class MobController extends BaseController {
 			mobInstance.heading += MathHelper.turnToFace(targetHeading, mobInstance.heading, .1f);
 
 			// move unit towards target
-			final var lMovementSpeed = 1f; // TODO: speed from unit
+			final var lMovementSpeed = mobInstance.movementSpeedMod;
 			final var len = (float) Math.sqrt(xx * xx + yy * yy);
 			mobInstance.vx += (xx / len) * lMovementSpeed * dt * .001f;
 			mobInstance.vy += (yy / len) * lMovementSpeed * dt * .001f;
@@ -893,7 +958,7 @@ public class MobController extends BaseController {
 			final var yy = mobInstance.targetY - mobInstance.yy;
 
 			// move unit towards target
-			final var lMovementSpeed = 1f; // TODO: speed from unit
+			final var lMovementSpeed = mobInstance.movementSpeedMod;
 			final var len = (float) Math.sqrt(xx * xx + yy * yy);
 			mobInstance.vx += (xx / len) * lMovementSpeed * dt * .001f;
 			mobInstance.vy += (yy / len) * lMovementSpeed * dt * .001f;
@@ -910,7 +975,7 @@ public class MobController extends BaseController {
 			final var yy = mobInstance.targetY - mobInstance.yy;
 
 			// move unit towards target
-			final var lMovementSpeed = 1f; // TODO: speed from unit
+			final var lMovementSpeed = mobInstance.movementSpeedMod;
 			final var len = (float) Math.sqrt(xx * xx + yy * yy);
 			mobInstance.vx += (xx / len) * lMovementSpeed * dt * .001f;
 			mobInstance.vy += (yy / len) * lMovementSpeed * dt * .001f;
@@ -925,13 +990,12 @@ public class MobController extends BaseController {
 			mobInstance.heading %= lMaxRange;
 
 			// move unit towards target
-			final var lMovementSpeed = .1f; // TODO: speed from unit
+			final var lMovementSpeed = mobInstance.movementSpeedMod;
 			mobInstance.vx += Math.cos(mobInstance.heading) * lMovementSpeed;
 			mobInstance.vy += Math.sin(mobInstance.heading) * lMovementSpeed;
 
 			return;
 		}
-
 	}
 
 	public void startNewGame(float startX, float startY) {

@@ -27,6 +27,7 @@ public class CellLevel {
 	public static final int LEVEL_ITEMS_ENTRANCE = 1;
 	public static final int LEVEL_ITEMS_SPAWNER = 4;
 	public static final int LEVEL_ITEMS_TREASURE = 5;
+	public static final int LEVEL_ITEMS_SPAWNER_DESTROYED = 6;
 
 	public static final byte LEVEL_MAX_VARIATION_OFFSET = 4;
 
@@ -386,6 +387,11 @@ public class CellLevel {
 			break;
 		}
 
+		case LEVEL_ITEMS_SPAWNER_DESTROYED: {
+			mItemTypeUids[tileCoord] = itemTypeUidToPlace;
+			break;
+		}
+
 		case LEVEL_ITEMS_TREASURE: {
 			final var lBlockTypeUid = getLevelBlockType(tileCoord);
 			if (lBlockTypeUid != LEVEL_TILE_INDEX_NOTHING)
@@ -418,6 +424,10 @@ public class CellLevel {
 		case LEVEL_ITEMS_SPAWNER: {
 			mItemTimers[tileCoord] = 0.f;
 			spawnerIndices.remove((Integer) tileCoord);
+			break;
+		}
+		case LEVEL_ITEMS_SPAWNER_DESTROYED: {
+			// ignore
 			break;
 		}
 		default:

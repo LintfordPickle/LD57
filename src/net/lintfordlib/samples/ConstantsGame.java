@@ -11,7 +11,7 @@ public class ConstantsGame {
 	public static final String FOOTER_TEXT = "(c) 2025 LintfordPickle";
 
 	public static final String APPLICATION_NAME = "LD57 - Depth";
-	public static final String WINDOW_TITLE = "Ludum Dare 57";
+	public static final String WINDOW_TITLE = "Ludum Dare 57 - Fill the Coffers";
 
 	public static final float ASPECT_RATIO = 16.f / 9.f;
 
@@ -46,15 +46,19 @@ public class ConstantsGame {
 	// Debug
 	// ---------------------------------------------
 
-	public static final boolean IS_LEVEL_EDIT_MODE = true;
-	public static final boolean IS_DEBUG_MODE = true;
+	public static final boolean IS_LEVEL_EDIT_MODE = false;
+	public static final boolean IS_DEBUG_MODE = false;
 	public static final boolean DEBUG_GOD_MODE = false;
 	public static final boolean IS_DEBUG_RENDERING_MODE = false;
+	public static final boolean DEBUG_ENABLE_ENEMY_MOBS = false;
+
+	public static final boolean DEBUG_ENABLE_DRAW_DEPTHVALUES = false;
+	public static final boolean DEBUG_ENABLE_DRAW_TILECOORDS = false;
 
 	public static boolean DEBUG_DRAW_MOB_COLLIDERS = false;
 	public static boolean DEBUG_DRAW_MOB_TARGET_LINES = false;
 
 	public static final boolean IS_AI_ENABLED = true;
-	public static final boolean CAMERA_DEBUG_MODE = true;
+	public static final boolean CAMERA_DEBUG_MODE = false;
 
 }

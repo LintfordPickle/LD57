@@ -17,7 +17,7 @@ public class MobInstance extends CellEntity {
 	public static final int TEAM_ID_ENEMY = 1;
 
 	public enum MobOrder {
-		normal, retreat, attack
+		normal, retreat, attack, home
 	}
 
 	// --------------------------------------
@@ -28,7 +28,7 @@ public class MobInstance extends CellEntity {
 	public MobInstance targetMob;
 	public int targetTileCoord;
 	public float dist2Px;
-	public float distManhatten;
+	public float chebyshevDistTiles;
 	public int homeTileCoord;
 	// end temp
 
@@ -43,12 +43,15 @@ public class MobInstance extends CellEntity {
 
 	public float heading;
 	public float holdingGoldAmt;
+	public float goldDropTimer;
+	public float movementSpeedMod;
 
 	public int teamUid;
 	public float targetX;
 	public float targetY;
 
 	public float pstimer; // particle footstep
+	public boolean lstep; // l/r
 	public float hstimer; // step
 	public boolean highStep;
 
@@ -113,6 +116,7 @@ public class MobInstance extends CellEntity {
 		super(uid);
 
 		targetMob = null;
+		movementSpeedMod = 1.f;
 		targetTileCoord = -1;
 	}
 
@@ -131,6 +135,8 @@ public class MobInstance extends CellEntity {
 			damageCooldownTimerMs -= dt;
 		if (attackCooldownTimerMs > 0)
 			attackCooldownTimerMs -= dt;
+		if (goldDropTimer > 0)
+			goldDropTimer -= dt;
 
 		if (pstimer > 0)
 			pstimer -= dt;

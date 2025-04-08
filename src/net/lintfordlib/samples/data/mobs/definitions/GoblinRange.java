@@ -21,9 +21,9 @@ public class GoblinRange extends MobDefinition {
 		rangeAttackEnabled = true;
 
 		swingRangePx = 0.f;
-		rangeRangePx = 64.f;
+		rangeRangePx = 50.f;
 
 		maxHealth = 2;
-		attackSpeedMs = 2000;
+		attackSpeedMs = 4000;
 	}
 }
