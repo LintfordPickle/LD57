@@ -6,7 +6,7 @@ import net.lintfordlib.samples.data.mobs.MobTypeIndex;
 public class GoblinRange extends MobDefinition {
 
 	public static final int typeId = MobTypeIndex.MOB_TYPE_GOBLIN_RANGE;
-	
+
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -14,7 +14,7 @@ public class GoblinRange extends MobDefinition {
 	public GoblinRange() {
 		typeUid = MobTypeIndex.MOB_TYPE_GOBLIN_RANGE;
 
-		radius = .3f;
+		radius = .15f;
 		digAttackEnabled = false;
 		damagesOnCollide = false;
 		swingAttackEnabled = false;

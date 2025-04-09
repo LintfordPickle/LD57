@@ -14,7 +14,7 @@ public class PlayerDigger extends MobDefinition {
 	public PlayerDigger() {
 		typeUid = MobTypeIndex.MOB_TYPE_PLAYER_DIGGER;
 
-		radius = .3f;
+		radius = .15f;
 		digAttackEnabled = true;
 		damagesOnCollide = false;
 		swingAttackEnabled = true;

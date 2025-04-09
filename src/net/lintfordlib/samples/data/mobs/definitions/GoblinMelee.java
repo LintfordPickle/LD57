@@ -14,7 +14,7 @@ public class GoblinMelee extends MobDefinition {
 	public GoblinMelee() {
 		typeUid = MobTypeIndex.MOB_TYPE_GOBLIN_MELEE;
 
-		radius = .3f;
+		radius = .15f;
 		digAttackEnabled = false;
 		damagesOnCollide = true;
 		swingAttackEnabled = true;

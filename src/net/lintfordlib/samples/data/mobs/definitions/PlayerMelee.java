@@ -14,7 +14,7 @@ public class PlayerMelee extends MobDefinition {
 	public PlayerMelee() {
 		typeUid = MobTypeIndex.MOB_TYPE_PLAYER_MELEE;
 
-		radius = .3f;
+		radius = .15f;
 		digAttackEnabled = false;
 		damagesOnCollide = true;
 		swingAttackEnabled = true;

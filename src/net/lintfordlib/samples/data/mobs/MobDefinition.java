@@ -53,7 +53,7 @@ public abstract class MobDefinition {
 
 	protected MobDefinition() {
 		// default for all
-		radius = .3f;
+		radius = .2f;
 		maxHealth = 1;
 		cost = 1;
 		maxCarryAmt = 0;

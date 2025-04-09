@@ -12,7 +12,7 @@ public class Commander extends MobDefinition {
 	public Commander() {
 		typeUid = MobTypeIndex.MOB_TYPE_PLAYER_COMANDER;
 
-		radius = .3f;
+		radius = .15f;
 		digAttackEnabled = false;
 		damagesOnCollide = true;
 		swingAttackEnabled = false;

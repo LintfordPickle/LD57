@@ -1,5 +1,6 @@
 package net.lintfordlib.samples;
 
+import net.lintfordlib.GameVersion;
 import net.lintfordlib.assets.ResourceGroupProvider;
 
 public class ConstantsGame {
@@ -11,7 +12,7 @@ public class ConstantsGame {
 	public static final String FOOTER_TEXT = "(c) 2025 LintfordPickle";
 
 	public static final String APPLICATION_NAME = "LD57 - Depth";
-	public static final String WINDOW_TITLE = "Ludum Dare 57 - Fill the Coffers";
+	public static final String WINDOW_TITLE = "Ludum Dare 57 - Fill the Coffers " + GameVersion.GAME_VERSION;
 
 	public static final float ASPECT_RATIO = 16.f / 9.f;
 
@@ -57,6 +58,7 @@ public class ConstantsGame {
 
 	public static boolean DEBUG_DRAW_MOB_COLLIDERS = false;
 	public static boolean DEBUG_DRAW_MOB_TARGET_LINES = false;
+	public static boolean DEBUG_DRAW_MOB_COLLISION_RADIUS = false;
 
 	public static final boolean IS_AI_ENABLED = true;
 	public static final boolean CAMERA_DEBUG_MODE = false;

@@ -14,7 +14,7 @@ public class PlayerRange extends MobDefinition {
 	public PlayerRange() {
 		typeUid = MobTypeIndex.MOB_TYPE_PLAYER_RANGE;
 
-		radius = .3f;
+		radius = .15f;
 		digAttackEnabled = false;
 		damagesOnCollide = false;
 		swingAttackEnabled = false;

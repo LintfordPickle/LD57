@@ -157,10 +157,47 @@ public class MobRenderer extends BaseRenderer {
 			GL11.glPointSize(5);
 			Debug.debugManager().drawers().drawPointImmediate(core.gameCamera(), lMobInstance.auxForwardPosX, lMobInstance.auxForwardPosY);
 
+			if (ConstantsGame.DEBUG_DRAW_MOB_COLLISION_RADIUS) {
+				var r = lMobInstance.teamUid == 0 ? 1.f : 1.f;
+				var g = lMobInstance.teamUid == 0 ? 1.f : 0.f;
+				var b = lMobInstance.teamUid == 0 ? 0.f : 0.f;
+
+				Debug.debugManager().drawers().drawCircleImmediate(core.gameCamera(), lMobInstance.xx, lMobInstance.yy, lMobInstance.radiusRatio * ConstantsGame.BLOCK_SIZE, 12, GL11.GL_LINE_STRIP, 2, r, g, b);
+			}
 		}
 
 		lSpriteBatch.end();
 		GL11.glDepthMask(true);
+
+		if (ConstantsGame.DEBUG_DRAW_MOB_COLLISION_RADIUS)
+			drawMobCollisionRadius(core);
+
+	}
+
+	private void drawMobCollisionRadius(LintfordCore core) {
+		final var lMobManager = mMobController.mobManager();
+
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthMask(false);
+
+		final var lMobList = lMobManager.mobs();
+		if (lMobList == null || lMobList.size() == 0)
+			return;
+
+
+		final int lMobCount = lMobList.size();
+		for (int i = 0; i < lMobCount; i++) {
+			Debug.debugManager().drawers().beginLineRenderer(core.gameCamera());
+			final var lMobInstance = (MobInstance) lMobList.get(i);
+
+			var r = lMobInstance.teamUid == 0 ? 1.f : 1.f;
+			var g = lMobInstance.teamUid == 0 ? 1.f : 0.f;
+			var b = lMobInstance.teamUid == 0 ? 0.f : 0.f;
+
+			Debug.debugManager().drawers().drawCircle(lMobInstance.xx, lMobInstance.yy, lMobInstance.radiusRatio * ConstantsGame.BLOCK_SIZE, lMobInstance.heading, 12, GL11.GL_LINES, r, g, b);
+			Debug.debugManager().drawers().endLineRenderer();
+		}
+
 	}
 
 	private void drawMobHealthBar(SpriteBatch lSpriteBatch, MobInstance lMobInstance, float lMobWorldPositionX, float lMobWorldPositionY) {
