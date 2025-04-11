@@ -3,6 +3,7 @@ package net.lintfordlib.samples.screens.game;
 import net.lintfordlib.assets.ResourceManager;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.graphics.sprites.spritesheet.SpriteSheetDefinition;
+import net.lintfordlib.core.maths.MathHelper;
 import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.GameOptions;
 import net.lintfordlib.samples.data.SampleSceneHeader;
@@ -47,8 +48,7 @@ public class WonScreen extends MenuScreen {
 		final var lLayout = new ListLayout(this);
 		lLayout.layoutFillType(FILLTYPE.TAKE_WHATS_NEEDED);
 
-		sceneHeader.levelNumber++;
-		if (sceneHeader.levelNumber > ConstantsGame.NUM_LEVELS) {
+		if (sceneHeader.levelNumber + 1 > ConstantsGame.NUM_LEVELS) {
 			lLayout.title("You've won the game!");
 			mWonGame = true;
 
@@ -144,12 +144,12 @@ public class WonScreen extends MenuScreen {
 	protected void handleOnClick() {
 		switch (mClickAction.consume()) {
 		case SCREEN_BUTTON_CONTINUE:
+			mSceneHeader.levelNumber = MathHelper.clampi(mSceneHeader.levelNumber++, 0, ConstantsGame.NUM_LEVELS);
 			final var lNewGameScreen = new GameScreen(screenManager, mSceneHeader, mGameOptions);
 			screenManager.createLoadingScreen(new LoadingScreen(screenManager, true, true, lNewGameScreen));
 			return;
 
 		case SCREEN_BUTTON_RESTART:
-			// TODO: the restart won't work like this because we already incremented the level index
 			final var lLoadingScreen = new GameScreen(screenManager, mSceneHeader, mGameOptions);
 			screenManager.createLoadingScreen(new LoadingScreen(screenManager, true, true, lLoadingScreen));
 			break;

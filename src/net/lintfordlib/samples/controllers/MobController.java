@@ -150,7 +150,7 @@ public class MobController extends BaseController {
 				final var stepOffsetX = lMobInstance.lstep ? lHeadingY * 2.f : -lHeadingY * 2.f;
 				final var stepOffsetY = lMobInstance.lstep ? lHeadingX * 2.f : -lHeadingX * 2.f;
 
-				mFootstepParticles.spawnParticle(lMobInstance.xx + stepOffsetX, lMobInstance.yy + stepOffsetY, .2f, lMobInstance.vx, lMobInstance.vy);
+				mFootstepParticles.spawnParticle(lMobInstance.xx + stepOffsetX, lMobInstance.yy + stepOffsetY, .51f, lMobInstance.vx, lMobInstance.vy);
 				lMobInstance.lstep = !lMobInstance.lstep;
 			}
 
@@ -263,7 +263,6 @@ public class MobController extends BaseController {
 			mCashoutSoundCooldownTimer = 1000;
 		}
 
-		// TODO: pass over time
 		mGameStateController.gameState().credits++;
 		mobInstance.holdingGoldAmt--;
 
@@ -481,8 +480,6 @@ public class MobController extends BaseController {
 		}
 
 		if (ourMob.def().swingAttackEnabled) {
-			// TODO: this would be sight range - because the units need to run towards each other
-			// final var lSwingRange = ourMob.def().swingRangePx;
 			if ((ourMob.targetMob != null || ourMob.targetTileCoord != -1) /* && closestDist < lSwingRange * lSwingRange */) {
 				ourMob.order = MobOrder.attack;
 			} else {
@@ -498,7 +495,6 @@ public class MobController extends BaseController {
 				ourMob.order = MobOrder.normal;
 			}
 		}
-
 	}
 
 	private boolean gridCheckLineOfSight(int x0, int y0, int x1, int y1) {
@@ -623,9 +619,10 @@ public class MobController extends BaseController {
 	}
 
 	private void updateMobPhysics(LintfordCore core, CellLevel pLevel, MobInstance pMobInstance) {
-		// TODO: should come from mobs
-		final var lMaxVelocity = .05f;
-		final var lMobRadius = .3f;
+		final var mobDef = pMobInstance.def();
+
+		final var lMaxVelocity = mobDef.maxMovementVelocity;
+		final var lMobRadius = mobDef.radius;
 
 		final var lVelocity = pMobInstance.vx * pMobInstance.vx + pMobInstance.vy * pMobInstance.vy;
 
@@ -762,23 +759,20 @@ public class MobController extends BaseController {
 	}
 
 	private void updateMobAttack(LintfordCore core, CellLevel level, MobInstance mobInstanceA, MobInstance mobInstanceB) {
-
-		// TODO: use actual mob ranges
-
 		// swing attacks
 		if (mobInstanceA.def().swingAttackEnabled) {
-			if (Math.abs(mobInstanceB.cx - mobInstanceA.cx) >= 2 || Math.abs(mobInstanceB.cy - mobInstanceA.cy) >= 2)
+			final var lMobMaxSwingDistance = mobInstanceA.def().swingMaxTiles();
+			if (Math.abs(mobInstanceB.cx - mobInstanceA.cx) >= lMobMaxSwingDistance || Math.abs(mobInstanceB.cy - mobInstanceA.cy) >= lMobMaxSwingDistance)
 				return;
 
 			final var lDistBetweenMobs = CellEntity.getDistSq(mobInstanceA, mobInstanceB);
 
-			// swing attacks
 			if (mobInstanceA.isAttackTimerElapsed()) {
 				final var lSwingRange = mobInstanceA.def().swingRangePx;
 				if (lDistBetweenMobs < lSwingRange * lSwingRange) {
 					// chance to block
 					if (!RandomNumbers.getRandomChance((1.f - mobInstanceB.def().blockChance) * 100.f)) {
-						// block
+						// mob blocks swing attack
 
 					} else {
 
@@ -941,7 +935,7 @@ public class MobController extends BaseController {
 			mobInstance.heading += MathHelper.turnToFace(targetHeading, mobInstance.heading, .1f);
 
 			// move unit towards target
-			final var lMovementSpeed = mobInstance.movementSpeedMod;
+			final var lMovementSpeed = mobInstance.def().movementSpeedModifier;
 			final var len = (float) Math.sqrt(xx * xx + yy * yy);
 			mobInstance.vx += (xx / len) * lMovementSpeed * dt * .001f;
 			mobInstance.vy += (yy / len) * lMovementSpeed * dt * .001f;
@@ -958,7 +952,7 @@ public class MobController extends BaseController {
 			final var yy = mobInstance.targetY - mobInstance.yy;
 
 			// move unit towards target
-			final var lMovementSpeed = mobInstance.movementSpeedMod;
+			final var lMovementSpeed = mobInstance.def().movementSpeedModifier;
 			final var len = (float) Math.sqrt(xx * xx + yy * yy);
 			mobInstance.vx += (xx / len) * lMovementSpeed * dt * .001f;
 			mobInstance.vy += (yy / len) * lMovementSpeed * dt * .001f;
@@ -975,7 +969,7 @@ public class MobController extends BaseController {
 			final var yy = mobInstance.targetY - mobInstance.yy;
 
 			// move unit towards target
-			final var lMovementSpeed = mobInstance.movementSpeedMod;
+			final var lMovementSpeed = mobInstance.def().movementSpeedModifier;
 			final var len = (float) Math.sqrt(xx * xx + yy * yy);
 			mobInstance.vx += (xx / len) * lMovementSpeed * dt * .001f;
 			mobInstance.vy += (yy / len) * lMovementSpeed * dt * .001f;
@@ -990,7 +984,7 @@ public class MobController extends BaseController {
 			mobInstance.heading %= lMaxRange;
 
 			// move unit towards target
-			final var lMovementSpeed = mobInstance.movementSpeedMod;
+			final var lMovementSpeed = mobInstance.def().movementSpeedModifier;
 			mobInstance.vx += Math.cos(mobInstance.heading) * lMovementSpeed;
 			mobInstance.vy += Math.sin(mobInstance.heading) * lMovementSpeed;
 
@@ -1008,8 +1002,6 @@ public class MobController extends BaseController {
 
 	private void addPlayerCommander(float worldX, float worldY) {
 		final var lPlayerMob = mMobManager.getNewMobInstance();
-
-		// TODO: gotta be using the entrance coords
 
 		lPlayerMob.initialise(MobDefinition.COMMANDER);
 		lPlayerMob.isPlayerControlled = true;

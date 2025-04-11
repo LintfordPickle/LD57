@@ -46,8 +46,7 @@ public class MobRenderer extends BaseRenderer {
 
 	@Override
 	public boolean isInitialized() {
-		// TODO Auto-generated method stub
-		return false;
+		return mMobController != null;
 	}
 
 	// --------------------------------------
@@ -135,7 +134,7 @@ public class MobRenderer extends BaseRenderer {
 			final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
 
 			lSpriteBatch.setColorA(.5f);
-			// lSpriteBatch.draw(mMobSpriteSheet, mShadowFrame, lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .7f);
+			lSpriteBatch.draw(mMobSpriteSheet, mShadowFrame, lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, lHalfHeight * 2.f, .7f);
 
 			var lTintColor = lDepthColorMod;
 			if (!lMobInstance.isDamageCooldownElapsed() && lMobInstance.damageCooldownTimerMs % FULL_FLASH_DUR < FULL_FLASH_DUR * .5f)
@@ -144,9 +143,9 @@ public class MobRenderer extends BaseRenderer {
 			lSpriteBatch.setColor(lTintColor);
 
 			if (lMobInstance.isLeftFacing)
-				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .1f);
+				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX + lHalfWidth, lMobWorldPositionY - lHalfHeight, -lMobWidth, 16, .4f);
 			else
-				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - lHalfWidth, lMobWorldPositionY - lHalfHeight, lMobWidth, 16, .1f);
+				lSpriteBatch.draw(mMobSpriteSheet, lMobSpriteInstance.currentSpriteFrame(), lMobWorldPositionX - lHalfWidth, lMobWorldPositionY - lHalfHeight, lMobWidth, 16, .4f);
 
 			if (lMobInstance.def().typeUid != MobTypeIndex.MOB_TYPE_PLAYER_COMANDER)
 				drawMobHealthBar(lSpriteBatch, lMobInstance, lMobWorldPositionX, lMobWorldPositionY);
@@ -184,7 +183,6 @@ public class MobRenderer extends BaseRenderer {
 		if (lMobList == null || lMobList.size() == 0)
 			return;
 
-
 		final int lMobCount = lMobList.size();
 		for (int i = 0; i < lMobCount; i++) {
 			Debug.debugManager().drawers().beginLineRenderer(core.gameCamera());
@@ -211,7 +209,7 @@ public class MobRenderer extends BaseRenderer {
 
 		for (int j = 0; j < lMobInstance.health; j++) {
 			lSpriteBatch.setColorA(.5f);
-			lSpriteBatch.draw(mMobSpriteSheet, mHeartFrame, xx, yy, lHeartSize, lHeartSize, .1f);
+			lSpriteBatch.draw(mMobSpriteSheet, mHeartFrame, xx, yy, lHeartSize, lHeartSize, .5f);
 			yy -= (lHeartSize + 1);
 		}
 	}
@@ -232,7 +230,7 @@ public class MobRenderer extends BaseRenderer {
 			var yyy = yy + (j / 5) * (lHeartSize + 1);
 
 			lSpriteBatch.setColorA(.5f);
-			lSpriteBatch.draw(mMobSpriteSheet, mCoinFrame, xxx, yyy, lHeartSize, lHeartSize, .1f);
+			lSpriteBatch.draw(mMobSpriteSheet, mCoinFrame, xxx, yyy, lHeartSize, lHeartSize, .5f);
 		}
 	}
 

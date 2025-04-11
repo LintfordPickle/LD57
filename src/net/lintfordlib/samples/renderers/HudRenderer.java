@@ -107,9 +107,7 @@ public class HudRenderer extends BaseRenderer {
 
 	@Override
 	public boolean handleInput(LintfordCore core) {
-
 		if (mGameStateController.playerInLoadoutArea()) {
-			// TODO: Need to display key/button on the hud
 			if (core.input().keyboard().isKeyDownTimed(GLFW.GLFW_KEY_X, this)) {
 				final var mobCost = MobDefinition.PLAYER_DIGGER.cost;
 				if (mGameStateController.deduct(mobCost)) {

@@ -34,8 +34,7 @@ public class ProjectileRenderer extends BaseRenderer {
 
 	@Override
 	public boolean isInitialized() {
-		// TODO Auto-generated method stub
-		return false;
+		return mProjectileController != null;
 	}
 
 	// --------------------------------------
@@ -56,7 +55,6 @@ public class ProjectileRenderer extends BaseRenderer {
 
 		final var lControllerManager = core.controllerManager();
 		mProjectileController = (ProjectileController) lControllerManager.getControllerByNameRequired(ProjectileController.CONTROLLER_NAME, mEntityGroupUid);
-
 	}
 
 	@Override
@@ -99,5 +97,4 @@ public class ProjectileRenderer extends BaseRenderer {
 
 		lSpriteBatch.end();
 	}
-
 }

@@ -131,7 +131,7 @@ public class LevelRenderer extends BaseRenderer {
 					break;
 				}
 
-				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
+				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .6f);
 			}
 		}
 
@@ -159,7 +159,7 @@ public class LevelRenderer extends BaseRenderer {
 
 				final var lDepthTolerance = 1.5f;
 				final var lInvDepth = 1.f - (lTileDepth / (float) ConstantsGame.LEVEL_TILES_WIDE / lDepthTolerance);
-				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 1.f);
+				final var lDepthColorMod = ColorConstants.getColor(lInvDepth, lInvDepth, lInvDepth, 6.f);
 				lTextureBatch.setColor(lDepthColorMod);
 
 				final int lBlockTypeIndex = lLevel.getLevelBlockType(x, y);
@@ -180,7 +180,7 @@ public class LevelRenderer extends BaseRenderer {
 					break;
 				}
 
-				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .01f);
+				lTextureBatch.draw(lSpriteSheetTexture, lSpriteFrame, (int) (x * lBlockSize), (int) (y * lBlockSize), 16, 16, .59f);
 			}
 		}
 
@@ -296,7 +296,7 @@ public class LevelRenderer extends BaseRenderer {
 
 		lTextureBatch.setColorWhite();
 		lTextureBatch.begin(core.gameCamera());
-		lTextureBatch.draw(mGameSpriteSheet, lEntranceFrame, lWorldX - lEntranceWidth * .5f, lWorldY - lEntranceHeight * .5f, lEntranceWidth, lEntranceHeight, .001f);
+		lTextureBatch.draw(mGameSpriteSheet, lEntranceFrame, lWorldX - lEntranceWidth * .5f, lWorldY - lEntranceHeight * .5f, lEntranceWidth, lEntranceHeight, .55f);
 
 		final var xx = mLevelController.startWorldX() - lEntranceWidth * .5f;
 		final var yy = mLevelController.startWorldY() + lEntranceHeight * .5f;
@@ -314,7 +314,7 @@ public class LevelRenderer extends BaseRenderer {
 			var yyy = yy - (j / lWrapAmount) * (lCoinSize + 1) - lCoinSize - 2;
 
 			lTextureBatch.setColorA(.5f);
-			lTextureBatch.draw(mGameSpriteSheet, lGoldFrame, xxx, yyy, lCoinSize, lCoinSize, .1f);
+			lTextureBatch.draw(mGameSpriteSheet, lGoldFrame, xxx, yyy, lCoinSize, lCoinSize, .54f);
 		}
 
 		lTextureBatch.end();

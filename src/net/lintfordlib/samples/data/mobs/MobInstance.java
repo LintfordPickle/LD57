@@ -13,6 +13,9 @@ public class MobInstance extends CellEntity {
 
 	private static final long serialVersionUID = -5778125755953549324L;
 
+	private static final float DAMAGE_RECEIVE_COOLDOWN_ENEMY_MS = 1000.f;
+	private static final float DAMAGE_RECEIVE_COOLDOWN_PLAYER_MS = 2000.f;
+
 	public static final int TEAM_ID_PLAYER = 0;
 	public static final int TEAM_ID_ENEMY = 1;
 
@@ -44,7 +47,6 @@ public class MobInstance extends CellEntity {
 	public float heading;
 	public float holdingGoldAmt;
 	public float goldDropTimer;
-	public float movementSpeedMod;
 
 	public int teamUid;
 	public float targetX;
@@ -97,15 +99,12 @@ public class MobInstance extends CellEntity {
 		return damageCooldownTimerMs <= 0;
 	}
 
-	// TODO: timer resets are mob and player specific (belong in def)
-
 	public void resetAttackTimer() {
 		attackCooldownTimerMs = def().attackSpeedMs;
-		;
 	}
 
 	public void resetDamageCooldown() {
-		attackCooldownTimerMs = 2000.f;
+		attackCooldownTimerMs = teamUid == TEAM_ID_PLAYER ? DAMAGE_RECEIVE_COOLDOWN_PLAYER_MS : DAMAGE_RECEIVE_COOLDOWN_ENEMY_MS;
 	}
 
 	// --------------------------------------
@@ -116,7 +115,6 @@ public class MobInstance extends CellEntity {
 		super(uid);
 
 		targetMob = null;
-		movementSpeedMod = 1.f;
 		targetTileCoord = -1;
 	}
 

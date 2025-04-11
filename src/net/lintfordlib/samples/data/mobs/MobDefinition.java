@@ -1,5 +1,6 @@
 package net.lintfordlib.samples.data.mobs;
 
+import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.mobs.definitions.Commander;
 import net.lintfordlib.samples.data.mobs.definitions.GoblinMelee;
 import net.lintfordlib.samples.data.mobs.definitions.GoblinRange;
@@ -42,11 +43,25 @@ public abstract class MobDefinition {
 	public int distanceToDropOffGold;
 	
 	public float attackSpeedMs;
+	public float movementSpeedModifier;
+	public float maxMovementVelocity;
 
 	public float maxHealth;
-	public int cost;
 	public int maxCarryAmt;
+	public int cost;
+	
+	// --------------------------------------
+	// Properties
+	// --------------------------------------
 
+	public int swingMaxTiles() {
+		return (int) (swingRangePx / ConstantsGame.BLOCK_SIZE);
+	}
+	
+	public int rangeMaxTiles() {
+		return (int) (rangeRangePx / ConstantsGame.BLOCK_SIZE);
+	}
+	
 	// --------------------------------------
 	// Constructor
 	// --------------------------------------
@@ -61,5 +76,7 @@ public abstract class MobDefinition {
 		targetSightRangeTiles = 0;
 		
 		maxAloneTravelDistInTiles = 5;
+		movementSpeedModifier = 1.f;
+		maxMovementVelocity = .05f;
 	}
 }

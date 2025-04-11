@@ -1,5 +1,6 @@
 package net.lintfordlib.samples.data.mobs.definitions;
 
+import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.mobs.MobDefinition;
 import net.lintfordlib.samples.data.mobs.MobTypeIndex;
 
@@ -21,7 +22,7 @@ public class PlayerRange extends MobDefinition {
 		rangeAttackEnabled = true;
 
 		swingRangePx = 0.f;
-		rangeRangePx = 80.f;
+		rangeRangePx = ConstantsGame.BLOCK_SIZE * 5.f;
 
 		maxHealth = 2;
 		cost = 15;

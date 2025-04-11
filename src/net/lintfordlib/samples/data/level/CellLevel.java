@@ -40,11 +40,9 @@ public class CellLevel {
 	private int mTilesWide;
 	private int mTilesHigh;
 
-	// TODO: this looks dodgy -
 	private int[] mBlockTypeIndices = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 	private byte[] mLevelBlockHealth = new byte[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 
-	// distance away from opening
 	private transient int[] mTileDepth = new int[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 	private transient byte[] mBlockVariationOffsets = new byte[ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH];
 
@@ -205,7 +203,6 @@ public class CellLevel {
 	public LevelSaveDefinition saveLevel() {
 		final var lSaveDef = new LevelSaveDefinition();
 
-		// TODO: save def meta data
 		lSaveDef.name = "unnamed";
 		lSaveDef.levelWidth = ConstantsGame.LEVEL_TILES_WIDE;
 		lSaveDef.levelHeight = ConstantsGame.LEVEL_TILES_HIGH;
@@ -326,7 +323,6 @@ public class CellLevel {
 		if (pTileCoord < 0 || pTileCoord >= ConstantsGame.LEVEL_TILES_WIDE * ConstantsGame.LEVEL_TILES_HIGH)
 			return false;
 
-		// TODO: make sure not protected (edges)?
 		boolean wasBlockRemoved = false;
 
 		// then deduct damage

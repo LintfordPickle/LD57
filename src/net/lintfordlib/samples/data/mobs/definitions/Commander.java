@@ -1,5 +1,6 @@
 package net.lintfordlib.samples.data.mobs.definitions;
 
+import net.lintfordlib.samples.ConstantsGame;
 import net.lintfordlib.samples.data.mobs.MobDefinition;
 import net.lintfordlib.samples.data.mobs.MobTypeIndex;
 
@@ -18,7 +19,7 @@ public class Commander extends MobDefinition {
 		swingAttackEnabled = false;
 		rangeAttackEnabled = false;
 
-		swingRangePx = 16.f;
+		swingRangePx = ConstantsGame.BLOCK_SIZE * 1.f;
 		rangeRangePx = 0;
 
 		maxHealth = 6;

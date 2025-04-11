@@ -8,7 +8,6 @@ import net.lintfordlib.controllers.core.particles.ParticleFrameworkController;
 import net.lintfordlib.core.LintfordCore;
 import net.lintfordlib.core.particles.ParticleFrameworkData;
 import net.lintfordlib.core.particles.particleemitters.ParticleEmitterInstance;
-import net.lintfordlib.core.particles.particlesystems.ParticleSystemInstance;
 import net.lintfordlib.data.DataManager;
 import net.lintfordlib.renderers.SimpleRendererManager;
 import net.lintfordlib.renderers.particles.ParticleFrameworkRenderer;
@@ -34,7 +33,6 @@ import net.lintfordlib.samples.renderers.MobRenderer;
 import net.lintfordlib.samples.renderers.ProjectileRenderer;
 import net.lintfordlib.screenmanager.ScreenManager;
 import net.lintfordlib.screenmanager.screens.BaseGameScreen;
-import net.lintfordlib.screenmanager.screens.LoadingScreen;
 
 public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
@@ -44,12 +42,12 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 	private SampleSceneHeader mSceneHeader;
 	private GameOptions mGameOptions;
+	private SimpleRendererManager mRendererManager;
 
 	// Data
 	private GameState mGameState;
 	private GameWorld mGameWorld; // reference to data related to the scene
 	private ParticleFrameworkData mParticleData;
-	private ProjectileManager mProjetileManager;
 
 	private ParticleEmitterInstance mWispEmitter;
 
@@ -80,8 +78,10 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 		mSceneHeader = sceneHeader;
 		mGameOptions = options;
-		
+
 		mShowBackgroundScreens = true;
+
+		mRendererManager = (SimpleRendererManager) rendererManager();
 	}
 
 	// --------------------------------------
@@ -154,8 +154,6 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 
 		mWispEmitter = mParticleData.particleEmitterManager().createNewParticleEmitterFromDefinitionName("PS_WISP");
 		mWispEmitter.triggerEmission(); // is timed, so should keep going ?
-
-		mProjetileManager = new ProjectileManager();
 	}
 
 	// CONTROLLERS ---------------------------------
@@ -191,24 +189,27 @@ public class GameScreen extends BaseGameScreen implements IGameStateListener {
 	@Override
 	protected void createRenderers(LintfordCore core) {
 
-		// TODO: this is the order of rendering, not the structure below.
-
 		mAnimationRenderer = new AnimationRenderer(mRendererManager, mAnimationController, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mLevelRenderer = new LevelRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mParticleFrameworkRenderer = new ParticleFrameworkRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mMobRenderer = new MobRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
-		mHudRenderer = new HudRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
 		mProjectileRenderer = new ProjectileRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+		mHudRenderer = new HudRenderer(mRendererManager, ConstantsGame.GAME_RESOURCE_GROUP_ID);
+
 	}
 
 	@Override
 	protected void createRendererStructure(LintfordCore core) {
-		mRendererManager.addRenderer(mAnimationRenderer);
-		mRendererManager.addRenderer(mLevelRenderer);
-		mRendererManager.addRenderer(mParticleFrameworkRenderer);
-		mRendererManager.addRenderer(mMobRenderer);
-		mRendererManager.addRenderer(mProjectileRenderer);
-		mRendererManager.addRenderer(mHudRenderer);
+		final var lGameStage = mRendererManager.gameStage();
+
+		// @formatter:off
+		lGameStage.addRenderer(mLevelRenderer); 				// .6
+		lGameStage.addRenderer(mParticleFrameworkRenderer); 	// .5
+		lGameStage.addRenderer(mMobRenderer); 					// .4
+		lGameStage.addRenderer(mAnimationRenderer);				// .3
+		lGameStage.addRenderer(mProjectileRenderer);			// .2
+		lGameStage.addRenderer(mHudRenderer);			// .2
+		// @formatter:on
 	}
 
 	// --------------------------------------
